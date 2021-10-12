@@ -288,7 +288,7 @@ BYTE Explorerplusplus::LookupToolbarButtonExtraStyles(int iButtonID)
 			break;
 
 		case TOOLBAR_BACK:
-			return BTNS_DROPDOWN;
+			return BTNS_SHOWTEXT | BTNS_DROPDOWN;
 			break;
 
 		case TOOLBAR_FORWARD:
@@ -340,7 +340,7 @@ BYTE Explorerplusplus::LookupToolbarButtonExtraStyles(int iButtonID)
 			break;
 
 		case TOOLBAR_SEARCH:
-			return 0;
+			return BTNS_SHOWTEXT;
 			break;
 
 		case TOOLBAR_PROPERTIES:
