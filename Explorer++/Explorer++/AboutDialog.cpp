@@ -1,18 +1,3 @@
-/******************************************************************
- *
- * Project: Explorer++
- * File: AboutDialog.cpp
- * License: GPL - See COPYING in the top level directory
- *
- * Manages the 'About' dialog box.
- *
- * Notes:
- *  - Always center dialog. Position is not saved/loaded.
- *
- * Written by David Erceg
- * www.explorerplusplus.com
- *
- *****************************************************************/
 
 #include "stdafx.h"
 #include <list>
