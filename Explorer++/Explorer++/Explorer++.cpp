@@ -142,10 +142,10 @@ Explorerplusplus::Explorerplusplus(HWND hwnd)
 
 		if(VersionInfo.dwMajorVersion >= WINDOWS_VISTA_SEVEN_MAJORVERSION)
 		{
-			ViewMode.uViewMode = VM_EXTRALARGEICONS;
+			ViewMode.uViewMode = VM_THUMBNAILS;
 			m_ViewModes.push_back(ViewMode);
 
-			ViewMode.uViewMode = VM_LARGEICONS;
+			ViewMode.uViewMode = VM_TILES;
 			m_ViewModes.push_back(ViewMode);
 
 			ViewMode.uViewMode = VM_ICONS;
@@ -158,12 +158,6 @@ Explorerplusplus::Explorerplusplus(HWND hwnd)
 			m_ViewModes.push_back(ViewMode);
 
 			ViewMode.uViewMode = VM_DETAILS;
-			m_ViewModes.push_back(ViewMode);
-
-			ViewMode.uViewMode = VM_THUMBNAILS;
-			m_ViewModes.push_back(ViewMode);
-
-			ViewMode.uViewMode = VM_TILES;
 			m_ViewModes.push_back(ViewMode);
 		}
 		else
