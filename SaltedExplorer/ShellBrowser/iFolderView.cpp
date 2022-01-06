@@ -8,8 +8,8 @@
  * object. Also contains some auxillary
  * code.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -7,8 +7,8 @@
  * Updates the size/position of a set of controls within
  * a resizable dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

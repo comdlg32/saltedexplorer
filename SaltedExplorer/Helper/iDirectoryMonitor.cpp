@@ -8,8 +8,8 @@
  * deleting, creation, etc.). Monitoring is performed
  * asynchronously.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

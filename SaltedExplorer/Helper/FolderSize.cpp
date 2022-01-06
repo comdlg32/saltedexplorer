@@ -6,8 +6,8 @@
  *
  * Calculates the size of a given folder.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

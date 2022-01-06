@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ArrangeMenuHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles arrange menu items.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -26,7 +26,7 @@
  * Sets the arrange menu items that will be shown
  * for each folder.
  */
-void Explorerplusplus::InitializeArrangeMenuItems(void)
+void SaltedExplorer::InitializeArrangeMenuItems(void)
 {
 	HMENU				hMainMenu;
 	HMENU				hArrangeMenu;
@@ -129,7 +129,7 @@ void Explorerplusplus::InitializeArrangeMenuItems(void)
  * Returns the index in the string table of the text
  * for the specified arrange menu item.
  */
-UINT Explorerplusplus::GetArrangeMenuItemStringIndex(UINT uItemId)
+UINT SaltedExplorer::GetArrangeMenuItemStringIndex(UINT uItemId)
 {
 	switch(uItemId)
 	{
@@ -297,7 +297,7 @@ UINT Explorerplusplus::GetArrangeMenuItemStringIndex(UINT uItemId)
  * Sets the current arrange menu used based on
  * the current folder.
  */
-void Explorerplusplus::SetActiveArrangeMenuItems(void)
+void SaltedExplorer::SetActiveArrangeMenuItems(void)
 {
 	if(CompareVirtualFolders(CSIDL_DRIVES))
 	{
@@ -321,7 +321,7 @@ void Explorerplusplus::SetActiveArrangeMenuItems(void)
  * Inserts the current arrange menu items onto the
  * specified menu.
  */
-int Explorerplusplus::InsertArrangeMenuItems(HMENU hMenu)
+int SaltedExplorer::InsertArrangeMenuItems(HMENU hMenu)
 {
 	MENUITEMINFO						mi;
 	std::list<ArrangeMenuItem_t>::iterator	itr;
@@ -359,7 +359,7 @@ int Explorerplusplus::InsertArrangeMenuItems(HMENU hMenu)
  * Translates the specified sort mode into its
  * associated menu id.
  */
-int Explorerplusplus::DetermineSortModeMenuId(int SortMode)
+int SaltedExplorer::DetermineSortModeMenuId(int SortMode)
 {
 	switch(SortMode)
 	{
@@ -523,7 +523,7 @@ int Explorerplusplus::DetermineSortModeMenuId(int SortMode)
 	return -1;
 }
 
-int Explorerplusplus::DetermineGroupModeMenuId(int SortMode)
+int SaltedExplorer::DetermineGroupModeMenuId(int SortMode)
 {
 	switch(SortMode)
 	{
@@ -690,7 +690,7 @@ int Explorerplusplus::DetermineGroupModeMenuId(int SortMode)
 /*
  * Removes the previous arrange menu items from the menu.
  */
-void Explorerplusplus::DeletePreviousArrangeMenuItems(void)
+void SaltedExplorer::DeletePreviousArrangeMenuItems(void)
 {
 	MENUITEMINFO	mii;
 	int				i = 0;
@@ -719,7 +719,7 @@ void Explorerplusplus::DeletePreviousArrangeMenuItems(void)
 /*
  * Updates the arrange menu with the new items.
  */
-void Explorerplusplus::UpdateArrangeMenuItems(void)
+void SaltedExplorer::UpdateArrangeMenuItems(void)
 {
 	std::list<int>			SortModes;
 	std::list<int>::iterator	itr;

@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: TabBackingHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Manages the 'tab backing' panel, which sits
  * behind the tab control.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -18,7 +18,7 @@
 #include "../Helper/Macros.h"
 
 
-void Explorerplusplus::CreateTabBacking(void)
+void SaltedExplorer::CreateTabBacking(void)
 {
 	m_hTabBacking = CreateWindow(WC_STATIC,EMPTY_STRING,
 	WS_VISIBLE|WS_CHILD|WS_CLIPSIBLINGS|SS_NOTIFY,
@@ -30,12 +30,12 @@ void Explorerplusplus::CreateTabBacking(void)
 LRESULT CALLBACK TabBackingProcStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->TabBackingProc(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::TabBackingProc(HWND hTabCtrl,
+LRESULT CALLBACK SaltedExplorer::TabBackingProc(HWND hTabCtrl,
 UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(msg)

@@ -6,8 +6,8 @@
  *
  * Provides support for acting as a drop target.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

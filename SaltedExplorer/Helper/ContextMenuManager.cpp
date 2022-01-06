@@ -11,8 +11,8 @@
  * References:
  * http://windowsxp.mvps.org/context_folders.htm
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

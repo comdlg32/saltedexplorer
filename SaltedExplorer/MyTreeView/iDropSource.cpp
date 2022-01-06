@@ -6,8 +6,8 @@
  *
  * Provides support for acting as a drop source.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

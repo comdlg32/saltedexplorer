@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: DestroyFilesDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Destroy Files' dialog and associated messages.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -266,7 +266,7 @@ void CDestroyFilesDialog::OnOk()
 
 	/* The default button in this message box will be the second
 	button (i.e. the no button). */
-	int iRes = MessageBox(m_hDlg,szConfirmation,NExplorerplusplus::WINDOW_NAME,
+	int iRes = MessageBox(m_hDlg,szConfirmation,NSaltedExplorer::WINDOW_NAME,
 		MB_ICONWARNING|MB_SETFOREGROUND|MB_YESNO|MB_DEFBUTTON2);
 
 	switch(iRes)

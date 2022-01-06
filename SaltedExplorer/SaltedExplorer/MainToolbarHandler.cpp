@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: MainToolbarHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles functionality associated with the main toolbar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -16,7 +16,7 @@
 #include "../Helper/Macros.h"
 
 
-void Explorerplusplus::SetInitialToolbarButtons(void)
+void SaltedExplorer::SetInitialToolbarButtons(void)
 {
 	ToolbarButton_t	tb;
 
@@ -95,7 +95,7 @@ void Explorerplusplus::SetInitialToolbarButtons(void)
 	m_tbInitial.push_back(tb);
 }
 
-int Explorerplusplus::LookupToolbarButtonTextID(int iButtonID)
+int SaltedExplorer::LookupToolbarButtonTextID(int iButtonID)
 {
 	switch(iButtonID)
 	{
@@ -187,7 +187,7 @@ int Explorerplusplus::LookupToolbarButtonTextID(int iButtonID)
 	return 0;
 }
 
-int Explorerplusplus::LookupToolbarButtonImage(int iButtonID)
+int SaltedExplorer::LookupToolbarButtonImage(int iButtonID)
 {
 	switch(iButtonID)
 	{
@@ -279,7 +279,7 @@ int Explorerplusplus::LookupToolbarButtonImage(int iButtonID)
 	return -1;
 }
 
-BYTE Explorerplusplus::LookupToolbarButtonExtraStyles(int iButtonID)
+BYTE SaltedExplorer::LookupToolbarButtonExtraStyles(int iButtonID)
 {
 	switch(iButtonID)
 	{
@@ -371,7 +371,7 @@ BYTE Explorerplusplus::LookupToolbarButtonExtraStyles(int iButtonID)
 	return 0;
 }
 
-void Explorerplusplus::AddStringsToMainToolbar(void)
+void SaltedExplorer::AddStringsToMainToolbar(void)
 {
 	TCHAR szText[64];
 
@@ -505,7 +505,7 @@ void Explorerplusplus::AddStringsToMainToolbar(void)
 /*
  * Sets the state of the items in the main toolbar.
  */
-void Explorerplusplus::HandleToolbarItemStates(void)
+void SaltedExplorer::HandleToolbarItemStates(void)
 {
     BOOL	bVirtualFolder;
 

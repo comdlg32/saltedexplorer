@@ -1,19 +1,7 @@
-/******************************************************************
- *
- * Project: Helper
- * File: CustomMenu.cpp
- * License: GPL - See COPYING in the top level directory
- *
- * Implements a custom menu system.
- *
- * Written by David Erceg
- * www.explorerplusplus.com
- *
- *****************************************************************/
-
 #include "stdafx.h"
 #include "CustomMenu.h"
 #include "Macros.h"
+
 
 /* The minimum height of any item in the custom menu
 (except separators). This is defined purely for menu
@@ -21,7 +9,7 @@ icons (i.e. the icons will need at least a vertical
 spacing of MINIMUM_MENU_ITEM_HEIGHT to display properly).
 A clearance of at least 2 should be provided on either
 side of a menu icon.*/
-#define MINIMUM_MENU_ITEM_HEIGHT	18
+#define MINIMUM_MENU_ITEM_HEIGHT	20
 
 /* How far to indent menu text from the left edge
 of the menu. */

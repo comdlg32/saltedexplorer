@@ -6,8 +6,8 @@
  *
  * Handles the browsing of directories.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

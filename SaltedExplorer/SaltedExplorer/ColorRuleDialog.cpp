@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ColorRuleDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the new/edit color rule dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

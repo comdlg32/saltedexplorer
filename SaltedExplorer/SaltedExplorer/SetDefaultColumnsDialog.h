@@ -53,7 +53,7 @@ class CSetDefaultColumnsDialog : public CBaseDialog
 {
 public:
 
-	CSetDefaultColumnsDialog(HINSTANCE hInstance,int iResource,HWND hParent,IExplorerplusplus *pexpp,std::list<Column_t> *pRealFolderColumnList,std::list<Column_t> *pMyComputerColumnList,
+	CSetDefaultColumnsDialog(HINSTANCE hInstance,int iResource,HWND hParent,ISaltedExplorer *pexpp,std::list<Column_t> *pRealFolderColumnList,std::list<Column_t> *pMyComputerColumnList,
 		std::list<Column_t> *pControlPanelColumnList,std::list<Column_t> *pRecycleBinColumnList,std::list<Column_t> *pPrintersColumnList,std::list<Column_t> *pNetworkConnectionsColumnList,
 		std::list<Column_t> *pMyNetworkPlacesColumnList);
 	~CSetDefaultColumnsDialog();
@@ -83,7 +83,7 @@ private:
 
 	std::list<Column_t>	*GetCurrentColumnList(FolderType_t FolderType);
 
-	IExplorerplusplus	*m_pexpp;
+	ISaltedExplorer	*m_pexpp;
 
 	std::list<Column_t>	*m_pRealFolderColumnList;
 	std::list<Column_t>	*m_pMyComputerColumnList;

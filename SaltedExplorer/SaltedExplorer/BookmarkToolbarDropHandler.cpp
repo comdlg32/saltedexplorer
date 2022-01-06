@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: OrganizeBookmarksDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles drag and drop for the bookmarks toolbar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -15,31 +15,31 @@
 #include "SaltedExplorer.h"
 #include "../Helper/Macros.h"
 
-Explorerplusplus::CBookmarkToolbarDrop::CBookmarkToolbarDrop(Explorerplusplus *pContainer)
+SaltedExplorer::CBookmarkToolbarDrop::CBookmarkToolbarDrop(SaltedExplorer *pContainer)
 {
 	m_pContainer = pContainer;
 
 	InitializeDragDropHelpers();
 }
 
-Explorerplusplus::CBookmarkToolbarDrop::~CBookmarkToolbarDrop()
+SaltedExplorer::CBookmarkToolbarDrop::~CBookmarkToolbarDrop()
 {
 
 }
 
-HRESULT __stdcall Explorerplusplus::CBookmarkToolbarDrop::QueryInterface(REFIID iid, void **ppvObject)
+HRESULT __stdcall SaltedExplorer::CBookmarkToolbarDrop::QueryInterface(REFIID iid, void **ppvObject)
 {
 	*ppvObject = NULL;
 
 	return E_NOINTERFACE;
 }
 
-ULONG __stdcall Explorerplusplus::CBookmarkToolbarDrop::AddRef(void)
+ULONG __stdcall SaltedExplorer::CBookmarkToolbarDrop::AddRef(void)
 {
 	return ++m_iRefCount;
 }
 
-ULONG __stdcall Explorerplusplus::CBookmarkToolbarDrop::Release(void)
+ULONG __stdcall SaltedExplorer::CBookmarkToolbarDrop::Release(void)
 {
 	m_iRefCount--;
 	
@@ -52,7 +52,7 @@ ULONG __stdcall Explorerplusplus::CBookmarkToolbarDrop::Release(void)
 	return m_iRefCount;
 }
 
-HRESULT _stdcall Explorerplusplus::CBookmarkToolbarDrop::DragEnter(IDataObject *pDataObject,
+HRESULT _stdcall SaltedExplorer::CBookmarkToolbarDrop::DragEnter(IDataObject *pDataObject,
 DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect)
 {
 	FORMATETC	ftc = {CF_HDROP,0,DVASPECT_CONTENT,-1,TYMED_HGLOBAL};
@@ -118,7 +118,7 @@ DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect)
 	return hr;
 }
 
-HRESULT _stdcall Explorerplusplus::CBookmarkToolbarDrop::DragOver(DWORD grfKeyState,
+HRESULT _stdcall SaltedExplorer::CBookmarkToolbarDrop::DragOver(DWORD grfKeyState,
 POINTL pt,DWORD *pdwEffect)
 {
 	TBINSERTMARK tbim;
@@ -169,7 +169,7 @@ POINTL pt,DWORD *pdwEffect)
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::CBookmarkToolbarDrop::DragLeave(void)
+HRESULT _stdcall SaltedExplorer::CBookmarkToolbarDrop::DragLeave(void)
 {
 	TBINSERTMARK tbim;
 
@@ -183,7 +183,7 @@ HRESULT _stdcall Explorerplusplus::CBookmarkToolbarDrop::DragLeave(void)
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::CBookmarkToolbarDrop::Drop(IDataObject *pDataObject,
+HRESULT _stdcall SaltedExplorer::CBookmarkToolbarDrop::Drop(IDataObject *pDataObject,
 DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 {
 	FORMATETC		ftc;
@@ -270,7 +270,7 @@ DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::CBookmarkToolbarDrop::InitializeDragDropHelpers(void)
+HRESULT SaltedExplorer::CBookmarkToolbarDrop::InitializeDragDropHelpers(void)
 {
 	HRESULT hr;
 

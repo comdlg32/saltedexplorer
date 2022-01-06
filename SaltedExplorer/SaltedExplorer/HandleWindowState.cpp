@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: HandleWindowState.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Keeps track of the state of the main window
  * and its child windows.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -28,7 +28,7 @@
 /*
  * Updates the states of all windows.
  */
-void Explorerplusplus::UpdateWindowStates(void)
+void SaltedExplorer::UpdateWindowStates(void)
 {
 	m_pActiveShellBrowser->QueryCurrentDirectory(SIZEOF_ARRAY(m_CurrentDirectory),m_CurrentDirectory);
 
@@ -50,7 +50,7 @@ void Explorerplusplus::UpdateWindowStates(void)
 * Set the state of the items in the main
 * program menu.
 */
-void Explorerplusplus::SetProgramMenuItemStates(HMENU hProgramMenu)
+void SaltedExplorer::SetProgramMenuItemStates(HMENU hProgramMenu)
 {
 	LONG WindowStyle;
 	UINT ItemToCheck;
@@ -96,6 +96,7 @@ void Explorerplusplus::SetProgramMenuItemStates(HMENU hProgramMenu)
 	lCheckMenuItem(hProgramMenu,IDM_VIEW_DISPLAYWINDOW,m_bShowDisplayWindow);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_ADDRESSBAR,m_bShowAddressBar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MAINTOOLBAR,m_bShowMainToolbar);
+	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MENUBAR,m_bShowMenuBar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_BOOKMARKSTOOLBAR,m_bShowBookmarksToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_DRIVES,m_bShowDrivesToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_APPLICATIONTOOLBAR,m_bShowApplicationToolbar);
@@ -154,7 +155,7 @@ void Explorerplusplus::SetProgramMenuItemStates(HMENU hProgramMenu)
 * 'arrange menu', which appears as a
 * submenu in other higher level menus.
 */
-void Explorerplusplus::SetArrangeMenuItemStates(HMENU hProgramMenu)
+void SaltedExplorer::SetArrangeMenuItemStates(HMENU hProgramMenu)
 {
 	UINT ItemToCheck;
 	UINT SortMode;
@@ -273,7 +274,7 @@ void Explorerplusplus::SetArrangeMenuItemStates(HMENU hProgramMenu)
 /*
  * Sets the title text for the main window.
  */
-void Explorerplusplus::HandleMainWindowText(void)
+void SaltedExplorer::HandleMainWindowText(void)
 {
 	TCHAR	szTitle[512];
 	TCHAR	szFolderDisplayName[MAX_PATH];
@@ -341,7 +342,7 @@ void Explorerplusplus::HandleMainWindowText(void)
 	SetWindowText(m_hContainer,szTitle);
 }
 
-void Explorerplusplus::HandleComboBoxText(void)
+void SaltedExplorer::HandleComboBoxText(void)
 {
 	LPITEMIDLIST pidl = NULL;
 	TCHAR szAddressBarTitle[MAX_PATH];
@@ -373,12 +374,12 @@ void Explorerplusplus::HandleComboBoxText(void)
 	CoTaskMemFree(pidl);
 }
 
-void Explorerplusplus::HandleTabText(void)
+void SaltedExplorer::HandleTabText(void)
 {
 	HandleTabText(m_iTabSelectedItem,m_iObjectIndex);
 }
 
-void Explorerplusplus::HandleTabText(int iTabId)
+void SaltedExplorer::HandleTabText(int iTabId)
 {
 	TCITEM tcItem;
 	int nTabs;
@@ -399,7 +400,7 @@ void Explorerplusplus::HandleTabText(int iTabId)
 	}
 }
 
-void Explorerplusplus::HandleTabText(int iTab,int iTabId)
+void SaltedExplorer::HandleTabText(int iTab,int iTabId)
 {
 	/* Can optimize - store folder name, only change when
 	folder changes. */
@@ -439,7 +440,7 @@ void Explorerplusplus::HandleTabText(int iTab,int iTabId)
 	}
 }
 
-void Explorerplusplus::SetTabIcon(void)
+void SaltedExplorer::SetTabIcon(void)
 {
 	LPITEMIDLIST pidl = NULL;
 
@@ -450,7 +451,7 @@ void Explorerplusplus::SetTabIcon(void)
 	CoTaskMemFree(pidl);
 }
 
-void Explorerplusplus::SetTabIcon(int iTabId)
+void SaltedExplorer::SetTabIcon(int iTabId)
 {
 	LPITEMIDLIST pidl = NULL;
 	TCITEM tcItem;
@@ -476,7 +477,7 @@ void Explorerplusplus::SetTabIcon(int iTabId)
 	CoTaskMemFree(pidl);
 }
 
-void Explorerplusplus::SetTabIcon(int iIndex,int iTabId)
+void SaltedExplorer::SetTabIcon(int iIndex,int iTabId)
 {
 	LPITEMIDLIST pidl = NULL;
 
@@ -490,7 +491,7 @@ void Explorerplusplus::SetTabIcon(int iIndex,int iTabId)
 /* Sets a tabs icon. Normally, this icon
 is the folders icon, however if the tab
 is locked, the icon will be a lock. */
-void Explorerplusplus::SetTabIcon(int iIndex,int iTabId,LPITEMIDLIST pidlDirectory)
+void SaltedExplorer::SetTabIcon(int iIndex,int iTabId,LPITEMIDLIST pidlDirectory)
 {
 	TCITEM			tcItem;
 	SHFILEINFO		shfi;

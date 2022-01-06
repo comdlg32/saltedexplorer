@@ -6,8 +6,8 @@
  *
  * Handles GUI messages for the display window.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -8,8 +8,8 @@
  * preparing the listview and drawing
  * image thumbnails.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

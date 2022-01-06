@@ -6,8 +6,8 @@
  *
  * Provides an implementation of IDataObject.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

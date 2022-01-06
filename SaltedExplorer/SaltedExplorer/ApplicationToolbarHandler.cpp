@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ApplicationToolbar.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -13,8 +13,8 @@
  *	<name="App2" command="D:\...">
  * </ApplicationToolbar>
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -28,7 +28,7 @@ DWORD ApplicationToolbarStyles	=	WS_CHILD |WS_VISIBLE |WS_CLIPSIBLINGS |WS_CLIPC
 								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
 								TBSTYLE_FLAT | CCS_NODIVIDER| CCS_NORESIZE;
 
-void Explorerplusplus::CreateApplicationToolbar(void)
+void SaltedExplorer::CreateApplicationToolbar(void)
 {
 	HIMAGELIST	himlSmall;
 
@@ -52,21 +52,21 @@ void Explorerplusplus::CreateApplicationToolbar(void)
 	RegisterDragDrop(m_hApplicationToolbar,patd);
 }
 
-void Explorerplusplus::InitializeApplicationToolbar(void)
+void SaltedExplorer::InitializeApplicationToolbar(void)
 {
 	m_pAppButtons = NULL;
 	m_nAppButtons = 0;
 	m_iAppIdOffset = 0;
 }
 
-void Explorerplusplus::ApplicationToolbarNewButton(void)
+void SaltedExplorer::ApplicationToolbarNewButton(void)
 {
 	DialogBoxParam(g_hLanguageModule,
 		MAKEINTRESOURCE(IDD_EDITAPPLICATIONBUTTON),
 		m_hContainer,ApplicationToolbarNewButtonProcStub,(LPARAM)this);
 }
 
-ApplicationButton_t *Explorerplusplus::ApplicationToolbarAddItem(TCHAR *szName,TCHAR *szCommand,
+ApplicationButton_t *SaltedExplorer::ApplicationToolbarAddItem(TCHAR *szName,TCHAR *szCommand,
 BOOL bShowNameOnToolbar)
 {
 	ApplicationButton_t *pAppButton = NULL;
@@ -113,7 +113,7 @@ BOOL bShowNameOnToolbar)
 	return pAppButton;
 }
 
-void Explorerplusplus::ApplicationToolbarOpenItem(int iItem,TCHAR *szParameters)
+void SaltedExplorer::ApplicationToolbarOpenItem(int iItem,TCHAR *szParameters)
 {
 	ApplicationButton_t	*pab = NULL;
 	LPITEMIDLIST		pidl = NULL;
@@ -146,7 +146,7 @@ void Explorerplusplus::ApplicationToolbarOpenItem(int iItem,TCHAR *szParameters)
 	}
 }
 
-void Explorerplusplus::ApplicationToolbarShowItemProperties(int iItem)
+void SaltedExplorer::ApplicationToolbarShowItemProperties(int iItem)
 {
 	ApplicationButton_t	*pab = NULL;
 	TBBUTTON			tbButton;
@@ -171,7 +171,7 @@ void Explorerplusplus::ApplicationToolbarShowItemProperties(int iItem)
 	}
 }
 
-void Explorerplusplus::ApplicationToolbarDeleteItem(int iItem)
+void SaltedExplorer::ApplicationToolbarDeleteItem(int iItem)
 {
 	ApplicationButton_t	*pab = NULL;
 	TBBUTTON			tbButton;
@@ -191,7 +191,7 @@ void Explorerplusplus::ApplicationToolbarDeleteItem(int iItem)
 				szInfoMsg,SIZEOF_ARRAY(szInfoMsg));
 
 			iMessageBoxReturn = MessageBox(m_hContainer,szInfoMsg,
-				NExplorerplusplus::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
+				NSaltedExplorer::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
 
 			if(iMessageBoxReturn == IDYES)
 			{
@@ -219,7 +219,7 @@ void Explorerplusplus::ApplicationToolbarDeleteItem(int iItem)
 	}
 }
 
-void Explorerplusplus::ApplicationToolbarAddButtonsToToolbar(void)
+void SaltedExplorer::ApplicationToolbarAddButtonsToToolbar(void)
 {
 	ApplicationButton_t	*pAppButtons = NULL;
 	TBBUTTON	*ptbButtons = NULL;
@@ -276,7 +276,7 @@ void Explorerplusplus::ApplicationToolbarAddButtonsToToolbar(void)
 	}
 }
 
-void Explorerplusplus::ApplicationToolbarAddButtonToToolbar(ApplicationButton_t *pab)
+void SaltedExplorer::ApplicationToolbarAddButtonToToolbar(ApplicationButton_t *pab)
 {
 	TBBUTTON	tbButton;
 	SHFILEINFO	shfi;
@@ -312,7 +312,7 @@ void Explorerplusplus::ApplicationToolbarAddButtonToToolbar(ApplicationButton_t 
 	UpdateToolbarBandSizing(m_hMainRebar,m_hApplicationToolbar);
 }
 
-void Explorerplusplus::ApplicationToolbarRefreshButton(int iItem)
+void SaltedExplorer::ApplicationToolbarRefreshButton(int iItem)
 {
 	ApplicationButton_t	*pab = NULL;
 	TBBUTTON			tbButton;
@@ -358,13 +358,13 @@ void Explorerplusplus::ApplicationToolbarRefreshButton(int iItem)
 
 INT_PTR CALLBACK ApplicationButtonPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 		{
-			pContainer = (Explorerplusplus *)lParam;
+			pContainer = (SaltedExplorer *)lParam;
 		}
 		break;
 	}
@@ -372,7 +372,7 @@ INT_PTR CALLBACK ApplicationButtonPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM 
 	return pContainer->ApplicationButtonPropertiesProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::ApplicationButtonPropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::ApplicationButtonPropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(Msg)
 	{
@@ -405,7 +405,7 @@ INT_PTR CALLBACK Explorerplusplus::ApplicationButtonPropertiesProc(HWND hDlg,UIN
 	return 0;
 }
 
-void Explorerplusplus::OnApplicationButtonPropertiesInit(HWND hDlg)
+void SaltedExplorer::OnApplicationButtonPropertiesInit(HWND hDlg)
 {
 	HWND hEditName;
 	HWND hEditCommand;
@@ -431,7 +431,7 @@ void Explorerplusplus::OnApplicationButtonPropertiesInit(HWND hDlg)
 	SetFocus(hEditName);
 }
 
-void Explorerplusplus::OnApplicationButtonPropertiesOk(HWND hDlg)
+void SaltedExplorer::OnApplicationButtonPropertiesOk(HWND hDlg)
 {
 	HWND	hEditName;
 	HWND	hEditCommand;
@@ -461,13 +461,13 @@ void Explorerplusplus::OnApplicationButtonPropertiesOk(HWND hDlg)
 
 INT_PTR CALLBACK ApplicationToolbarNewButtonProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 		{
-			pContainer = (Explorerplusplus *)lParam;
+			pContainer = (SaltedExplorer *)lParam;
 		}
 		break;
 	}
@@ -475,7 +475,7 @@ INT_PTR CALLBACK ApplicationToolbarNewButtonProcStub(HWND hDlg,UINT uMsg,WPARAM 
 	return pContainer->ApplicationToolbarNewButtonProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::ApplicationToolbarNewButtonProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::ApplicationToolbarNewButtonProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(Msg)
 	{
@@ -508,7 +508,7 @@ INT_PTR CALLBACK Explorerplusplus::ApplicationToolbarNewButtonProc(HWND hDlg,UIN
 	return 0;
 }
 
-void Explorerplusplus::OnApplicationToolbarNewButtonInit(HWND hDlg)
+void SaltedExplorer::OnApplicationToolbarNewButtonInit(HWND hDlg)
 {
 	HWND hEditName;
 	TCHAR szTemp[64];
@@ -526,7 +526,7 @@ void Explorerplusplus::OnApplicationToolbarNewButtonInit(HWND hDlg)
 	SetFocus(hEditName);
 }
 
-void Explorerplusplus::OnApplicationToolbarNewButtonOk(HWND hDlg)
+void SaltedExplorer::OnApplicationToolbarNewButtonOk(HWND hDlg)
 {
 	HWND				hEditName;
 	HWND				hEditCommand;
@@ -557,7 +557,7 @@ void Explorerplusplus::OnApplicationToolbarNewButtonOk(HWND hDlg)
 	EndDialog(hDlg,1);
 }
 
-void Explorerplusplus::OnApplicationToolbarCommandButton(HWND hDlg)
+void SaltedExplorer::OnApplicationToolbarCommandButton(HWND hDlg)
 {
 	TCHAR *Filter = _T("Programs (*.exe)\0*.exe\0All Files\0*.*\0\0");
 	OPENFILENAME ofn;
@@ -595,7 +595,7 @@ void Explorerplusplus::OnApplicationToolbarCommandButton(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnApplicationToolbarRClick(void)
+void SaltedExplorer::OnApplicationToolbarRClick(void)
 {
 	MENUITEMINFO mii;
 

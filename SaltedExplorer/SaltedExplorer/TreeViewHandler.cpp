@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: TreeViewHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles messages asscoiated with the main
  * treeview control.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -30,12 +30,12 @@ HTREEITEM	g_NewSelectionItem;
 LRESULT CALLBACK TreeViewSubclassStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->TreeViewSubclass(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::TreeViewSubclass(HWND hwnd,UINT uMsg,
+LRESULT CALLBACK SaltedExplorer::TreeViewSubclass(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
@@ -101,7 +101,7 @@ WPARAM wParam,LPARAM lParam)
 	return DefSubclassProc(hwnd,uMsg,wParam,lParam);
 }
 
-void Explorerplusplus::OnTreeViewFileRename(void)
+void SaltedExplorer::OnTreeViewFileRename(void)
 {
 	HTREEITEM hItem;
 
@@ -110,7 +110,7 @@ void Explorerplusplus::OnTreeViewFileRename(void)
 	TreeView_EditLabel(m_hTreeView,hItem);
 }
 
-void Explorerplusplus::OnTreeViewFileDelete(BOOL bPermanent)
+void SaltedExplorer::OnTreeViewFileDelete(BOOL bPermanent)
 {
 	HTREEITEM		hItem, hParentItem;
 	LPITEMIDLIST	pidl = NULL;
@@ -138,7 +138,7 @@ void Explorerplusplus::OnTreeViewFileDelete(BOOL bPermanent)
 	}
 }
 
-void Explorerplusplus::OnTreeViewRightClick(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnTreeViewRightClick(WPARAM wParam,LPARAM lParam)
 {
 	LPITEMIDLIST pidl = NULL;
 	POINT *ppt = NULL;
@@ -221,7 +221,7 @@ void Explorerplusplus::OnTreeViewRightClick(WPARAM wParam,LPARAM lParam)
  * Shows the properties dialog for the currently
  * selected treeview item.
  */
-void Explorerplusplus::OnTreeViewShowFileProperties(void)
+void SaltedExplorer::OnTreeViewShowFileProperties(void)
 {
 	LPITEMIDLIST	pidlDirectory = NULL;
 	HTREEITEM		hItem;
@@ -236,7 +236,7 @@ void Explorerplusplus::OnTreeViewShowFileProperties(void)
 	CoTaskMemFree(pidlDirectory);
 }
 
-BOOL Explorerplusplus::OnTreeViewItemExpanding(LPARAM lParam)
+BOOL SaltedExplorer::OnTreeViewItemExpanding(LPARAM lParam)
 {
 	NMTREEVIEW *pnmtv;
 	TVITEM *tvItem;
@@ -301,7 +301,7 @@ BOOL Explorerplusplus::OnTreeViewItemExpanding(LPARAM lParam)
 	return FALSE;
 }
 
-void Explorerplusplus::OnTreeViewCopyItemPath(void)
+void SaltedExplorer::OnTreeViewCopyItemPath(void)
 {
 	HTREEITEM		hItem;
 	LPITEMIDLIST	pidl;
@@ -321,7 +321,7 @@ void Explorerplusplus::OnTreeViewCopyItemPath(void)
 	}
 }
 
-void Explorerplusplus::OnTreeViewCopyUniversalPaths(void)
+void SaltedExplorer::OnTreeViewCopyUniversalPaths(void)
 {
 	HTREEITEM		hItem;
 	LPITEMIDLIST	pidl;
@@ -351,7 +351,7 @@ void Explorerplusplus::OnTreeViewCopyUniversalPaths(void)
 	}
 }
 
-void Explorerplusplus::OnTreeViewCopy(BOOL bCopy)
+void SaltedExplorer::OnTreeViewCopy(BOOL bCopy)
 {
 	IDataObject		*pClipboardDataObject = NULL;
 	HTREEITEM		hItem;
@@ -402,7 +402,7 @@ void Explorerplusplus::OnTreeViewCopy(BOOL bCopy)
 	}
 }
 
-void Explorerplusplus::OnTreeViewHolderWindowTimer(void)
+void SaltedExplorer::OnTreeViewHolderWindowTimer(void)
 {
 	LPITEMIDLIST	pidlDirectory = NULL;
 	LPITEMIDLIST	pidlCurrentDirectory = NULL;
@@ -427,7 +427,7 @@ void Explorerplusplus::OnTreeViewHolderWindowTimer(void)
 	KillTimer(m_hHolder,0);
 }
 
-void Explorerplusplus::OnTreeViewSelChanged(LPARAM lParam)
+void SaltedExplorer::OnTreeViewSelChanged(LPARAM lParam)
 {
 	NMTREEVIEW	*pnmtv = NULL;
 	TVITEM		*tvItem = NULL;
@@ -464,7 +464,7 @@ void Explorerplusplus::OnTreeViewSelChanged(LPARAM lParam)
 	}
 }
 
-int Explorerplusplus::OnTreeViewBeginLabelEdit(LPARAM lParam)
+int SaltedExplorer::OnTreeViewBeginLabelEdit(LPARAM lParam)
 {
 	NMTVDISPINFO *pdi	= NULL;
 	LPITEMIDLIST pidl	= NULL;
@@ -480,7 +480,7 @@ int Explorerplusplus::OnTreeViewBeginLabelEdit(LPARAM lParam)
 	return FALSE;
 }
 
-int Explorerplusplus::OnTreeViewEndLabelEdit(LPARAM lParam)
+int SaltedExplorer::OnTreeViewEndLabelEdit(LPARAM lParam)
 {
 	NMTVDISPINFO	*pdi = NULL;
 	TCHAR			NewFileName[MAX_PATH];
@@ -517,7 +517,7 @@ int Explorerplusplus::OnTreeViewEndLabelEdit(LPARAM lParam)
 	return TRUE;
 }
 
-LRESULT Explorerplusplus::OnTreeViewKeyDown(LPARAM lParam)
+LRESULT SaltedExplorer::OnTreeViewKeyDown(LPARAM lParam)
 {
 	NMTVKEYDOWN	*nmtvkd = NULL;
 
@@ -566,12 +566,12 @@ LRESULT Explorerplusplus::OnTreeViewKeyDown(LPARAM lParam)
 LRESULT CALLBACK TreeViewHolderProcStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->TreeViewHolderProc(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::TreeViewHolderProc(HWND hwnd,
+LRESULT CALLBACK SaltedExplorer::TreeViewHolderProc(HWND hwnd,
 UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(msg)
@@ -592,7 +592,7 @@ UINT msg,WPARAM wParam,LPARAM lParam)
 	return DefSubclassProc(hwnd,msg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::TreeViewHolderWindowNotifyHandler(LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::TreeViewHolderWindowNotifyHandler(LPARAM lParam)
 {
 	switch(((LPNMHDR)lParam)->code)
 	{
@@ -658,7 +658,7 @@ LRESULT CALLBACK Explorerplusplus::TreeViewHolderWindowNotifyHandler(LPARAM lPar
 	return 0;
 }
 
-LRESULT CALLBACK Explorerplusplus::TreeViewHolderWindowCommandHandler(WPARAM wParam)
+LRESULT CALLBACK SaltedExplorer::TreeViewHolderWindowCommandHandler(WPARAM wParam)
 {
 	switch(LOWORD(wParam))
 	{
@@ -670,7 +670,7 @@ LRESULT CALLBACK Explorerplusplus::TreeViewHolderWindowCommandHandler(WPARAM wPa
 	return 1;
 }
 
-void Explorerplusplus::OnTreeViewSetFileAttributes(void)
+void SaltedExplorer::OnTreeViewSetFileAttributes(void)
 {
 	HTREEITEM hItem = TreeView_GetSelection(m_hTreeView);
 
@@ -704,7 +704,7 @@ void Explorerplusplus::OnTreeViewSetFileAttributes(void)
 	}
 }
 
-void Explorerplusplus::OnTreeViewPaste(void)
+void SaltedExplorer::OnTreeViewPaste(void)
 {
 	HTREEITEM hItem;
 	LPITEMIDLIST pidl = NULL;

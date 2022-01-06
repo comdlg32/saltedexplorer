@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: BookmarkPropertiesDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Bookmark Properties' dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -32,7 +32,7 @@ BOOL g_bShownOnToolbar;
 
 INT_PTR CALLBACK BookmarkPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
@@ -42,7 +42,7 @@ INT_PTR CALLBACK BookmarkPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 
 				pbpi = (BookmarkPropertiesInfo_t *)lParam;
 
-				pContainer = (Explorerplusplus *)pbpi->pContainer;
+				pContainer = (SaltedExplorer *)pbpi->pContainer;
 			}
 			break;
 	}
@@ -50,7 +50,7 @@ INT_PTR CALLBACK BookmarkPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 	return pContainer->BookmarkPropertiesProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::BookmarkPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::BookmarkPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -79,7 +79,7 @@ INT_PTR CALLBACK Explorerplusplus::BookmarkPropertiesProc(HWND hDlg,UINT uMsg,WP
 	return 0;
 }
 
-void Explorerplusplus::OnBookmarkPropertiesInit(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnBookmarkPropertiesInit(HWND hDlg,LPARAM lParam)
 {
 	HWND	hEditName;
 	HWND	hEditLocation;
@@ -113,7 +113,7 @@ void Explorerplusplus::OnBookmarkPropertiesInit(HWND hDlg,LPARAM lParam)
 	SendMessage(hEditName,EM_SETSEL,0,-1);
 }
 
-void Explorerplusplus::OnBookmarkPropertiesOk(HWND hDlg)
+void SaltedExplorer::OnBookmarkPropertiesOk(HWND hDlg)
 {
 	HWND	hEditName;
 	HWND	hEditLocation;
@@ -166,7 +166,7 @@ void Explorerplusplus::OnBookmarkPropertiesOk(HWND hDlg)
 
 INT_PTR CALLBACK BookmarkFolderPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
@@ -176,7 +176,7 @@ INT_PTR CALLBACK BookmarkFolderPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wPa
 
 				pbpi = (BookmarkPropertiesInfo_t *)lParam;
 
-				pContainer = (Explorerplusplus *)pbpi->pContainer;
+				pContainer = (SaltedExplorer *)pbpi->pContainer;
 			}
 			break;
 	}
@@ -184,7 +184,7 @@ INT_PTR CALLBACK BookmarkFolderPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wPa
 	return pContainer->BookmarkFolderPropertiesProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::BookmarkFolderPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::BookmarkFolderPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -213,7 +213,7 @@ INT_PTR CALLBACK Explorerplusplus::BookmarkFolderPropertiesProc(HWND hDlg,UINT u
 	return 0;
 }
 
-void Explorerplusplus::OnBookmarkFolderPropertiesInit(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnBookmarkFolderPropertiesInit(HWND hDlg,LPARAM lParam)
 {
 	HWND		hEditName;
 	HWND		hEditDescription;
@@ -244,7 +244,7 @@ void Explorerplusplus::OnBookmarkFolderPropertiesInit(HWND hDlg,LPARAM lParam)
 	SendMessage(hEditName,EM_SETSEL,0,-1);
 }
 
-void Explorerplusplus::OnBookmarkFolderPropertiesOk(HWND hDlg)
+void SaltedExplorer::OnBookmarkFolderPropertiesOk(HWND hDlg)
 {
 	HWND		hEditName;
 	HWND		hEditDescription;

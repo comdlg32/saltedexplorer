@@ -7,8 +7,8 @@
  * Manages the 'holder window'. This window acts as a generic
  * container for child windows.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

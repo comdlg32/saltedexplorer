@@ -1,21 +1,21 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: EvenSwitcher.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Switches events based on the currently selected window
  * (principally the listview and treeview).
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
 #include "stdafx.h"
 #include "SaltedExplorer.h"
 
-void Explorerplusplus::OnCopyItemPath(void)
+void SaltedExplorer::OnCopyItemPath(void)
 {
 	HWND hFocus;
 
@@ -31,7 +31,7 @@ void Explorerplusplus::OnCopyItemPath(void)
 	}
 }
 
-void Explorerplusplus::OnCopyUniversalPaths(void)
+void SaltedExplorer::OnCopyUniversalPaths(void)
 {
 	HWND hFocus;
 
@@ -47,7 +47,7 @@ void Explorerplusplus::OnCopyUniversalPaths(void)
 	}
 }
 
-void Explorerplusplus::OnCopy(BOOL bCopy)
+void SaltedExplorer::OnCopy(BOOL bCopy)
 {
 	HWND hFocus;
 
@@ -63,7 +63,7 @@ void Explorerplusplus::OnCopy(BOOL bCopy)
 	}
 }
 
-void Explorerplusplus::OnFileRename(void)
+void SaltedExplorer::OnFileRename(void)
 {
 	HWND	hFocus;
 
@@ -87,7 +87,7 @@ void Explorerplusplus::OnFileRename(void)
 	}
 }
 
-void Explorerplusplus::OnFileDelete(BOOL bPermanent)
+void SaltedExplorer::OnFileDelete(BOOL bPermanent)
 {
 	HWND hFocus;
 
@@ -103,7 +103,7 @@ void Explorerplusplus::OnFileDelete(BOOL bPermanent)
 	}
 }
 
-void Explorerplusplus::OnSetFileAttributes(void)
+void SaltedExplorer::OnSetFileAttributes(void)
 {
 	HWND hFocus;
 
@@ -119,7 +119,7 @@ void Explorerplusplus::OnSetFileAttributes(void)
 	}
 }
 
-void Explorerplusplus::OnShowFileProperties(void)
+void SaltedExplorer::OnShowFileProperties(void)
 {
 	HWND hFocus;
 
@@ -135,7 +135,7 @@ void Explorerplusplus::OnShowFileProperties(void)
 	}
 }
 
-void Explorerplusplus::OnRightClick(NMHDR *nmhdr)
+void SaltedExplorer::OnRightClick(NMHDR *nmhdr)
 {
 	if(nmhdr->hwndFrom == m_hActiveListView)
 	{
@@ -166,7 +166,7 @@ void Explorerplusplus::OnRightClick(NMHDR *nmhdr)
 	}
 }
 
-void Explorerplusplus::OnPaste(void)
+void SaltedExplorer::OnPaste(void)
 {
 	HWND hFocus;
 

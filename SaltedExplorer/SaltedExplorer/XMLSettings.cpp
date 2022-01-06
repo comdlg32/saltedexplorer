@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: XMLSettings.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -13,8 +13,8 @@
  *     - No spaces
  *     - First character cannot be a number
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -147,7 +147,7 @@ static ColumnXMLSaveData ColumnData[] =
 
 unsigned long hash_setting(unsigned char *str);
 
-void Explorerplusplus::LoadGenericSettingsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+void SaltedExplorer::LoadGenericSettingsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	BSTR						bstr = NULL;
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
@@ -209,7 +209,7 @@ clean:
 	return;
 }
 
-void Explorerplusplus::SaveGenericSettingsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveGenericSettingsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement					*pe = NULL;
@@ -454,7 +454,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	SaveWindowPositionToXML(pXMLDom,pRoot);
 }
 
-int Explorerplusplus::LoadTabSettingsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+int SaltedExplorer::LoadTabSettingsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -652,7 +652,7 @@ clean:
 	return nTabsCreated;
 }
 
-void Explorerplusplus::SaveTabSettingsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveTabSettingsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement	*pe = NULL;
@@ -675,7 +675,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	pe = NULL;
 }
 
-void Explorerplusplus::SaveTabSettingsToXMLnternal(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pe)
+void SaltedExplorer::SaveTabSettingsToXMLnternal(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pe)
 {
 	MSXML2::IXMLDOMElement	*pParentNode = NULL;
 	MSXML2::IXMLDOMElement	*pColumnsNode = NULL;
@@ -789,7 +789,7 @@ void Explorerplusplus::SaveTabSettingsToXMLnternal(MSXML2::IXMLDOMDocument *pXML
 	SysFreeString(bstr_wsnttt);
 }
 
-int Explorerplusplus::LoadColumnFromXML(MSXML2::IXMLDOMNode *pNode,std::list<Column_t> *pColumns)
+int SaltedExplorer::LoadColumnFromXML(MSXML2::IXMLDOMNode *pNode,std::list<Column_t> *pColumns)
 {
 	MSXML2::IXMLDOMNamedNodeMap	*am = NULL;
 	MSXML2::IXMLDOMNode			*pAttributeNode = NULL;
@@ -873,7 +873,7 @@ int Explorerplusplus::LoadColumnFromXML(MSXML2::IXMLDOMNode *pNode,std::list<Col
 	return iColumnType;
 }
 
-int Explorerplusplus::LoadBookmarksFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+int SaltedExplorer::LoadBookmarksFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -906,7 +906,7 @@ clean:
 and then step down into any children, before traversing
 any sibling nodes (and stepping into their child items,
 etc). */
-void Explorerplusplus::LoadBookmarksFromXMLInternal(MSXML2::IXMLDOMNode *pNode,void *pParentFolder)
+void SaltedExplorer::LoadBookmarksFromXMLInternal(MSXML2::IXMLDOMNode *pNode,void *pParentFolder)
 {
 	MSXML2::IXMLDOMNamedNodeMap	*am = NULL;
 	MSXML2::IXMLDOMNode			*pAttributeNode = NULL;
@@ -1000,7 +1000,7 @@ void Explorerplusplus::LoadBookmarksFromXMLInternal(MSXML2::IXMLDOMNode *pNode,v
 	}
 }
 
-void Explorerplusplus::SaveBookmarksToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveBookmarksToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement		*pe = NULL;
@@ -1035,7 +1035,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	SysFreeString(bstr_wsnt);
 }
 
-void Explorerplusplus::SaveBookmarksToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveBookmarksToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pe,Bookmark_t *pBookmark)
 {
 	MSXML2::IXMLDOMElement		*pParentNode = NULL;
@@ -1139,7 +1139,7 @@ MSXML2::IXMLDOMElement *pe,Bookmark_t *pBookmark)
 	SysFreeString(bstr_wsntt);
 }
 
-int Explorerplusplus::LoadDefaultColumnsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+int SaltedExplorer::LoadDefaultColumnsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -1212,7 +1212,7 @@ clean:
 	return 0;
 }
 
-void Explorerplusplus::SaveDefaultColumnsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveDefaultColumnsToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement	*pColumnsNode = NULL;
@@ -1234,7 +1234,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	pColumnsNode = NULL;
 }
 
-void Explorerplusplus::SaveDefaultColumnsToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveDefaultColumnsToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pColumnsNode)
 {
 	int DEFAULT_INDENT = 2;
@@ -1248,7 +1248,7 @@ MSXML2::IXMLDOMElement *pColumnsNode)
 	SaveColumnToXML(pXMLDom,pColumnsNode,&m_MyNetworkPlacesColumnList,_T("NetworkPlaces"),DEFAULT_INDENT);
 }
 
-void Explorerplusplus::SaveColumnToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveColumnToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pColumnsNode,std::list<Column_t> *pColumns,
 TCHAR *szColumnSet,int iIndent)
 {
@@ -1290,7 +1290,7 @@ TCHAR *szColumnSet,int iIndent)
 	SysFreeString(bstr_indent);
 }
 
-void Explorerplusplus::SaveWindowPositionToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveWindowPositionToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement	*pWndPosNode = NULL;
@@ -1312,7 +1312,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	pWndPosNode = NULL;
 }
 
-void Explorerplusplus::SaveWindowPositionToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveWindowPositionToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pWndPosNode)
 {
 	MSXML2::IXMLDOMElement	*pParentNode = NULL;
@@ -1340,7 +1340,7 @@ MSXML2::IXMLDOMElement *pWndPosNode)
 	pParentNode = NULL;
 }
 
-void Explorerplusplus::LoadApplicationToolbarFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+void SaltedExplorer::LoadApplicationToolbarFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -1370,7 +1370,7 @@ clean:
 and then step down into any children, before traversing
 any sibling nodes (and stepping into their child items,
 etc). */
-void Explorerplusplus::LoadApplicationToolbarFromXMLInternal(MSXML2::IXMLDOMNode *pNode)
+void SaltedExplorer::LoadApplicationToolbarFromXMLInternal(MSXML2::IXMLDOMNode *pNode)
 {
 	MSXML2::IXMLDOMNamedNodeMap	*am = NULL;
 	MSXML2::IXMLDOMNode			*pAttributeNode = NULL;
@@ -1439,7 +1439,7 @@ void Explorerplusplus::LoadApplicationToolbarFromXMLInternal(MSXML2::IXMLDOMNode
 	}
 }
 
-void Explorerplusplus::SaveApplicationToolbarToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveApplicationToolbarToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement		*pe = NULL;
@@ -1467,7 +1467,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	SysFreeString(bstr_wsnt);
 }
 
-void Explorerplusplus::SaveApplicationToolbarToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveApplicationToolbarToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pe,ApplicationButton_t *pab)
 {
 	MSXML2::IXMLDOMElement		*pParentNode = NULL;
@@ -1502,7 +1502,7 @@ MSXML2::IXMLDOMElement *pe,ApplicationButton_t *pab)
 	SysFreeString(bstr_wsntt);
 }
 
-void Explorerplusplus::LoadColorRulesFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+void SaltedExplorer::LoadColorRulesFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -1533,7 +1533,7 @@ clean:
 and then step down into any children, before traversing
 any sibling nodes (and stepping into their child items,
 etc). */
-void Explorerplusplus::LoadColorRulesFromXMLInternal(MSXML2::IXMLDOMNode *pNode)
+void SaltedExplorer::LoadColorRulesFromXMLInternal(MSXML2::IXMLDOMNode *pNode)
 {
 	MSXML2::IXMLDOMNamedNodeMap	*am = NULL;
 	MSXML2::IXMLDOMNode			*pAttributeNode = NULL;
@@ -1619,7 +1619,7 @@ void Explorerplusplus::LoadColorRulesFromXMLInternal(MSXML2::IXMLDOMNode *pNode)
 	}
 }
 
-void Explorerplusplus::SaveColorRulesToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveColorRulesToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement		*pe = NULL;
@@ -1647,7 +1647,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	SysFreeString(bstr_wsnt);
 }
 
-void Explorerplusplus::SaveColorRulesToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveColorRulesToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
 	MSXML2::IXMLDOMElement *pe,const ColorRule_t &ColorRule)
 {
 	MSXML2::IXMLDOMElement		*pParentNode = NULL;
@@ -1682,7 +1682,7 @@ void Explorerplusplus::SaveColorRulesToXMLInternal(MSXML2::IXMLDOMDocument *pXML
 	SysFreeString(bstr_wsntt);
 }
 
-void Explorerplusplus::LoadToolbarInformationFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+void SaltedExplorer::LoadToolbarInformationFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -1769,7 +1769,7 @@ clean:
 	if (pNode) pNode->Release();
 }
 
-void Explorerplusplus::SaveToolbarInformationToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveToolbarInformationToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement	*pe = NULL;
@@ -1792,7 +1792,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	pe = NULL;
 }
 
-void Explorerplusplus::SaveToolbarInformationToXMLnternal(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveToolbarInformationToXMLnternal(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pe)
 {
 	MSXML2::IXMLDOMElement	*pParentNode = NULL;
@@ -1831,7 +1831,7 @@ MSXML2::IXMLDOMElement *pe)
 	SysFreeString(bstr_wsnttt);
 }
 
-void Explorerplusplus::LoadStateFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+void SaltedExplorer::LoadStateFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
@@ -1926,7 +1926,7 @@ clean:
 	if (pNode) pNode->Release();
 }
 
-void Explorerplusplus::SaveStateToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveStateToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement	*pe = NULL;
@@ -1974,7 +1974,7 @@ unsigned long hash_setting(unsigned char *str)
 
 
 /* Maps attribute name to their corresponding internal variable. */
-void Explorerplusplus::MapAttributeToValue(MSXML2::IXMLDOMNode *pNode,
+void SaltedExplorer::MapAttributeToValue(MSXML2::IXMLDOMNode *pNode,
 WCHAR *wszName,WCHAR *wszValue)
 {
 	unsigned char	szName[512];
@@ -2370,7 +2370,7 @@ WCHAR *wszName,WCHAR *wszValue)
 	}
 }
 
-void Explorerplusplus::MapTabAttributeValue(WCHAR *wszName,WCHAR *wszValue,
+void SaltedExplorer::MapTabAttributeValue(WCHAR *wszName,WCHAR *wszValue,
 InitialSettings_t *pSettings,TabInfo_t *pTabInfo)
 {
 	if(lstrcmp(wszName,L"ApplyFilter") == 0)
@@ -2433,7 +2433,7 @@ InitialSettings_t *pSettings,TabInfo_t *pTabInfo)
 	}
 }
 
-Explorerplusplus::CLoadSaveXML::CLoadSaveXML(Explorerplusplus *pContainer,BOOL bLoad)
+SaltedExplorer::CLoadSaveXML::CLoadSaveXML(SaltedExplorer *pContainer,BOOL bLoad)
 {
 	m_iRefCount = 1;
 
@@ -2453,7 +2453,7 @@ Explorerplusplus::CLoadSaveXML::CLoadSaveXML(Explorerplusplus *pContainer,BOOL b
 	}
 }
 
-Explorerplusplus::CLoadSaveXML::~CLoadSaveXML()
+SaltedExplorer::CLoadSaveXML::~CLoadSaveXML()
 {
 	if(m_bLoad)
 		ReleaseLoadEnvironment();
@@ -2462,7 +2462,7 @@ Explorerplusplus::CLoadSaveXML::~CLoadSaveXML()
 }
 
 /* IUnknown interface members. */
-HRESULT __stdcall Explorerplusplus::CLoadSaveXML::QueryInterface(REFIID iid, void **ppvObject)
+HRESULT __stdcall SaltedExplorer::CLoadSaveXML::QueryInterface(REFIID iid, void **ppvObject)
 {
 	*ppvObject = NULL;
 
@@ -2475,12 +2475,12 @@ HRESULT __stdcall Explorerplusplus::CLoadSaveXML::QueryInterface(REFIID iid, voi
 	return E_NOINTERFACE;
 }
 
-ULONG __stdcall Explorerplusplus::CLoadSaveXML::AddRef(void)
+ULONG __stdcall SaltedExplorer::CLoadSaveXML::AddRef(void)
 {
 	return ++m_iRefCount;
 }
 
-ULONG __stdcall Explorerplusplus::CLoadSaveXML::Release(void)
+ULONG __stdcall SaltedExplorer::CLoadSaveXML::Release(void)
 {
 	m_iRefCount--;
 	
@@ -2493,7 +2493,7 @@ ULONG __stdcall Explorerplusplus::CLoadSaveXML::Release(void)
 	return m_iRefCount;
 }
 
-void Explorerplusplus::CLoadSaveXML::InitializeLoadEnvironment(void)
+void SaltedExplorer::CLoadSaveXML::InitializeLoadEnvironment(void)
 {
 	TCHAR szConfigFile[MAX_PATH];
 	VARIANT_BOOL status;
@@ -2508,9 +2508,9 @@ void Explorerplusplus::CLoadSaveXML::InitializeLoadEnvironment(void)
 
 	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
-	PathAppend(szConfigFile,NExplorerplusplus::XML_FILENAME);
+	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
-	var = NXMLSettings::VariantString(NExplorerplusplus::XML_FILENAME);
+	var = NXMLSettings::VariantString(NSaltedExplorer::XML_FILENAME);
 	m_pXMLDom->load(var,&status);
 
 	if(status != VARIANT_TRUE)
@@ -2524,7 +2524,7 @@ clean:
 	return;
 }
 
-void Explorerplusplus::CLoadSaveXML::ReleaseLoadEnvironment(void)
+void SaltedExplorer::CLoadSaveXML::ReleaseLoadEnvironment(void)
 {
 	if(m_bLoadedCorrectly)
 	{
@@ -2533,7 +2533,7 @@ void Explorerplusplus::CLoadSaveXML::ReleaseLoadEnvironment(void)
 	}
 }
 
-void Explorerplusplus::CLoadSaveXML::InitializeSaveEnvironment(void)
+void SaltedExplorer::CLoadSaveXML::InitializeSaveEnvironment(void)
 {
 	MSXML2::IXMLDOMProcessingInstruction	*pi = NULL;
 	MSXML2::IXMLDOMComment					*pc = NULL;
@@ -2570,7 +2570,7 @@ void Explorerplusplus::CLoadSaveXML::InitializeSaveEnvironment(void)
 
 	/* Create the root element. CANNOT use '+' signs
 	within the element name. */
-	bstr = SysAllocString(L"ExplorerPlusPlus");
+	bstr = SysAllocString(L"SaltedExplorer");
 	m_pXMLDom->createElement(bstr,&m_pRoot);
 	SysFreeString(bstr);
 	bstr = NULL;
@@ -2587,7 +2587,7 @@ clean:
 	if (pc) pc->Release();
 }
 
-void Explorerplusplus::CLoadSaveXML::ReleaseSaveEnvironment(void)
+void SaltedExplorer::CLoadSaveXML::ReleaseSaveEnvironment(void)
 {
 	HANDLE	hProcess;
 	TCHAR	szConfigFile[MAX_PATH];
@@ -2609,7 +2609,7 @@ void Explorerplusplus::CLoadSaveXML::ReleaseSaveEnvironment(void)
 	CloseHandle(hProcess);
 
 	PathRemoveFileSpec(szConfigFile);
-	PathAppend(szConfigFile,NExplorerplusplus::XML_FILENAME);
+	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
 	var = NXMLSettings::VariantString(szConfigFile);
 	m_pXMLDom->save(var);
@@ -2621,82 +2621,82 @@ void Explorerplusplus::CLoadSaveXML::ReleaseSaveEnvironment(void)
 	m_pXMLDom = NULL;
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadGenericSettings(void)
+void SaltedExplorer::CLoadSaveXML::LoadGenericSettings(void)
 {
 	m_pContainer->LoadGenericSettingsFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadBookmarks(void)
+void SaltedExplorer::CLoadSaveXML::LoadBookmarks(void)
 {
 	m_pContainer->LoadBookmarksFromXML(m_pXMLDom);
 }
 
-int Explorerplusplus::CLoadSaveXML::LoadPreviousTabs(void)
+int SaltedExplorer::CLoadSaveXML::LoadPreviousTabs(void)
 {
 	return m_pContainer->LoadTabSettingsFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadDefaultColumns(void)
+void SaltedExplorer::CLoadSaveXML::LoadDefaultColumns(void)
 {
 	m_pContainer->LoadDefaultColumnsFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadApplicationToolbar(void)
+void SaltedExplorer::CLoadSaveXML::LoadApplicationToolbar(void)
 {
 	m_pContainer->LoadApplicationToolbarFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadToolbarInformation(void)
+void SaltedExplorer::CLoadSaveXML::LoadToolbarInformation(void)
 {
 	m_pContainer->LoadToolbarInformationFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadColorRules(void)
+void SaltedExplorer::CLoadSaveXML::LoadColorRules(void)
 {
 	m_pContainer->LoadColorRulesFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::LoadState(void)
+void SaltedExplorer::CLoadSaveXML::LoadState(void)
 {
 	m_pContainer->LoadStateFromXML(m_pXMLDom);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveGenericSettings(void)
+void SaltedExplorer::CLoadSaveXML::SaveGenericSettings(void)
 {
 	m_pContainer->SaveGenericSettingsToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveBookmarks(void)
+void SaltedExplorer::CLoadSaveXML::SaveBookmarks(void)
 {
 	m_pContainer->SaveBookmarksToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveTabs(void)
+void SaltedExplorer::CLoadSaveXML::SaveTabs(void)
 {
 	m_pContainer->SaveTabSettingsToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveDefaultColumns(void)
+void SaltedExplorer::CLoadSaveXML::SaveDefaultColumns(void)
 {
 	m_pContainer->SaveDefaultColumnsToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveApplicationToolbar(void)
+void SaltedExplorer::CLoadSaveXML::SaveApplicationToolbar(void)
 {
 	m_pContainer->SaveApplicationToolbarToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveToolbarInformation(void)
+void SaltedExplorer::CLoadSaveXML::SaveToolbarInformation(void)
 {
 	m_pContainer->SaveToolbarInformationToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveColorRules(void)
+void SaltedExplorer::CLoadSaveXML::SaveColorRules(void)
 {
 	m_pContainer->SaveColorRulesToXML(m_pXMLDom,m_pRoot);
 }
 
-void Explorerplusplus::CLoadSaveXML::SaveState(void)
+void SaltedExplorer::CLoadSaveXML::SaveState(void)
 {
 	m_pContainer->SaveStateToXML(m_pXMLDom,m_pRoot);
 }
@@ -2726,7 +2726,7 @@ BOOL LoadWindowPositionFromXML(WINDOWPLACEMENT *pwndpl)
 
 	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
-	PathAppend(szConfigFile,NExplorerplusplus::XML_FILENAME);
+	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
 	var = NXMLSettings::VariantString(szConfigFile);
 	pXMLDom->load(var,&status);
@@ -2821,7 +2821,7 @@ BOOL LoadAllowMultipleInstancesFromXML(void)
 
 	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
-	PathAppend(szConfigFile,NExplorerplusplus::XML_FILENAME);
+	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
 	var = NXMLSettings::VariantString(szConfigFile);
 	pXMLDom->load(var,&status);

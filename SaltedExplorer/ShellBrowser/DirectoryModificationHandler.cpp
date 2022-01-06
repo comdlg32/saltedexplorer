@@ -8,8 +8,8 @@
  * including adding, deleting and renaming
  * items.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

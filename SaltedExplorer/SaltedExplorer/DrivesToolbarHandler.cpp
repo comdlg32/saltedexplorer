@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: DrivesToolbarHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the drives toolbar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -19,12 +19,12 @@
 LRESULT CALLBACK DrivesToolbarSubclassStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->DrivesToolbarSubclass(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::DrivesToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::DrivesToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -62,7 +62,7 @@ LRESULT CALLBACK Explorerplusplus::DrivesToolbarSubclass(HWND hwnd,UINT uMsg,WPA
 	return DefSubclassProc(hwnd,uMsg,wParam,lParam);
 }
 
-void Explorerplusplus::InsertDrivesIntoDrivesToolbar(void)
+void SaltedExplorer::InsertDrivesIntoDrivesToolbar(void)
 {
 	HIMAGELIST	SmallIcons;
 	TCHAR		*pszDriveStrings = NULL;
@@ -97,7 +97,7 @@ void Explorerplusplus::InsertDrivesIntoDrivesToolbar(void)
 	free(pszDriveStrings);
 }
 
-LRESULT Explorerplusplus::InsertDriveIntoDrivesToolbar(TCHAR *szDrive)
+LRESULT SaltedExplorer::InsertDriveIntoDrivesToolbar(TCHAR *szDrive)
 {
 	TBBUTTON	tbButton;
 	SHFILEINFO	shfi;
@@ -164,7 +164,7 @@ disconnected from the system (i.e. a removable
 device may have been ejected).
 Returns TRUE if the drive was found and removed;
 FALSE otherwise. */
-LRESULT Explorerplusplus::RemoveDriveFromDrivesToolbar(TCHAR *szDrive)
+LRESULT SaltedExplorer::RemoveDriveFromDrivesToolbar(TCHAR *szDrive)
 {
 	TBBUTTON	tbButton;
 	TCHAR		*pszDrivePath = NULL;
@@ -199,7 +199,7 @@ LRESULT Explorerplusplus::RemoveDriveFromDrivesToolbar(TCHAR *szDrive)
 
 /* Updates an items icon. This may be necessary,
 for example, if a cd/dvd is inserted/removed. */
-void Explorerplusplus::UpdateDrivesToolbarIcon(TCHAR *szDrive)
+void SaltedExplorer::UpdateDrivesToolbarIcon(TCHAR *szDrive)
 {
 	TBBUTTON tbButton;
 	SHFILEINFO shfi;
@@ -236,7 +236,7 @@ void Explorerplusplus::UpdateDrivesToolbarIcon(TCHAR *szDrive)
 	}
 }
 
-void Explorerplusplus::DrivesToolbarRefreshAllIcons(void)
+void SaltedExplorer::DrivesToolbarRefreshAllIcons(void)
 {
 	TBBUTTON tbButton;
 	SHFILEINFO shfi;

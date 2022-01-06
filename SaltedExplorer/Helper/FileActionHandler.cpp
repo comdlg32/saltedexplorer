@@ -7,8 +7,8 @@
  * Performs file actions and saves information about them.
  * Also allows file actions to be undone.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

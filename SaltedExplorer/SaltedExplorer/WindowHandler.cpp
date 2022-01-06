@@ -1,17 +1,3 @@
-/******************************************************************
- *
- * Project: Explorer++
- * File: WindowHandler.cpp
- * License: GPL - See COPYING in the top level directory
- *
- * Manages the creation of windows as well
- * as housing various window procedures.
- *
- * Written by David Erceg
- * www.explorerplusplus.com
- *
- *****************************************************************/
-
 #include "stdafx.h"
 #include "SaltedExplorer.h"
 #include "SaltedExplorer_internal.h"
@@ -51,7 +37,7 @@ DWORD RebarStyles			=	WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS|
 
 
 
-void Explorerplusplus::CreateFolderControls(void)
+void SaltedExplorer::CreateFolderControls(void)
 {
 	TCHAR szTemp[32];
 	UINT uStyle = WS_CHILD|WS_CLIPSIBLINGS|WS_CLIPCHILDREN;
@@ -79,7 +65,7 @@ void Explorerplusplus::CreateFolderControls(void)
 	m_hFoldersToolbar = CreateTabToolbar(m_hHolder,FOLDERS_TOOLBAR_CLOSE,szTemp);
 }
 
-void Explorerplusplus::CreateMainControls(void)
+void SaltedExplorer::CreateMainControls(void)
 {
 	SIZE	sz;
 	DWORD	ToolbarSize;
@@ -100,6 +86,9 @@ void Explorerplusplus::CreateMainControls(void)
 	{
 		switch(m_ToolbarInformation[i].wID)
 		{
+		case ID_MENUBAR:
+			CreateMenuBar();
+			break;
 		case ID_MAINTOOLBAR:
 			CreateMainToolbar();
 			ToolbarSize = (DWORD)SendMessage(m_hMainToolbar,TB_GETBUTTONSIZE,0,0);
@@ -176,7 +165,10 @@ void Explorerplusplus::CreateMainControls(void)
 	}
 }
 
-void Explorerplusplus::CreateMainToolbar(void)
+void SaltedExplorer::CreateMenuBar(void)
+{
+}
+void SaltedExplorer::CreateMainToolbar(void)
 {
 	m_hMainToolbar = CreateToolbar(m_hMainRebar,MainToolbarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_EX_DRAWDDARROWS|
@@ -223,7 +215,7 @@ void Explorerplusplus::CreateMainToolbar(void)
 	}
 }
 
-void Explorerplusplus::CreateAddressToolbar(void)
+void SaltedExplorer::CreateAddressToolbar(void)
 {
 	HIMAGELIST	himl;
 	HBITMAP		hb;
@@ -268,7 +260,7 @@ void Explorerplusplus::CreateAddressToolbar(void)
 	SendMessage(m_hAddressToolbar,TB_ADDBUTTONS,(WPARAM)iCurrent,(LPARAM)tbButton);
 }
 
-void Explorerplusplus::CreateAddressBar(void)
+void SaltedExplorer::CreateAddressBar(void)
 {
 	HWND		hEdit;
 	HIMAGELIST	SmallIcons;
@@ -288,7 +280,7 @@ void Explorerplusplus::CreateAddressBar(void)
 	SHAutoComplete(hEdit,SHACF_FILESYSTEM|SHACF_AUTOSUGGEST_FORCE_ON);
 }
 
-void Explorerplusplus::CreateBookmarksToolbar(void)
+void SaltedExplorer::CreateBookmarksToolbar(void)
 {
 	m_hBookmarksToolbar = CreateToolbar(m_hMainRebar,BookmarkToolbarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_EX_DRAWDDARROWS|
@@ -306,7 +298,7 @@ void Explorerplusplus::CreateBookmarksToolbar(void)
 	RegisterDragDrop(m_hBookmarksToolbar,pbtd);
 }
 
-void Explorerplusplus::CreateDrivesToolbar(void)
+void SaltedExplorer::CreateDrivesToolbar(void)
 {
 	m_hDrivesToolbar = CreateToolbar(m_hMainRebar,BookmarkToolbarStyles,
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
@@ -319,7 +311,7 @@ void Explorerplusplus::CreateDrivesToolbar(void)
 	InsertDrivesIntoDrivesToolbar();
 }
 
-HWND Explorerplusplus::CreateTabToolbar(HWND hParent,int idCommand,TCHAR *szTip)
+HWND SaltedExplorer::CreateTabToolbar(HWND hParent,int idCommand,TCHAR *szTip)
 {
 	HWND TabToolbar;
 	TBBUTTON tbButton[1];
@@ -366,12 +358,12 @@ HWND Explorerplusplus::CreateTabToolbar(HWND hParent,int idCommand,TCHAR *szTip)
 LRESULT CALLBACK EditSubclassStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->EditSubclass(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::EditSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::EditSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(msg)
 	{
@@ -403,12 +395,12 @@ LRESULT CALLBACK Explorerplusplus::EditSubclass(HWND hwnd,UINT msg,WPARAM wParam
 LRESULT CALLBACK RebarSubclassStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->RebarSubclass(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::RebarSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::RebarSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(msg)
 	{
@@ -537,7 +529,7 @@ LRESULT CALLBACK Explorerplusplus::RebarSubclass(HWND hwnd,UINT msg,WPARAM wPara
 	return DefSubclassProc(hwnd,msg,wParam,lParam);
 }
 
-void Explorerplusplus::SetStatusBarParts(int width)
+void SaltedExplorer::SetStatusBarParts(int width)
 {
 	int Parts[3];
 
@@ -548,7 +540,7 @@ void Explorerplusplus::SetStatusBarParts(int width)
 	SendMessage(m_hStatusBar,SB_SETPARTS,3,(LPARAM)Parts);
 }
 
-void Explorerplusplus::ResizeWindows(void)
+void SaltedExplorer::ResizeWindows(void)
 {
 	RECT rc;
 
@@ -558,7 +550,7 @@ void Explorerplusplus::ResizeWindows(void)
 }
 
 /* TODO: This should be linked to OnSize(). */
-void Explorerplusplus::SetListViewInitialPosition(HWND hListView)
+void SaltedExplorer::SetListViewInitialPosition(HWND hListView)
 {
 	RECT			rc;
 	int				MainWindowWidth;
@@ -622,7 +614,7 @@ void Explorerplusplus::SetListViewInitialPosition(HWND hListView)
 	}
 }
 
-void Explorerplusplus::ToggleFolders(void)
+void SaltedExplorer::ToggleFolders(void)
 {
 	m_bShowFolders = !m_bShowFolders;
 	lShowWindow(m_hHolder,m_bShowFolders);
@@ -632,7 +624,7 @@ void Explorerplusplus::ToggleFolders(void)
 	ResizeWindows();
 }
 
-void Explorerplusplus::InsertToolbarButtons(void)
+void SaltedExplorer::InsertToolbarButtons(void)
 {
 	std::list<ToolbarButton_t>::iterator	itr;
 	TBBUTTON						*ptbButton = NULL;
@@ -678,7 +670,7 @@ void Explorerplusplus::InsertToolbarButtons(void)
 	free(ptbButton);
 }
 
-void Explorerplusplus::InsertToolbarButton(ToolbarButton_t *ptb,int iPos)
+void SaltedExplorer::InsertToolbarButton(ToolbarButton_t *ptb,int iPos)
 {
 	TBBUTTON	tbButton;
 	BYTE		StandardStyle;
@@ -716,23 +708,23 @@ void Explorerplusplus::InsertToolbarButton(ToolbarButton_t *ptb,int iPos)
 	HandleToolbarItemStates();
 }
 
-void Explorerplusplus::DeleteToolbarButton(int iButton)
+void SaltedExplorer::DeleteToolbarButton(int iButton)
 {
 	SendMessage(m_hMainToolbar,TB_DELETEBUTTON,iButton,0);
 }
 
-BOOL Explorerplusplus::OnTBQueryInsert(LPARAM lParam)
+BOOL SaltedExplorer::OnTBQueryInsert(LPARAM lParam)
 {
 	return TRUE;
 }
 
-BOOL Explorerplusplus::OnTBQueryDelete(LPARAM lParam)
+BOOL SaltedExplorer::OnTBQueryDelete(LPARAM lParam)
 {
 	/* All buttons can be deleted. */
 	return TRUE;
 }
 
-BOOL Explorerplusplus::OnTBGetButtonInfo(LPARAM lParam)
+BOOL SaltedExplorer::OnTBGetButtonInfo(LPARAM lParam)
 {
 	NMTOOLBAR		*pnmtb = NULL;
 	static TCHAR	szText[64];
@@ -762,17 +754,17 @@ BOOL Explorerplusplus::OnTBGetButtonInfo(LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::OnTBSave(LPARAM lParam)
+void SaltedExplorer::OnTBSave(LPARAM lParam)
 {
 	/* Can add custom information here. */
 }
 
-BOOL Explorerplusplus::OnTBRestore(LPARAM lParam)
+BOOL SaltedExplorer::OnTBRestore(LPARAM lParam)
 {
 	return 0;
 }
 
-void Explorerplusplus::OnTBReset(void)
+void SaltedExplorer::OnTBReset(void)
 {
 	int nButtons;
 	int i = 0;
@@ -786,7 +778,7 @@ void Explorerplusplus::OnTBReset(void)
 	HandleToolbarItemStates();
 }
 
-void Explorerplusplus::OnTBGetInfoTip(LPARAM lParam)
+void SaltedExplorer::OnTBGetInfoTip(LPARAM lParam)
 {
 	NMTBGETINFOTIP	*ptbgit = NULL;
 	LPITEMIDLIST	pidl = NULL;
@@ -904,7 +896,7 @@ void Explorerplusplus::OnTBGetInfoTip(LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::OnAddressBarBeginDrag(void)
+void SaltedExplorer::OnAddressBarBeginDrag(void)
 {
 	IDragSourceHelper *pDragSourceHelper = NULL;
 	IDropSource *pDropSource = NULL;
@@ -1013,7 +1005,7 @@ void Explorerplusplus::OnAddressBarBeginDrag(void)
 	}
 }
 
-void Explorerplusplus::AdjustMainToolbarSize(void)
+void SaltedExplorer::AdjustMainToolbarSize(void)
 {
 	HIMAGELIST *phiml = NULL;
 	int cx;

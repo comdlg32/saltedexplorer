@@ -6,8 +6,8 @@
  *
  * Provides a degree of abstraction for a status bar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

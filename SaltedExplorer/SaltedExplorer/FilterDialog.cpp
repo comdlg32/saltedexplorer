@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: FilterDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Filter' dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -25,7 +25,7 @@
 const TCHAR CFilterDialogPersistentSettings::SETTINGS_KEY[] = _T("Filter");
 
 CFilterDialog::CFilterDialog(HINSTANCE hInstance,
-	int iResource,HWND hParent,IExplorerplusplus *pexpp) :
+	int iResource,HWND hParent,ISaltedExplorer *pexpp) :
 CBaseDialog(hInstance,iResource,hParent,true)
 {
 	m_pexpp = pexpp;

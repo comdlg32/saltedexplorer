@@ -6,8 +6,8 @@
  *
  * Handles directory modifications for the CMyTreeView class.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

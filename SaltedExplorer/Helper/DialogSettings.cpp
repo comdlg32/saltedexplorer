@@ -8,8 +8,8 @@
  * is saved automatically (if required); all other
  * settings must be explicitly specified.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

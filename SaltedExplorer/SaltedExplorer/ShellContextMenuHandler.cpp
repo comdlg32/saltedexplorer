@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ShellContextMenuHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles shell context menus (such as file
  * context menus, and the new menu).
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -20,7 +20,7 @@
 
 #define MENU_OPEN_IN_NEW_TAB	(MAX_SHELL_MENU_ID + 1)
 
-void Explorerplusplus::AddMenuEntries(LPITEMIDLIST pidlParent,
+void SaltedExplorer::AddMenuEntries(LPITEMIDLIST pidlParent,
 	const std::list<LPITEMIDLIST> &pidlItemList,DWORD_PTR dwData,HMENU hMenu)
 {
 	assert(dwData != NULL);
@@ -67,7 +67,7 @@ void Explorerplusplus::AddMenuEntries(LPITEMIDLIST pidlParent,
 	}
 }
 
-BOOL Explorerplusplus::HandleShellMenuItem(LPITEMIDLIST pidlParent,
+BOOL SaltedExplorer::HandleShellMenuItem(LPITEMIDLIST pidlParent,
 	const std::list<LPITEMIDLIST> &pidlItemList,DWORD_PTR dwData,TCHAR *szCmd)
 {
 	FileContextMenuInfo_t *pfcmi = reinterpret_cast<FileContextMenuInfo_t *>(dwData);
@@ -142,7 +142,7 @@ BOOL Explorerplusplus::HandleShellMenuItem(LPITEMIDLIST pidlParent,
 	return FALSE;
 }
 
-void Explorerplusplus::HandleCustomMenuItem(LPITEMIDLIST pidlParent,
+void SaltedExplorer::HandleCustomMenuItem(LPITEMIDLIST pidlParent,
 	const std::list<LPITEMIDLIST> &pidlItemList,int iCmd)
 {
 	switch(iCmd)
@@ -178,13 +178,13 @@ void Explorerplusplus::HandleCustomMenuItem(LPITEMIDLIST pidlParent,
 	}
 }
 
-HRESULT Explorerplusplus::ShowMultipleFileProperties(LPITEMIDLIST pidlDirectory,
+HRESULT SaltedExplorer::ShowMultipleFileProperties(LPITEMIDLIST pidlDirectory,
 LPCITEMIDLIST *ppidl,int nFiles)
 {
 	return ExecuteActionFromContextMenu(pidlDirectory,ppidl,nFiles,_T("properties"),0);
 }
 
-HRESULT Explorerplusplus::ExecuteActionFromContextMenu(LPITEMIDLIST pidlDirectory,
+HRESULT SaltedExplorer::ExecuteActionFromContextMenu(LPITEMIDLIST pidlDirectory,
 LPCITEMIDLIST *ppidl,int nFiles,TCHAR *szAction,DWORD fMask)
 {
 	assert(pidlDirectory != NULL);
@@ -272,7 +272,7 @@ LPCITEMIDLIST *ppidl,int nFiles,TCHAR *szAction,DWORD fMask)
 	return hr;
 }
 
-HRESULT Explorerplusplus::ProcessShellMenuCommand(IContextMenu *pContextMenu,
+HRESULT SaltedExplorer::ProcessShellMenuCommand(IContextMenu *pContextMenu,
 	UINT CmdIDOffset,UINT iStartOffset)
 {
 	assert(pContextMenu != NULL);

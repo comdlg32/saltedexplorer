@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ApplicationToolbarDropHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles drag and drop for the application toolbar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -18,31 +18,31 @@
 
 #define GENERAL_ALLOCATION_UNIT	1024
 
-Explorerplusplus::CApplicationToolbarDrop::CApplicationToolbarDrop(Explorerplusplus *pContainer)
+SaltedExplorer::CApplicationToolbarDrop::CApplicationToolbarDrop(SaltedExplorer *pContainer)
 {
 	m_pContainer = pContainer;
 
 	InitializeDragDropHelpers();
 }
 
-Explorerplusplus::CApplicationToolbarDrop::~CApplicationToolbarDrop()
+SaltedExplorer::CApplicationToolbarDrop::~CApplicationToolbarDrop()
 {
 
 }
 
-HRESULT __stdcall Explorerplusplus::CApplicationToolbarDrop::QueryInterface(REFIID iid, void **ppvObject)
+HRESULT __stdcall SaltedExplorer::CApplicationToolbarDrop::QueryInterface(REFIID iid, void **ppvObject)
 {
 	*ppvObject = NULL;
 
 	return E_NOINTERFACE;
 }
 
-ULONG __stdcall Explorerplusplus::CApplicationToolbarDrop::AddRef(void)
+ULONG __stdcall SaltedExplorer::CApplicationToolbarDrop::AddRef(void)
 {
 	return ++m_iRefCount;
 }
 
-ULONG __stdcall Explorerplusplus::CApplicationToolbarDrop::Release(void)
+ULONG __stdcall SaltedExplorer::CApplicationToolbarDrop::Release(void)
 {
 	m_iRefCount--;
 	
@@ -55,7 +55,7 @@ ULONG __stdcall Explorerplusplus::CApplicationToolbarDrop::Release(void)
 	return m_iRefCount;
 }
 
-HRESULT _stdcall Explorerplusplus::CApplicationToolbarDrop::DragEnter(IDataObject *pDataObject,
+HRESULT _stdcall SaltedExplorer::CApplicationToolbarDrop::DragEnter(IDataObject *pDataObject,
 DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect)
 {
 	FORMATETC	ftc = {CF_HDROP,0,DVASPECT_CONTENT,-1,TYMED_HGLOBAL};
@@ -84,7 +84,7 @@ DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect)
 	return hr;
 }
 
-HRESULT _stdcall Explorerplusplus::CApplicationToolbarDrop::DragOver(DWORD grfKeyState,
+HRESULT _stdcall SaltedExplorer::CApplicationToolbarDrop::DragOver(DWORD grfKeyState,
 POINTL pt,DWORD *pdwEffect)
 {
 	*pdwEffect = DROPEFFECT_COPY;
@@ -95,14 +95,14 @@ POINTL pt,DWORD *pdwEffect)
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::CApplicationToolbarDrop::DragLeave(void)
+HRESULT _stdcall SaltedExplorer::CApplicationToolbarDrop::DragLeave(void)
 {
 	m_pDropTargetHelper->DragLeave();
 
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::CApplicationToolbarDrop::Drop(IDataObject *pDataObject,
+HRESULT _stdcall SaltedExplorer::CApplicationToolbarDrop::Drop(IDataObject *pDataObject,
 DWORD grfKeyState,POINTL ptl,DWORD *pdwEffect)
 {
 	FORMATETC		ftc;
@@ -221,7 +221,7 @@ DWORD grfKeyState,POINTL ptl,DWORD *pdwEffect)
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::CApplicationToolbarDrop::InitializeDragDropHelpers(void)
+HRESULT SaltedExplorer::CApplicationToolbarDrop::InitializeDragDropHelpers(void)
 {
 	HRESULT hr;
 

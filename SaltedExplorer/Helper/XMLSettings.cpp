@@ -7,8 +7,8 @@
  * XML helper functions. Intended to be used when
  * reading from/writing to an XML file.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

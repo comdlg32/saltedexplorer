@@ -1,19 +1,3 @@
-/******************************************************************
- *
- * Project: Explorer++
- * File: Settings.cpp
- * License: GPL - See COPYING in the top level directory
- *
- * Explorer++ is an Explorer-like file manager for
- * Windows XP, Vista and 7.
- *
- * This is the main module for Explorer++. Handles startup.
- *
- * Written by David Erceg
- * www.explorerplusplus.com
- *
- *****************************************************************/
-
 #include "stdafx.h"
 #include <pantheios\backends\bec.file.h>
 #include "SaltedExplorer.h"
@@ -115,12 +99,12 @@ BOOL ProcessCommandLine(TCHAR *pCommandLine)
 			if(bSuccess)
 			{
 				MessageBox(NULL,_T("SaltedExplorer successfully removed as default file manager."),
-					NExplorerplusplus::WINDOW_NAME,MB_OK);
+					NSaltedExplorer::WINDOW_NAME,MB_OK);
 			}
 			else
 			{
 				MessageBox(NULL,_T("Could not remove SaltedExplorer as default file manager. Please \
-ensure you have administrator privileges."),NExplorerplusplus::WINDOW_NAME,MB_ICONWARNING|MB_OK);
+ensure you have administrator privileges."),NSaltedExplorer::WINDOW_NAME,MB_ICONWARNING|MB_OK);
 			}
 		}
 		else if(lstrcmp(szPath,_T("-set_as_default")) == 0)
@@ -133,15 +117,15 @@ ensure you have administrator privileges."),NExplorerplusplus::WINDOW_NAME,MB_IC
 			if(bSuccess)
 			{
 				MessageBox(NULL,_T("SaltedExplorer successfully set as default file manager."),
-					NExplorerplusplus::WINDOW_NAME,MB_OK);
+					NSaltedExplorer::WINDOW_NAME,MB_OK);
 			}
 			else
 			{
 				MessageBox(NULL,_T("Could not set SaltedExplorer as default file manager. Please \
-ensure you have administrator privileges."),NExplorerplusplus::WINDOW_NAME,MB_ICONWARNING|MB_OK);
+ensure you have administrator privileges."),NSaltedExplorer::WINDOW_NAME,MB_ICONWARNING|MB_OK);
 			}
 		}
-		else if(lstrcmp(szPath,NExplorerplusplus::JUMPLIST_TASK_NEWTAB_ARGUMENT) == 0)
+		else if(lstrcmp(szPath,NSaltedExplorer::JUMPLIST_TASK_NEWTAB_ARGUMENT) == 0)
 		{
 			/* This will be called when the user clicks the
 			'New Tab' item on the tasks menu in Windows 7.
@@ -155,7 +139,7 @@ ensure you have administrator privileges."),NExplorerplusplus::WINDOW_NAME,MB_IC
 			{
 				HWND hPrev;
 
-				hPrev = FindWindow(NExplorerplusplus::CLASS_NAME,NULL);
+				hPrev = FindWindow(NSaltedExplorer::CLASS_NAME,NULL);
 
 				if(hPrev != NULL)
 				{
@@ -212,7 +196,7 @@ supplying their name:\n\
 e.g. explorer++.exe \"control panel\"\nwill open the \
 Control Panel\n");
 
-	MessageBox(NULL,UsageString,NExplorerplusplus::WINDOW_NAME,MB_OK);
+	MessageBox(NULL,UsageString,NSaltedExplorer::WINDOW_NAME,MB_OK);
 }
 
 void ClearRegistrySettings(void)
@@ -222,9 +206,9 @@ void ClearRegistrySettings(void)
 	lStatus = SHDeleteKey(HKEY_CURRENT_USER,REG_MAIN_KEY);
 
 	if(lStatus == ERROR_SUCCESS)
-		MessageBox(NULL,_T("Settings cleared successfully."),NExplorerplusplus::WINDOW_NAME,MB_OK);
+		MessageBox(NULL,_T("Settings cleared successfully."),NSaltedExplorer::WINDOW_NAME,MB_OK);
 	else
-		MessageBox(NULL,_T("Settings could not be cleared."),NExplorerplusplus::WINDOW_NAME,MB_ICONWARNING);
+		MessageBox(NULL,_T("Settings could not be cleared."),NSaltedExplorer::WINDOW_NAME,MB_ICONWARNING);
 }
 
 /*
@@ -239,14 +223,14 @@ ATOM RegisterMainWindowClass(HINSTANCE hInstance)
 	wcex.style			= 0;
 	wcex.lpfnWndProc	= WndProcStub;
 	wcex.cbClsExtra		= 0;
-	wcex.cbWndExtra		= sizeof(Explorerplusplus *);
+	wcex.cbWndExtra		= sizeof(SaltedExplorer *);
 	wcex.hInstance		= hInstance;
 	wcex.hIcon			= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN),IMAGE_ICON,48,48,LR_VGACOLOR);
 	wcex.hIconSm		= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN_SMALL),IMAGE_ICON,16,16,LR_VGACOLOR);
 	wcex.hCursor		= LoadCursor(NULL,IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)NULL;
 	wcex.lpszMenuName	= NULL;
-	wcex.lpszClassName	= NExplorerplusplus::CLASS_NAME;
+	wcex.lpszClassName	= NSaltedExplorer::CLASS_NAME;
 
 	return RegisterClassEx(&wcex);
 }
@@ -367,7 +351,7 @@ LPSTR lpCmdLine,int nCmdShow)
 		GetCurrentProcessImageName(szLogFile,SIZEOF_ARRAY(szLogFile));
 
 		PathRemoveFileSpec(szLogFile);
-		PathAppend(szLogFile,NExplorerplusplus::LOG_FILENAME);
+		PathAppend(szLogFile,NSaltedExplorer::LOG_FILENAME);
 
 		pantheios_be_file_setFilePath(szLogFile);
 	}
@@ -501,7 +485,7 @@ LPSTR lpCmdLine,int nCmdShow)
 		{
 			HWND hPrev;
 
-			hPrev = FindWindow(NExplorerplusplus::CLASS_NAME,NULL);
+			hPrev = FindWindow(NSaltedExplorer::CLASS_NAME,NULL);
 
 			if(hPrev != NULL)
 			{
@@ -543,7 +527,7 @@ LPSTR lpCmdLine,int nCmdShow)
 
 	if(res == 0)
 	{
-		MessageBox(NULL,_T("Could not register class"),NExplorerplusplus::WINDOW_NAME,
+		MessageBox(NULL,_T("Could not register class"),NSaltedExplorer::WINDOW_NAME,
 			MB_OK|MB_ICONERROR);
 
 		FreeLibrary(hRichEditLib);
@@ -557,8 +541,8 @@ LPSTR lpCmdLine,int nCmdShow)
 	/* Create the main window. This window will act as a
 	container for all child windows created. */
 	hwnd = CreateWindow(
-	NExplorerplusplus::CLASS_NAME,
-	NExplorerplusplus::WINDOW_NAME,
+	NSaltedExplorer::CLASS_NAME,
+	NSaltedExplorer::WINDOW_NAME,
 	WS_OVERLAPPEDWINDOW,
 	CW_USEDEFAULT,
 	CW_USEDEFAULT,
@@ -571,7 +555,7 @@ LPSTR lpCmdLine,int nCmdShow)
 
 	if(hwnd == NULL)
 	{
-		MessageBox(NULL,_T("Could not create main window."),NExplorerplusplus::WINDOW_NAME,
+		MessageBox(NULL,_T("Could not create main window."),NSaltedExplorer::WINDOW_NAME,
 			MB_OK|MB_ICONERROR);
 
 		FreeLibrary(hRichEditLib);

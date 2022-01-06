@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ListViewHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles messages asscoiated with the main
  * listview controls.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -34,7 +34,7 @@ LRESULT	(CALLBACK *DefaultListViewProc)(HWND,UINT,WPARAM,LPARAM);
 /*
  * Creates and then subclasses a new listview control.
  */
-HWND Explorerplusplus::CreateAndSubclassListView(HWND hParent,DWORD Style)
+HWND SaltedExplorer::CreateAndSubclassListView(HWND hParent,DWORD Style)
 {
 	HWND hListView;
 	DWORD dwExtendedStyle;
@@ -78,17 +78,17 @@ LRESULT CALLBACK ListViewSubclassProcStub(HWND ListView,
 UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	ListViewInfo_t	*plvi = NULL;
-	Explorerplusplus		*pContainer = NULL;
+	SaltedExplorer		*pContainer = NULL;
 
 	plvi = (ListViewInfo_t *)GetWindowLongPtr(ListView,GWLP_USERDATA);
 
-	pContainer = (Explorerplusplus *)plvi->pContainer;
+	pContainer = (SaltedExplorer *)plvi->pContainer;
 
 	/* Jump across to the member window function (will handle all requests). */
 	return pContainer->ListViewSubclassProc(ListView,msg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::ListViewSubclassProc(HWND ListView,
+LRESULT CALLBACK SaltedExplorer::ListViewSubclassProc(HWND ListView,
 UINT msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(msg)
@@ -323,7 +323,7 @@ UINT msg,WPARAM wParam,LPARAM lParam)
 	return CallWindowProc(DefaultListViewProc,ListView,msg,wParam,lParam);
 }
 
-LRESULT Explorerplusplus::OnListViewLButtonDown(WPARAM wParam,LPARAM lParam)
+LRESULT SaltedExplorer::OnListViewLButtonDown(WPARAM wParam,LPARAM lParam)
 {
 	LV_HITTESTINFO HitTestInfo;
 
@@ -352,7 +352,7 @@ LRESULT Explorerplusplus::OnListViewLButtonDown(WPARAM wParam,LPARAM lParam)
 	return CallWindowProc(DefaultListViewProc,m_hActiveListView,WM_LBUTTONDOWN,wParam,lParam);
 }
 
-void Explorerplusplus::OnListViewMButtonDown(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnListViewMButtonDown(WPARAM wParam,LPARAM lParam)
 {
 	LV_HITTESTINFO ht;
 
@@ -373,7 +373,7 @@ void Explorerplusplus::OnListViewMButtonDown(WPARAM wParam,LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::OnListViewMButtonUp(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnListViewMButtonUp(WPARAM wParam,LPARAM lParam)
 {
 	LV_HITTESTINFO	ht;
 
@@ -439,7 +439,7 @@ void Explorerplusplus::OnListViewMButtonUp(WPARAM wParam,LPARAM lParam)
 	}
 }
 
-LRESULT Explorerplusplus::OnListViewKeyDown(LPARAM lParam)
+LRESULT SaltedExplorer::OnListViewKeyDown(LPARAM lParam)
 {
 	LV_KEYDOWN	*lv_key = NULL;
 
@@ -542,7 +542,7 @@ LRESULT Explorerplusplus::OnListViewKeyDown(LPARAM lParam)
 	return 0;
 }
 
-void Explorerplusplus::OnListViewItemChanged(LPARAM lParam)
+void SaltedExplorer::OnListViewItemChanged(LPARAM lParam)
 {
 	NMLISTVIEW	*ItemChanged = NULL;
 	int			iObjectIndex;
@@ -646,7 +646,7 @@ void Explorerplusplus::OnListViewItemChanged(LPARAM lParam)
 	HandleToolbarItemStates();
 }
 
-int Explorerplusplus::DetermineListViewObjectIndex(HWND hListView)
+int SaltedExplorer::DetermineListViewObjectIndex(HWND hListView)
 {
 	ListViewInfo_t	*plvi = NULL;
 
@@ -662,12 +662,12 @@ int Explorerplusplus::DetermineListViewObjectIndex(HWND hListView)
 LRESULT CALLBACK ListViewEditProcStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->ListViewEditProc(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::ListViewEditProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::ListViewEditProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	switch(Msg)
 	{
@@ -812,7 +812,7 @@ LRESULT CALLBACK Explorerplusplus::ListViewEditProc(HWND hwnd,UINT Msg,WPARAM wP
 	return DefSubclassProc(hwnd,Msg,wParam,lParam);
 }
 
-BOOL Explorerplusplus::OnListViewBeginLabelEdit(LPARAM lParam)
+BOOL SaltedExplorer::OnListViewBeginLabelEdit(LPARAM lParam)
 {
 	HWND			hEdit;
 	NMLVDISPINFO	*pnmdi = NULL;
@@ -841,7 +841,7 @@ BOOL Explorerplusplus::OnListViewBeginLabelEdit(LPARAM lParam)
 	return FALSE;
 }
 
-BOOL Explorerplusplus::OnListViewEndLabelEdit(LPARAM lParam)
+BOOL SaltedExplorer::OnListViewEndLabelEdit(LPARAM lParam)
 {
 	NMLVDISPINFO	*pdi = NULL;
 	LVITEM			*pItem = NULL;
@@ -967,7 +967,7 @@ BOOL Explorerplusplus::OnListViewEndLabelEdit(LPARAM lParam)
 		LoadString(g_hLanguageModule,IDS_FILERENAMEERROR,szTemp,
 		SIZEOF_ARRAY(szTemp));
 
-		MessageBox(m_hContainer,szTemp,NExplorerplusplus::WINDOW_NAME,
+		MessageBox(m_hContainer,szTemp,NSaltedExplorer::WINDOW_NAME,
 			MB_ICONWARNING|MB_OK);
 	}
 
@@ -978,7 +978,7 @@ BOOL Explorerplusplus::OnListViewEndLabelEdit(LPARAM lParam)
  * Called when information (icon number, text) is required
  * for an item in one of the listview controls.
  */
-void Explorerplusplus::OnListViewGetDisplayInfo(LPARAM lParam)
+void SaltedExplorer::OnListViewGetDisplayInfo(LPARAM lParam)
 {
 	NMLVDISPINFO	*pnmv = NULL;
 	LVITEM			*plvItem = NULL;
@@ -1014,7 +1014,7 @@ void Explorerplusplus::OnListViewGetDisplayInfo(LPARAM lParam)
 /*
  * Called when a column is clicked in the main listview.
  */
-void Explorerplusplus::OnListViewColumnClick(LPARAM lParam)
+void SaltedExplorer::OnListViewColumnClick(LPARAM lParam)
 {
 	NMLISTVIEW *pnmlv = NULL;
 
@@ -1029,7 +1029,7 @@ void Explorerplusplus::OnListViewColumnClick(LPARAM lParam)
  * Called when info tip text is required for an item
  * in the main listview control.
  */
-void Explorerplusplus::OnListViewGetInfoTip(LPARAM lParam)
+void SaltedExplorer::OnListViewGetInfoTip(LPARAM lParam)
 {
 	LPNMLVGETINFOTIP	pGetInfoTip	= NULL;
 	TCHAR				szInfoTip[512];
@@ -1056,7 +1056,7 @@ void Explorerplusplus::OnListViewGetInfoTip(LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::CreateFileInfoTip(int iItem,TCHAR *szInfoTip,UINT cchMax)
+void SaltedExplorer::CreateFileInfoTip(int iItem,TCHAR *szInfoTip,UINT cchMax)
 {
 	HRESULT	hr;
 
@@ -1098,7 +1098,7 @@ void Explorerplusplus::CreateFileInfoTip(int iItem,TCHAR *szInfoTip,UINT cchMax)
 	}
 }
 
-void Explorerplusplus::OnListViewRClick(HWND hParent,POINT *pCursorPos)
+void SaltedExplorer::OnListViewRClick(HWND hParent,POINT *pCursorPos)
 {
 	/* It may be possible for the active tab/folder
 	to change while the menu is been shown (e.g. if
@@ -1149,7 +1149,7 @@ void Explorerplusplus::OnListViewRClick(HWND hParent,POINT *pCursorPos)
 	}
 }
 
-void Explorerplusplus::OnListViewBackgroundRClick(POINT *pCursorPos)
+void SaltedExplorer::OnListViewBackgroundRClick(POINT *pCursorPos)
 {
 	HMENU hMenu = InitializeRightClickMenu();
 	LPITEMIDLIST pidlDirectory = m_pActiveShellBrowser->QueryCurrentDirectoryIdl();
@@ -1200,7 +1200,7 @@ void Explorerplusplus::OnListViewBackgroundRClick(POINT *pCursorPos)
 	DestroyMenu(hMenu);
 }
 
-HMENU Explorerplusplus::InitializeRightClickMenu(void)
+HMENU SaltedExplorer::InitializeRightClickMenu(void)
 {
 	HMENU hMenu = GetSubMenu(LoadMenu(g_hLanguageModule,
 		MAKEINTRESOURCE(IDR_MAINMENU_RCLICK)),0);
@@ -1247,7 +1247,7 @@ HMENU Explorerplusplus::InitializeRightClickMenu(void)
 	return hMenu;
 }
 
-void Explorerplusplus::OnListViewItemRClick(POINT *pCursorPos)
+void SaltedExplorer::OnListViewItemRClick(POINT *pCursorPos)
 {
 	int nSelected = ListView_GetSelectedCount(m_hActiveListView);
 
@@ -1283,7 +1283,7 @@ void Explorerplusplus::OnListViewItemRClick(POINT *pCursorPos)
 	}
 }
 
-void Explorerplusplus::OnListViewHeaderRClick(POINT *pCursorPos)
+void SaltedExplorer::OnListViewHeaderRClick(POINT *pCursorPos)
 {
 	HMENU						hHeaderPopupMenu;
 	HMENU						hMenu;
@@ -1346,7 +1346,7 @@ void Explorerplusplus::OnListViewHeaderRClick(POINT *pCursorPos)
 	DestroyMenu(hHeaderPopupMenu);
 }
 
-int Explorerplusplus::GetColumnHeaderMenuList(unsigned int **pHeaderList)
+int SaltedExplorer::GetColumnHeaderMenuList(unsigned int **pHeaderList)
 {
 	int nItems;
 
@@ -1389,7 +1389,7 @@ int Explorerplusplus::GetColumnHeaderMenuList(unsigned int **pHeaderList)
 	return nItems;
 }
 
-HRESULT Explorerplusplus::OnListViewBeginDrag(LPARAM lParam,DragTypes_t DragType)
+HRESULT SaltedExplorer::OnListViewBeginDrag(LPARAM lParam,DragTypes_t DragType)
 {
 	IDropSource			*pDropSource = NULL;
 	IDragSourceHelper	*pDragSourceHelper = NULL;
@@ -1502,7 +1502,7 @@ HRESULT Explorerplusplus::OnListViewBeginDrag(LPARAM lParam,DragTypes_t DragType
 	return hr;
 }
 
-void Explorerplusplus::OnListViewFileDelete(BOOL bPermanent)
+void SaltedExplorer::OnListViewFileDelete(BOOL bPermanent)
 {
 	int nSelected = ListView_GetSelectedCount(m_hActiveListView);
 
@@ -1524,7 +1524,7 @@ void Explorerplusplus::OnListViewFileDelete(BOOL bPermanent)
 	m_FileActionHandler.DeleteFiles(m_hContainer,FullFilenameList,bPermanent);
 }
 
-void Explorerplusplus::OnListViewDoubleClick(NMHDR *nmhdr)
+void SaltedExplorer::OnListViewDoubleClick(NMHDR *nmhdr)
 {
 	if(nmhdr->hwndFrom == m_hActiveListView)
 	{
@@ -1577,7 +1577,7 @@ void Explorerplusplus::OnListViewDoubleClick(NMHDR *nmhdr)
 	}
 }
 
-void Explorerplusplus::OnListViewFileRename(void)
+void SaltedExplorer::OnListViewFileRename(void)
 {
 	if(m_pActiveShellBrowser->InVirtualFolder())
 	{
@@ -1624,7 +1624,7 @@ void Explorerplusplus::OnListViewFileRename(void)
 	}
 }
 
-void Explorerplusplus::OnListViewShowFileProperties(void)
+void SaltedExplorer::OnListViewShowFileProperties(void)
 {
 	LPITEMIDLIST	*ppidl = NULL;
 	LPITEMIDLIST	pidlDirectory = NULL;
@@ -1664,7 +1664,7 @@ void Explorerplusplus::OnListViewShowFileProperties(void)
 	free(ppidl);
 }
 
-void Explorerplusplus::OnListViewCopyItemPath(void)
+void SaltedExplorer::OnListViewCopyItemPath(void)
 {
 	if(ListView_GetSelectedCount(m_hActiveListView) == 0)
 	{
@@ -1687,7 +1687,7 @@ void Explorerplusplus::OnListViewCopyItemPath(void)
 	CopyTextToClipboard(strItemPaths);
 }
 
-void Explorerplusplus::OnListViewCopyUniversalPaths(void)
+void SaltedExplorer::OnListViewCopyUniversalPaths(void)
 {
 	if(ListView_GetSelectedCount(m_hActiveListView) == 0)
 	{
@@ -1724,7 +1724,7 @@ void Explorerplusplus::OnListViewCopyUniversalPaths(void)
 	CopyTextToClipboard(strUniversalPaths);
 }
 
-HRESULT Explorerplusplus::OnListViewCopy(BOOL bCopy)
+HRESULT SaltedExplorer::OnListViewCopy(BOOL bCopy)
 {
 	IDataObject		*pClipboardDataObject = NULL;
 	int				iItem = -1;
@@ -1777,7 +1777,7 @@ HRESULT Explorerplusplus::OnListViewCopy(BOOL bCopy)
 	return hr;
 }
 
-void Explorerplusplus::OnListViewSetFileAttributes(void)
+void SaltedExplorer::OnListViewSetFileAttributes(void)
 {
 	if(ListView_GetSelectedCount(m_hActiveListView) > 0)
 	{
@@ -1805,7 +1805,7 @@ void Explorerplusplus::OnListViewSetFileAttributes(void)
 	}
 }
 
-void Explorerplusplus::OnListViewPaste(void)
+void SaltedExplorer::OnListViewPaste(void)
 {
 	IDataObject *pClipboardObject = NULL;
 	HRESULT hr;
@@ -1836,7 +1836,7 @@ void Explorerplusplus::OnListViewPaste(void)
 	}
 }
 
-void Explorerplusplus::OnDropFile(const std::list<std::wstring> &PastedFileList,POINT *ppt)
+void SaltedExplorer::OnDropFile(const std::list<std::wstring> &PastedFileList,POINT *ppt)
 {
 	if(m_pActiveShellBrowser->QueryNumSelected() == 0)
 	{
@@ -1844,7 +1844,7 @@ void Explorerplusplus::OnDropFile(const std::list<std::wstring> &PastedFileList,
 	}
 }
 
-void Explorerplusplus::BuildListViewFileSelectionList(HWND hListView,
+void SaltedExplorer::BuildListViewFileSelectionList(HWND hListView,
 	std::list<std::wstring> *pFileSelectionList)
 {
 	if(pFileSelectionList == NULL)

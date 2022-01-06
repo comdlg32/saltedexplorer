@@ -6,8 +6,8 @@
  *
  * Provides a set of drive information functions.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -6,8 +6,8 @@
  *
  * Provides a degree of abstraction off a standard dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

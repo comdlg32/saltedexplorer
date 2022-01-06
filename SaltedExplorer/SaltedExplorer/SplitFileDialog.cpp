@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: SplitFileDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Provides the ability to split a file into several
  * pieces.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -7,8 +7,8 @@
  * Handles the dropping of items onto
  * the main listview.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

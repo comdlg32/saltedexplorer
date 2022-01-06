@@ -6,8 +6,8 @@
  *
  * Provides various shell related functionality.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

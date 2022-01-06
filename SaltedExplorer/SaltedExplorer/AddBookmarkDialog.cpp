@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: AddBookmarkDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Add Bookmark' dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -35,7 +35,7 @@ int g_iFolderSelected;
 
 INT_PTR CALLBACK BookmarkTabDlgProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
@@ -45,7 +45,7 @@ INT_PTR CALLBACK BookmarkTabDlgProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM
 
 				pabi = (AddBookmarkInfo_t *)lParam;
 
-				pContainer = (Explorerplusplus *)pabi->pContainer;
+				pContainer = (SaltedExplorer *)pabi->pContainer;
 			}
 			break;
 	}
@@ -53,7 +53,7 @@ INT_PTR CALLBACK BookmarkTabDlgProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM
 	return pContainer->BookmarkTabDlgProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::BookmarkTabDlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::BookmarkTabDlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -92,7 +92,7 @@ INT_PTR CALLBACK Explorerplusplus::BookmarkTabDlgProc(HWND hDlg,UINT uMsg,WPARAM
 	return FALSE;
 }
 
-void Explorerplusplus::OnAddBookmarkInit(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnAddBookmarkInit(HWND hDlg,LPARAM lParam)
 {
 	AddBookmarkInfo_t	*pabi = NULL;
 	Bookmark_t			ParentBookmark;
@@ -179,7 +179,7 @@ void Explorerplusplus::OnAddBookmarkInit(HWND hDlg,LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::OnAddBookmarkOk(HWND hDlg)
+void SaltedExplorer::OnAddBookmarkOk(HWND hDlg)
 {
 	HWND			hEditName;
 	HWND			hEditDescription;
@@ -268,7 +268,7 @@ void Explorerplusplus::OnAddBookmarkOk(HWND hDlg)
 	EndDialog(hDlg,1);
 }
 
-void Explorerplusplus::OnAddBookmarkNewFolder(HWND hDlg)
+void SaltedExplorer::OnAddBookmarkNewFolder(HWND hDlg)
 {
 	HWND	hCreateIn;
 
@@ -296,7 +296,7 @@ void Explorerplusplus::OnAddBookmarkNewFolder(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnBookmarkDetails(HWND hDlg)
+void SaltedExplorer::OnBookmarkDetails(HWND hDlg)
 {
 	HWND	hSeparator;
 	HWND	hOk;
@@ -456,7 +456,7 @@ void Explorerplusplus::OnBookmarkDetails(HWND hDlg)
 	g_bExpanded = !g_bExpanded;
 }
 
-void Explorerplusplus::AddBookmarkSaveState(HWND hDlg)
+void SaltedExplorer::AddBookmarkSaveState(HWND hDlg)
 {
 	RECT rcTemp;
 

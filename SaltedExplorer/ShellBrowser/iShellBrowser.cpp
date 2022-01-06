@@ -6,8 +6,8 @@
  *
  * Main file for folder browsing support.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

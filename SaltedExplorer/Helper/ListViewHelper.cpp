@@ -6,8 +6,8 @@
  *
  * Listview helper functionality.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: ChangeDisplayWindowDetailsDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -24,8 +24,8 @@
  *
  * Show preview (checkbox)
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -39,13 +39,13 @@ extern DWRule_t	*g_pDWRule;
 
 INT_PTR CALLBACK DWChangeDetailsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 		{
-			pContainer = (Explorerplusplus *)lParam;
+			pContainer = (SaltedExplorer *)lParam;
 		}
 		break;
 	}
@@ -53,7 +53,7 @@ INT_PTR CALLBACK DWChangeDetailsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 	return pContainer->DWChangeDetailsProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::DWChangeDetailsProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::DWChangeDetailsProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	/*switch(Msg)
 	{

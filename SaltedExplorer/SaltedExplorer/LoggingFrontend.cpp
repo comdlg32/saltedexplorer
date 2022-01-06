@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: LoggingFrontend.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -9,8 +9,8 @@
  * and disable all logging in release mode. This setting
  * can then be changed dynamically.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

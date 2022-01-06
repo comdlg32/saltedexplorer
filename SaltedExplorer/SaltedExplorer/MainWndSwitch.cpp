@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: Settings.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Processes and forwards incoming messages for the main
  * window.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -35,13 +35,13 @@ extern HIMAGELIST himlMenu;
 
 LRESULT CALLBACK WndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)GetWindowLongPtr(hwnd,GWLP_USERDATA);
+	SaltedExplorer *pContainer = (SaltedExplorer *)GetWindowLongPtr(hwnd,GWLP_USERDATA);
 
 	switch(Msg)
 	{
 		case WM_NCCREATE:
-			/* Create a new Explorerplusplus object to assign to this window. */
-			pContainer = new Explorerplusplus(hwnd);
+			/* Create a new SaltedExplorer object to assign to this window. */
+			pContainer = new SaltedExplorer(hwnd);
 
 			if(!pContainer)
 			{
@@ -49,7 +49,7 @@ LRESULT CALLBACK WndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 				return 0;
 			}
 
-			/* Store the Explorerplusplus object pointer into the extra window bytes
+			/* Store the SaltedExplorer object pointer into the extra window bytes
 			for this window. */
 			SetWindowLongPtr(hwnd,GWLP_USERDATA,(LONG_PTR)pContainer);
 			break;
@@ -62,7 +62,7 @@ LRESULT CALLBACK WndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 		return DefWindowProc(hwnd,Msg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	if(Msg == m_uTaskbarButtonCreatedMessage)
 	{
@@ -364,13 +364,14 @@ LRESULT CALLBACK Explorerplusplus::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPa
 		case WM_DESTROY:
 			return OnDestroy();
 			break;
+
 		}
 	}
 
 	return DefWindowProc(hwnd,Msg,wParam,lParam);
 }
 
-void Explorerplusplus::OnMenuCommand(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnMenuCommand(WPARAM wParam,LPARAM lParam)
 {
 	UINT	uMenuID;
 
@@ -391,7 +392,7 @@ void Explorerplusplus::OnMenuCommand(WPARAM wParam,LPARAM lParam)
 /*
  * WM_COMMAND handler for main window.
  */
-LRESULT CALLBACK Explorerplusplus::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	/* Has a bookmark menu item been clicked? */
 	if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_BOOKMARK_STARTID &&
@@ -711,6 +712,13 @@ LRESULT CALLBACK Explorerplusplus::CommandHandler(HWND hwnd,UINT Msg,WPARAM wPar
 		case IDM_TOOLBARS_MAINTOOLBAR:
 			m_bShowMainToolbar = !m_bShowMainToolbar;
 			ShowMainRebarBand(m_hMainToolbar,m_bShowMainToolbar);
+			AdjustFolderPanePosition();
+			ResizeWindows();
+			break;
+
+		case IDM_TOOLBARS_MENUBAR:
+			m_bShowMenuBar = !m_bShowMenuBar;
+			ShowMainRebarBand(m_hMenuBar,m_bShowMenuBar);
 			AdjustFolderPanePosition();
 			ResizeWindows();
 			break;
@@ -1403,7 +1411,7 @@ LRESULT CALLBACK Explorerplusplus::CommandHandler(HWND hwnd,UINT Msg,WPARAM wPar
 				TCHAR szHelpFile[MAX_PATH];
 				GetCurrentProcessImageName(szHelpFile,SIZEOF_ARRAY(szHelpFile));
 				PathRemoveFileSpec(szHelpFile);
-				PathAppend(szHelpFile,NExplorerplusplus::HELP_FILE_NAME);
+				PathAppend(szHelpFile,NSaltedExplorer::HELP_FILE_NAME);
 
 				LPITEMIDLIST pidl = NULL;
 				HRESULT hr = GetIdlFromParsingName(szHelpFile,&pidl);
@@ -1585,7 +1593,7 @@ LRESULT CALLBACK Explorerplusplus::CommandHandler(HWND hwnd,UINT Msg,WPARAM wPar
 /*
  * WM_NOTIFY handler for the main window.
  */
-LRESULT CALLBACK Explorerplusplus::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	NMHDR *nmhdr;
 	nmhdr = (NMHDR *)lParam;
@@ -1764,6 +1772,10 @@ LRESULT CALLBACK Explorerplusplus::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wPara
 				{
 				case ID_MAINTOOLBAR:
 					hToolbar = m_hMainToolbar;
+					break;
+
+				case ID_MENUBAR:
+					hToolbar = m_hMenuBar;
 					break;
 
 				case ID_BOOKMARKSTOOLBAR:

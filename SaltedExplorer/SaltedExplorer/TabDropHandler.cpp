@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: TabDropHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Manages drag and drop for the tabs.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -22,7 +22,7 @@ UINT_PTR idEvent,DWORD dwTime);
 
 BOOL	g_bTabDragTimerElapsed;
 
-HRESULT _stdcall Explorerplusplus::DragEnter(IDataObject *pDataObject,
+HRESULT _stdcall SaltedExplorer::DragEnter(IDataObject *pDataObject,
 DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 {
 	m_iTabDragTab = m_iTabSelectedItem;
@@ -91,7 +91,7 @@ DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
+HRESULT _stdcall SaltedExplorer::DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect)
 {
 	TCHITTESTINFO HitTestInfo;
 	BOOL bOnSameDrive;
@@ -170,7 +170,7 @@ HRESULT _stdcall Explorerplusplus::DragOver(DWORD grfKeyState,POINTL pt,DWORD *p
 
 /* Retrieves the filename of the first file been
 dropped. */
-void Explorerplusplus::GetSourceFileName(IDataObject *pDataObject)
+void SaltedExplorer::GetSourceFileName(IDataObject *pDataObject)
 {
 	FORMATETC	ftc;
 	STGMEDIUM	stg;
@@ -218,7 +218,7 @@ if the files come from different drives,
 whether this operation is classed as a copy
 or move is only based on the location of the
 first file). */
-BOOL Explorerplusplus::CheckItemLocations(int iTabId)
+BOOL SaltedExplorer::CheckItemLocations(int iTabId)
 {
 	TCHAR			szDestDirectory[MAX_PATH];
 	BOOL			bOnSameDrive = FALSE;
@@ -237,14 +237,14 @@ UINT_PTR idEvent,DWORD dwTime)
 	g_bTabDragTimerElapsed = TRUE;
 }
 
-HRESULT _stdcall Explorerplusplus::DragLeave(void)
+HRESULT _stdcall SaltedExplorer::DragLeave(void)
 {
 	m_pDropTargetHelper->DragLeave();
 
 	return S_OK;
 }
 
-HRESULT _stdcall Explorerplusplus::Drop(IDataObject *pDataObject,DWORD grfKeyState,
+HRESULT _stdcall SaltedExplorer::Drop(IDataObject *pDataObject,DWORD grfKeyState,
 POINTL pt,DWORD *pdwEffect)
 {
 	TCHITTESTINFO tchi;

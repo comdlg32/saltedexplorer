@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: MassRenameDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -11,8 +11,8 @@
  * /B	- Basename (filename without extension)
  * /E	- Extension
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

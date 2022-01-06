@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: Initialization.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Includes miscellaneous functions related to
  * the top-level GUI component.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -27,7 +27,7 @@
 
 extern HIMAGELIST himlMenu;
 
-void Explorerplusplus::InitializeBookmarks(void)
+void SaltedExplorer::InitializeBookmarks(void)
 {
 	HMENU	hMenu;
 	HMENU	hBookmarkMenu;
@@ -41,7 +41,7 @@ void Explorerplusplus::InitializeBookmarks(void)
 	InsertBookmarkToolbarButtons();
 }
 
-void Explorerplusplus::InitializeDisplayWindow(void)
+void SaltedExplorer::InitializeDisplayWindow(void)
 {
 	DWInitialSettings_t	InitialSettings;
 
@@ -57,7 +57,7 @@ void Explorerplusplus::InitializeDisplayWindow(void)
 		&m_pDisplayMain,&InitialSettings);
 }
 
-void Explorerplusplus::InitializeMenus(void)
+void SaltedExplorer::InitializeMenus(void)
 {
 	HMENU	hMenu;
 	HBITMAP	hBitmap;
@@ -161,7 +161,7 @@ void Explorerplusplus::InitializeMenus(void)
 	SetMenuOwnerDraw(m_hGroupBySubMenu);
 }
 
-void Explorerplusplus::SetDefaultTabSettings(TabInfo_t *pTabInfo)
+void SaltedExplorer::SetDefaultTabSettings(TabInfo_t *pTabInfo)
 {
 	pTabInfo->bLocked			= FALSE;
 	pTabInfo->bAddressLocked	= FALSE;
@@ -170,7 +170,7 @@ void Explorerplusplus::SetDefaultTabSettings(TabInfo_t *pTabInfo)
 		SIZEOF_ARRAY(pTabInfo->szName),EMPTY_STRING);
 }
 
-void Explorerplusplus::InitializeColorRules(void)
+void SaltedExplorer::InitializeColorRules(void)
 {
 	ColorRule_t ColorRule;
 	TCHAR szTemp[64];

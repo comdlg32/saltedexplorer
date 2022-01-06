@@ -6,8 +6,8 @@
  *
  * Implements a general bookmarking system.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

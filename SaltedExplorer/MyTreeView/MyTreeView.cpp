@@ -14,8 +14,8 @@
  *     - Items on the desktop
  *     - Items in My Computer
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

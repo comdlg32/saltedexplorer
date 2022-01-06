@@ -146,15 +146,15 @@ TOOLBAR_NEWFOLDER,TOOLBAR_CUT,TOOLBAR_COPY,
 TOOLBAR_PASTE,TOOLBAR_DELETE,TOOLBAR_DELETEPERMANENTLY,TOOLBAR_VIEWS,
 TOOLBAR_SEARCH,TOOLBAR_PROPERTIES,TOOLBAR_REFRESH};
 
-class Explorerplusplus : public IDropTarget, public IServiceProvider,
+class SaltedExplorer : public IDropTarget, public IServiceProvider,
 	public IShellView2, public INewMenuClient, public IDropFilesCallback,
 	public IFileContextMenuExternal, public IModelessDialogNotification,
-	public IExplorerplusplus
+	public ISaltedExplorer
 {
 public:
 
-	Explorerplusplus(HWND);
-	~Explorerplusplus();
+	SaltedExplorer(HWND);
+	~SaltedExplorer();
 
 	/* Window/dialog procedures.
 	Window procedures use LRESULT
@@ -189,7 +189,7 @@ public:
 
 	void				FolderSizeCallback(FolderSizeExtraInfo_t *pfsei,int nFolders,int nFiles,PULARGE_INTEGER lTotalFolderSize);
 
-	/* IExplorerplusplus methods. */
+	/* ISaltedExplorer methods. */
 	HWND				GetActiveListView();
 	IShellBrowser2		*GetActiveShellBrowser();
 
@@ -258,7 +258,7 @@ private:
 	{
 	public:
 
-		CLoadSaveRegistry(Explorerplusplus *pContainer);
+		CLoadSaveRegistry(SaltedExplorer *pContainer);
 		~CLoadSaveRegistry();
 
 		/* IUnknown methods. */
@@ -290,14 +290,14 @@ private:
 
 		int	m_iRefCount;
 
-		Explorerplusplus *m_pContainer;
+		SaltedExplorer *m_pContainer;
 	};
 
 	class CLoadSaveXML : public ILoadSave
 	{
 	public:
 
-		CLoadSaveXML(Explorerplusplus *pContainer,BOOL bLoad);
+		CLoadSaveXML(SaltedExplorer *pContainer,BOOL bLoad);
 		~CLoadSaveXML();
 
 		/* IUnknown methods. */
@@ -334,7 +334,7 @@ private:
 
 		int	m_iRefCount;
 
-		Explorerplusplus				*m_pContainer;
+		SaltedExplorer				*m_pContainer;
 		BOOL					m_bLoad;
 
 		/* These are used for saving + loading. */
@@ -352,7 +352,7 @@ private:
 	class CBookmarkToolbarDrop : public IDropTarget
 	{
 	public:
-		CBookmarkToolbarDrop(Explorerplusplus *pContainer);
+		CBookmarkToolbarDrop(SaltedExplorer *pContainer);
 		~CBookmarkToolbarDrop();
 
 		/* IUnknown methods. */
@@ -369,7 +369,7 @@ private:
 	private:
 		int m_iRefCount;
 
-		Explorerplusplus *m_pContainer;
+		SaltedExplorer *m_pContainer;
 
 		/* Drag and drop. */
 		IDragSourceHelper *	m_pDragSourceHelper;
@@ -384,7 +384,7 @@ private:
 	class CApplicationToolbarDrop : public IDropTarget
 	{
 	public:
-		CApplicationToolbarDrop(Explorerplusplus *pContainer);
+		CApplicationToolbarDrop(SaltedExplorer *pContainer);
 		~CApplicationToolbarDrop();
 
 		/* IUnknown methods. */
@@ -400,7 +400,7 @@ private:
 
 	private:
 		int m_iRefCount;
-		Explorerplusplus *m_pContainer;
+		SaltedExplorer *m_pContainer;
 
 		/* Drag and drop. */
 		IDragSourceHelper *	m_pDragSourceHelper;
@@ -644,6 +644,7 @@ private:
 	void					CreateMainControls(void);
 	void					CreateFolderControls(void);
 	void					CreateMainToolbar(void);
+	void					CreateMenuBar(void);
 	void					CreateAddressToolbar(void);
 	void					CreateAddressBar(void);
 	void					CreateBookmarksToolbar(void);
@@ -996,6 +997,7 @@ private:
 	HWND					m_hTabWindowToolbar;
 	HWND					m_hTreeView;
 	HWND					m_hHolder;
+	HWND					m_hMenuBar;
 	HWND					m_hAddressBar;
 	HWND					m_hMainToolbar;
 	HWND					m_hListView[MAX_TABS];
@@ -1078,6 +1080,7 @@ private:
 	BOOL					m_bShowFolders;
 	BOOL					m_bShowAddressBar;
 	BOOL					m_bShowDisplayWindow;
+	BOOL					m_bShowMenuBar;
 	BOOL					m_bShowMainToolbar;
 	BOOL					m_bShowBookmarksToolbar;
 	BOOL					m_bShowDrivesToolbar;
@@ -1268,7 +1271,7 @@ private:
 
 typedef struct
 {
-	Explorerplusplus	*pContainer;
+	SaltedExplorer	*pContainer;
 	int			iTabId;
 } TabProxy_t;
 

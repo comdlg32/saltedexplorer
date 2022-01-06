@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: OrganizeBookmarksDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the bookmarking of tabs.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -38,13 +38,13 @@ int		g_iMenuItem;
 
 INT_PTR CALLBACK OrganizeBookmarksStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 			{
-				pContainer = (Explorerplusplus *)lParam;
+				pContainer = (SaltedExplorer *)lParam;
 			}
 			break;
 	}
@@ -52,7 +52,7 @@ INT_PTR CALLBACK OrganizeBookmarksStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM 
 	return pContainer->OrganizeBookmarks(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::OrganizeBookmarks(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::OrganizeBookmarks(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -134,7 +134,7 @@ INT_PTR CALLBACK Explorerplusplus::OrganizeBookmarks(HWND hDlg,UINT uMsg,WPARAM 
 	return FALSE;
 }
 
-void Explorerplusplus::OnOrganizeBookmarksInit(HWND hDlg)
+void SaltedExplorer::OnOrganizeBookmarksInit(HWND hDlg)
 {
 	HWND						hListView;
 	LVCOLUMN					col;
@@ -216,7 +216,7 @@ void Explorerplusplus::OnOrganizeBookmarksInit(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OrganizeBookmarksRefreshItem(HWND hDlg,int iItem)
+void SaltedExplorer::OrganizeBookmarksRefreshItem(HWND hDlg,int iItem)
 {
 	HWND		hListView;
 	Bookmark_t	Bookmark;
@@ -241,7 +241,7 @@ void Explorerplusplus::OrganizeBookmarksRefreshItem(HWND hDlg,int iItem)
 	ListView_SetItemText(hListView,iItem,2,Bookmark.szItemDescription);
 }
 
-void Explorerplusplus::MoveColumnItem(HWND hDlg,BOOL bUp)
+void SaltedExplorer::MoveColumnItem(HWND hDlg,BOOL bUp)
 {
 	HWND	hListView;
 	int		iSelected;
@@ -261,7 +261,7 @@ void Explorerplusplus::MoveColumnItem(HWND hDlg,BOOL bUp)
 	}
 }
 
-void Explorerplusplus::OrganizeBookmarksMove(HWND hDlg,BOOL bUp)
+void SaltedExplorer::OrganizeBookmarksMove(HWND hDlg,BOOL bUp)
 {
 	HWND		hListView;
 	LVITEM		lvItem;
@@ -311,7 +311,7 @@ void Explorerplusplus::OrganizeBookmarksMove(HWND hDlg,BOOL bUp)
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksOk(HWND hDlg)
+void SaltedExplorer::OnOrganizeBookmarksOk(HWND hDlg)
 {
 	/* Replace the bookmarks menu (in case any of the
 	bookmarks have had their properties changed). */
@@ -330,7 +330,7 @@ void Explorerplusplus::OnOrganizeBookmarksOk(HWND hDlg)
 	EndDialog(hDlg,1);
 }
 
-void Explorerplusplus::OnOrganizeBookmarksProperties(HWND hDlg)
+void SaltedExplorer::OnOrganizeBookmarksProperties(HWND hDlg)
 {
 	HWND	hListView;
 	int		iSelected;
@@ -343,7 +343,7 @@ void Explorerplusplus::OnOrganizeBookmarksProperties(HWND hDlg)
 		ShowBookmarkProperties(hDlg,hListView,iSelected);
 }
 
-void Explorerplusplus::ShowBookmarkProperties(HWND hDlg,HWND hListView,int iItem)
+void SaltedExplorer::ShowBookmarkProperties(HWND hDlg,HWND hListView,int iItem)
 {
 	LVITEM						lvItem;
 	Bookmark_t					Bookmark;
@@ -392,7 +392,7 @@ void Explorerplusplus::ShowBookmarkProperties(HWND hDlg,HWND hListView,int iItem
 	SetFocus(hListView);
 }
 
-void Explorerplusplus::OnOrganizeBookmarksDoubleClick(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnOrganizeBookmarksDoubleClick(HWND hDlg,LPARAM lParam)
 {
 	HWND			hBookmarks;
 	NMITEMACTIVATE	*pnmItem = NULL;
@@ -444,7 +444,7 @@ item.
 Therefore, get the first child of the current item,
 and keep stepping through each child item, until
 the current item is found. */
-void Explorerplusplus::OrganizeBookmarksTrackInTreeView(HWND hDlg,void *pBookmarkHandle)
+void SaltedExplorer::OrganizeBookmarksTrackInTreeView(HWND hDlg,void *pBookmarkHandle)
 {
 	HWND		hTreeViewFolders;
 	HTREEITEM	hItemCurrent;
@@ -474,7 +474,7 @@ void Explorerplusplus::OrganizeBookmarksTrackInTreeView(HWND hDlg,void *pBookmar
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksRightClick(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnOrganizeBookmarksRightClick(HWND hDlg,LPARAM lParam)
 {
 	HWND			hBookmarks;
 	NMITEMACTIVATE	*pnmItem = NULL;
@@ -510,7 +510,7 @@ void Explorerplusplus::OnOrganizeBookmarksRightClick(HWND hDlg,LPARAM lParam)
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksTvnSelChanged(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnOrganizeBookmarksTvnSelChanged(HWND hDlg,LPARAM lParam)
 {
 	HWND		hBookmarks;
 	HWND		hFolders;
@@ -534,7 +534,7 @@ void Explorerplusplus::OnOrganizeBookmarksTvnSelChanged(HWND hDlg,LPARAM lParam)
 		InsertBookmarksIntoListView(hBookmarks,&Child);
 }
 
-void Explorerplusplus::OnOrganizeBookmarksDelete(HWND hDlg)
+void SaltedExplorer::OnOrganizeBookmarksDelete(HWND hDlg)
 {
 	HWND		hListView;
 	LVITEM		lvItem;
@@ -587,7 +587,7 @@ void Explorerplusplus::OnOrganizeBookmarksDelete(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksInitMenu(HWND hDlg,WPARAM wParam)
+void SaltedExplorer::OnOrganizeBookmarksInitMenu(HWND hDlg,WPARAM wParam)
 {
 	HWND		hListView;
 	LVITEM		lvItem;
@@ -616,7 +616,7 @@ void Explorerplusplus::OnOrganizeBookmarksInitMenu(HWND hDlg,WPARAM wParam)
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksShowOnToolbar(HWND hDlg)
+void SaltedExplorer::OnOrganizeBookmarksShowOnToolbar(HWND hDlg)
 {
 	HWND		hListView;
 	LVITEM		lvItem;
@@ -654,7 +654,7 @@ void Explorerplusplus::OnOrganizeBookmarksShowOnToolbar(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnOrganizeBookmarksOpen(HWND hDlg,BOOL bOpenInNewTab)
+void SaltedExplorer::OnOrganizeBookmarksOpen(HWND hDlg,BOOL bOpenInNewTab)
 {
 	HWND			hBookmarks;
 	LVITEM			lvItem;
@@ -696,7 +696,7 @@ void Explorerplusplus::OnOrganizeBookmarksOpen(HWND hDlg,BOOL bOpenInNewTab)
 	}
 }
 
-void Explorerplusplus::OrganizeBookmarksSaveState(HWND hDlg)
+void SaltedExplorer::OrganizeBookmarksSaveState(HWND hDlg)
 {
 	RECT rcTemp;
 

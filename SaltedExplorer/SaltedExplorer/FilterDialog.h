@@ -43,7 +43,7 @@ class CFilterDialog : public CBaseDialog
 {
 public:
 
-	CFilterDialog(HINSTANCE hInstance,int iResource,HWND hParent,IExplorerplusplus *pexpp);
+	CFilterDialog(HINSTANCE hInstance,int iResource,HWND hParent,ISaltedExplorer *pexpp);
 	~CFilterDialog();
 
 protected:
@@ -61,7 +61,7 @@ private:
 	void				OnOk();
 	void				OnCancel();
 
-	IExplorerplusplus	*m_pexpp;
+	ISaltedExplorer	*m_pexpp;
 	HICON				m_hDialogIcon;
 
 	CFilterDialogPersistentSettings	*m_pfdps;

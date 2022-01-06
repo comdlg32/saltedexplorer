@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: MergeFiles.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Provides support for merging files.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -337,7 +337,7 @@ void CMergeFilesDialog::OnPrivateMessage(UINT uMsg,WPARAM wParam,LPARAM lParam)
 			TCHAR szTemp[64];
 			LoadString(GetInstance(),IDS_MERGE_FILES_OUTPUTFILEINVALID,
 				szTemp,SIZEOF_ARRAY(szTemp));
-			MessageBox(m_hDlg,szTemp,NExplorerplusplus::WINDOW_NAME,MB_ICONWARNING|MB_OK);
+			MessageBox(m_hDlg,szTemp,NSaltedExplorer::WINDOW_NAME,MB_ICONWARNING|MB_OK);
 
 			assert(m_pMergeFiles != NULL);
 
@@ -371,7 +371,7 @@ void CMergeFilesDialog::OnOk()
 			LoadString(GetInstance(),IDS_MERGE_OUTPUTINVALID,
 				szTemp,SIZEOF_ARRAY(szTemp));
 
-			MessageBox(m_hDlg,szTemp,NExplorerplusplus::WINDOW_NAME,
+			MessageBox(m_hDlg,szTemp,NSaltedExplorer::WINDOW_NAME,
 				MB_ICONWARNING|MB_OK);
 			return;
 		}

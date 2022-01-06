@@ -7,8 +7,8 @@
  * Handles the sorting of items
  * within the listview.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

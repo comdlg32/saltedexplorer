@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: RenameTabDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Rename Tab' dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -23,7 +23,7 @@
 const TCHAR CRenameTabDialogPersistentSettings::SETTINGS_KEY[] = _T("RenameTab");
 
 CRenameTabDialog::CRenameTabDialog(HINSTANCE hInstance,
-	int iResource,HWND hParent,int iTab,IExplorerplusplus *pexpp) :
+	int iResource,HWND hParent,int iTab,ISaltedExplorer *pexpp) :
 CBaseDialog(hInstance,iResource,hParent,false)
 {
 	m_iTab = iTab;

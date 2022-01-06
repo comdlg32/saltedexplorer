@@ -6,8 +6,8 @@
  *
  * Manages the file context menu.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

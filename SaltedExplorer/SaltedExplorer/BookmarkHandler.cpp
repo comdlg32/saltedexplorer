@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: BookmarkHandler.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -8,8 +8,8 @@
  * such as creating a bookmarks menu, and
  * adding bookmarks to a toolbar.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -30,12 +30,12 @@ extern int g_iFolderSelected;
 LRESULT CALLBACK BookmarksToolbarSubclassStub(HWND hwnd,UINT uMsg,
 WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData)
 {
-	Explorerplusplus *pContainer = (Explorerplusplus *)dwRefData;
+	SaltedExplorer *pContainer = (SaltedExplorer *)dwRefData;
 
 	return pContainer->BookmarksToolbarSubclass(hwnd,uMsg,wParam,lParam);
 }
 
-LRESULT CALLBACK Explorerplusplus::BookmarksToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::BookmarksToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -73,7 +73,7 @@ LRESULT CALLBACK Explorerplusplus::BookmarksToolbarSubclass(HWND hwnd,UINT uMsg,
 	return DefSubclassProc(hwnd,uMsg,wParam,lParam);
 }
 
-void Explorerplusplus::InsertBookmarksIntoMenu(void)
+void SaltedExplorer::InsertBookmarksIntoMenu(void)
 {
 	Bookmark_t		RootBookmark;
 	Bookmark_t		FirstChild;
@@ -112,7 +112,7 @@ void Explorerplusplus::InsertBookmarksIntoMenu(void)
 	}
 }
 
-void Explorerplusplus::InsertBookmarksIntoMenuInternal(HMENU hMenu,
+void SaltedExplorer::InsertBookmarksIntoMenuInternal(HMENU hMenu,
 Bookmark_t *pBookmark,int iStartPos,int iStartId)
 {
 	g_iStartId = iStartId;
@@ -120,7 +120,7 @@ Bookmark_t *pBookmark,int iStartPos,int iStartId)
 	InsertBookmarksIntoMenuInternal(hMenu,pBookmark,iStartPos);
 }
 
-void Explorerplusplus::InsertBookmarksIntoMenuInternal(HMENU hMenu,
+void SaltedExplorer::InsertBookmarksIntoMenuInternal(HMENU hMenu,
 Bookmark_t *pBookmark,int iStartPos)
 {
 	MENUITEMINFO		mi;
@@ -210,7 +210,7 @@ Bookmark_t *pBookmark,int iStartPos)
 	}
 }
 
-void Explorerplusplus::InsertBookmarkToolbarButtons(void)
+void SaltedExplorer::InsertBookmarkToolbarButtons(void)
 {
 	Bookmark_t		RootBookmark;
 	HIMAGELIST		himl;
@@ -229,7 +229,7 @@ void Explorerplusplus::InsertBookmarkToolbarButtons(void)
 	InsertToolbarButtonsInternal(&RootBookmark);
 }
 
-void Explorerplusplus::InsertToolbarButtonsInternal(Bookmark_t *pBookmark)
+void SaltedExplorer::InsertToolbarButtonsInternal(Bookmark_t *pBookmark)
 {
 	Bookmark_t	CurrentBookmark;
 	Bookmark_t	ChildBookmark;
@@ -258,7 +258,7 @@ void Explorerplusplus::InsertToolbarButtonsInternal(Bookmark_t *pBookmark)
 	}
 }
 
-void Explorerplusplus::InsertBookmarkIntoToolbar(Bookmark_t *pBookmark,int id)
+void SaltedExplorer::InsertBookmarkIntoToolbar(Bookmark_t *pBookmark,int id)
 {
 	TBBUTTON	tbButton;
 	int			iImage;
@@ -280,7 +280,7 @@ void Explorerplusplus::InsertBookmarkIntoToolbar(Bookmark_t *pBookmark,int id)
 	UpdateToolbarBandSizing(m_hMainRebar,m_hBookmarksToolbar);
 }
 
-void Explorerplusplus::UpdateToolbarButton(Bookmark_t *pBookmark)
+void SaltedExplorer::UpdateToolbarButton(Bookmark_t *pBookmark)
 {
 	TBBUTTONINFO tbbi;
 	TBBUTTON tbButton;
@@ -318,7 +318,7 @@ void Explorerplusplus::UpdateToolbarButton(Bookmark_t *pBookmark)
 	}
 }
 
-void Explorerplusplus::InsertBookmarksIntoTreeView(HWND hTreeView,
+void SaltedExplorer::InsertBookmarksIntoTreeView(HWND hTreeView,
 HTREEITEM hParent,Bookmark_t *pBookmark)
 {
 	TVINSERTSTRUCT	tvis;
@@ -344,7 +344,7 @@ HTREEITEM hParent,Bookmark_t *pBookmark)
 	InsertBookmarksIntoTreeViewInternal(hTreeView,hTreeItem,pBookmark);
 }
 
-void Explorerplusplus::InsertBookmarksIntoTreeViewInternal(HWND hTreeView,
+void SaltedExplorer::InsertBookmarksIntoTreeViewInternal(HWND hTreeView,
 HTREEITEM hParent,Bookmark_t *pBookmark)
 {
 	TVINSERTSTRUCT	tvis;
@@ -398,7 +398,7 @@ HTREEITEM hParent,Bookmark_t *pBookmark)
 	hr = m_Bookmark.GetChild(pBookmark,&FirstChild);
 }
 
-void Explorerplusplus::InsertBookmarkFolderItemsIntoTreeView(HWND hFolders,
+void SaltedExplorer::InsertBookmarkFolderItemsIntoTreeView(HWND hFolders,
 HTREEITEM hParent,Bookmark_t *pBookmark)
 {
 	TVINSERTSTRUCT	tvis;
@@ -435,7 +435,7 @@ HTREEITEM hParent,Bookmark_t *pBookmark)
 	}
 }
 
-void Explorerplusplus::InsertBookmarksIntoListView(HWND hBookmarks,Bookmark_t *pBookmark)
+void SaltedExplorer::InsertBookmarksIntoListView(HWND hBookmarks,Bookmark_t *pBookmark)
 {
 	LVITEM			lvItem;
 	Bookmark_t		*pCurrentBookmark;
@@ -475,12 +475,12 @@ void Explorerplusplus::InsertBookmarksIntoListView(HWND hBookmarks,Bookmark_t *p
 	}
 }
 
-void Explorerplusplus::InsertFolderItemsIntoComboBox(HWND hCreateIn,Bookmark_t *pBookmark)
+void SaltedExplorer::InsertFolderItemsIntoComboBox(HWND hCreateIn,Bookmark_t *pBookmark)
 {
 	InsertFolderItemsIntoComboBoxInternal(hCreateIn,pBookmark,0,0);
 }
 
-void Explorerplusplus::InsertFolderItemsIntoComboBoxInternal(HWND hCreateIn,Bookmark_t *pBookmark,
+void SaltedExplorer::InsertFolderItemsIntoComboBoxInternal(HWND hCreateIn,Bookmark_t *pBookmark,
 int iIndent,int iBookmarkFolderItem)
 {
 	COMBOBOXEXITEM	cbexItem;
@@ -514,7 +514,7 @@ int iIndent,int iBookmarkFolderItem)
 	}
 }
 
-int Explorerplusplus::LocateBookmarkInComboBox(HWND hComboBox,void *pBookmarkHandle)
+int SaltedExplorer::LocateBookmarkInComboBox(HWND hComboBox,void *pBookmarkHandle)
 {
 	LONG_PTR	lResult;
 	int			nItems;
@@ -537,7 +537,7 @@ int Explorerplusplus::LocateBookmarkInComboBox(HWND hComboBox,void *pBookmarkHan
 	return -1;
 }
 
-void Explorerplusplus::InitializeBookmarkToolbarMap(void)
+void SaltedExplorer::InitializeBookmarkToolbarMap(void)
 {
 	int i = 0;
 
@@ -545,7 +545,7 @@ void Explorerplusplus::InitializeBookmarkToolbarMap(void)
 		m_uBookmarkToolbarMap[i] = 0;
 }
 
-int Explorerplusplus::GenerateUniqueBookmarkToolbarId(void)
+int SaltedExplorer::GenerateUniqueBookmarkToolbarId(void)
 {
 	BOOL	bFound = FALSE;
 	int		i = 0;
@@ -566,7 +566,7 @@ int Explorerplusplus::GenerateUniqueBookmarkToolbarId(void)
 		return -1;
 }
 
-void Explorerplusplus::GetBookmarkMenuItemDirectory(HMENU hMenu,
+void SaltedExplorer::GetBookmarkMenuItemDirectory(HMENU hMenu,
 int iBookmarkId,TCHAR *szDirectory,UINT uBufSize)
 {
 	MENUITEMINFO		mii;
@@ -584,7 +584,7 @@ int iBookmarkId,TCHAR *szDirectory,UINT uBufSize)
 	StringCchCopy(szDirectory,uBufSize,Bookmark.szLocation);
 }
 
-void Explorerplusplus::BookmarkToolbarOpenItem(int iItem,BOOL bOpenInNewTab)
+void SaltedExplorer::BookmarkToolbarOpenItem(int iItem,BOOL bOpenInNewTab)
 {
 	Bookmark_t	Bookmark;
 	TBBUTTON	tbButton;
@@ -608,7 +608,7 @@ void Explorerplusplus::BookmarkToolbarOpenItem(int iItem,BOOL bOpenInNewTab)
 	}
 }
 
-void Explorerplusplus::BookmarkToolbarDeleteItem(int iItem)
+void SaltedExplorer::BookmarkToolbarDeleteItem(int iItem)
 {
 	TBBUTTON	tbButton;
 	BOOL		bDeleted;
@@ -631,7 +631,7 @@ void Explorerplusplus::BookmarkToolbarDeleteItem(int iItem)
 	}
 }
 
-void Explorerplusplus::BookmarkToolbarShowItemProperties(int iItem)
+void SaltedExplorer::BookmarkToolbarShowItemProperties(int iItem)
 {
 	Bookmark_t					Bookmark;
 	BookmarkPropertiesInfo_t	bpi;
@@ -672,7 +672,7 @@ void Explorerplusplus::BookmarkToolbarShowItemProperties(int iItem)
 	}
 }
 
-void Explorerplusplus::BookmarkToolbarNewBookmark(int iItem)
+void SaltedExplorer::BookmarkToolbarNewBookmark(int iItem)
 {
 	AddBookmarkInfo_t	abi;
 	TBBUTTON			tbButton;
@@ -704,14 +704,14 @@ void Explorerplusplus::BookmarkToolbarNewBookmark(int iItem)
 	}
 }
 
-void Explorerplusplus::BookmarkToolbarNewFolder(int iItem)
+void SaltedExplorer::BookmarkToolbarNewFolder(int iItem)
 {
 	g_iFolderSelected = 0;
 	DialogBoxParam(g_hLanguageModule,MAKEINTRESOURCE(IDD_NEWBOOKMARKFOLDER),
 		m_hContainer,NewBookmarkFolderProcStub,(LPARAM)this);
 }
 
-void Explorerplusplus::RemoveItemFromBookmarksToolbar(void *pBookmarkHandle)
+void SaltedExplorer::RemoveItemFromBookmarksToolbar(void *pBookmarkHandle)
 {
 	TBBUTTON	tbButton;
 	LRESULT		lResult;
@@ -738,7 +738,7 @@ void Explorerplusplus::RemoveItemFromBookmarksToolbar(void *pBookmarkHandle)
 	}
 }
 
-HRESULT Explorerplusplus::ExpandAndBrowsePath(TCHAR *szPath)
+HRESULT SaltedExplorer::ExpandAndBrowsePath(TCHAR *szPath)
 {
 	return ExpandAndBrowsePath(szPath,FALSE,FALSE);
 }
@@ -746,7 +746,7 @@ HRESULT Explorerplusplus::ExpandAndBrowsePath(TCHAR *szPath)
 /* Browses to the specified path. The path may
 have any environment variables expanded (if
 necessary). */
-HRESULT Explorerplusplus::ExpandAndBrowsePath(TCHAR *szPath,BOOL bOpenInNewTab,BOOL bSwitchToNewTab)
+HRESULT SaltedExplorer::ExpandAndBrowsePath(TCHAR *szPath,BOOL bOpenInNewTab,BOOL bSwitchToNewTab)
 {
 	TCHAR szExpandedPath[MAX_PATH];
 
@@ -756,7 +756,7 @@ HRESULT Explorerplusplus::ExpandAndBrowsePath(TCHAR *szPath,BOOL bOpenInNewTab,B
 	return BrowseFolder(szExpandedPath,SBSP_ABSOLUTE,bOpenInNewTab,bSwitchToNewTab,FALSE);
 }
 
-BOOL Explorerplusplus::DeleteBookmarkSafe(HWND hwnd,void *pBookmarkHandle)
+BOOL SaltedExplorer::DeleteBookmarkSafe(HWND hwnd,void *pBookmarkHandle)
 {
 	TCHAR szInfoMsg[128];
 	int	iMessageBoxReturn;
@@ -765,7 +765,7 @@ BOOL Explorerplusplus::DeleteBookmarkSafe(HWND hwnd,void *pBookmarkHandle)
 		szInfoMsg,SIZEOF_ARRAY(szInfoMsg));
 
 	iMessageBoxReturn = MessageBox(hwnd,szInfoMsg,
-		NExplorerplusplus::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
+		NSaltedExplorer::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
 
 	if(iMessageBoxReturn == IDYES)
 	{

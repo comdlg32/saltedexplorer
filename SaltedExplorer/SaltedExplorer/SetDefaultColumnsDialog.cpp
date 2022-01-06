@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: SelectColumnsDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Select Columns' dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -28,7 +28,7 @@
 const TCHAR CSetDefaultColumnsDialogPersistentSettings::SETTINGS_KEY[] = _T("SetDefaultColumns");
 
 CSetDefaultColumnsDialog::CSetDefaultColumnsDialog(HINSTANCE hInstance,int iResource,HWND hParent,
-	IExplorerplusplus *pexpp,std::list<Column_t> *pRealFolderColumnList,std::list<Column_t> *pMyComputerColumnList,
+	ISaltedExplorer *pexpp,std::list<Column_t> *pRealFolderColumnList,std::list<Column_t> *pMyComputerColumnList,
 	std::list<Column_t> *pControlPanelColumnList,std::list<Column_t> *pRecycleBinColumnList,
 	std::list<Column_t> *pPrintersColumnList,std::list<Column_t> *pNetworkConnectionsColumnList,
 	std::list<Column_t> *pMyNetworkPlacesColumnList) :

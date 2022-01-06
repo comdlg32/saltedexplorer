@@ -6,8 +6,8 @@
  *
  * Contains various helper functions.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

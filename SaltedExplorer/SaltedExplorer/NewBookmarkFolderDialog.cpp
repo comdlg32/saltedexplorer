@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: NewBookmarkFolderDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'New Folder' dialog (for bookmarks).
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -28,13 +28,13 @@ extern int g_iFolderSelected;
 
 INT_PTR CALLBACK NewBookmarkFolderProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 			{
-				pContainer = (Explorerplusplus *)lParam;
+				pContainer = (SaltedExplorer *)lParam;
 			}
 			break;
 	}
@@ -42,7 +42,7 @@ INT_PTR CALLBACK NewBookmarkFolderProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPA
 	return pContainer->NewBookmarkFolderProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::NewBookmarkFolderProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::NewBookmarkFolderProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -71,7 +71,7 @@ INT_PTR CALLBACK Explorerplusplus::NewBookmarkFolderProc(HWND hDlg,UINT uMsg,WPA
 	return FALSE;
 }
 
-void Explorerplusplus::OnNewBookmarkFolderInit(HWND hDlg)
+void SaltedExplorer::OnNewBookmarkFolderInit(HWND hDlg)
 {
 	HWND	hName;
 	HWND	hCreateIn;
@@ -111,7 +111,7 @@ void Explorerplusplus::OnNewBookmarkFolderInit(HWND hDlg)
 is selected. Use the selection to decide where to
 create the new bookmark folder, by passing selection
 information back to the bookmarks module. */
-void Explorerplusplus::OnNewBookmarkFolderOk(HWND hDlg)
+void SaltedExplorer::OnNewBookmarkFolderOk(HWND hDlg)
 {
 	HWND			hName;
 	HWND			hCreateIn;

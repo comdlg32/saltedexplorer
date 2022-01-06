@@ -12,8 +12,8 @@
  *     - Swapping columns (i.e. checking/unchecking columns)
  *     - Exiting the program
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

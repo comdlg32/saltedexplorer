@@ -9,8 +9,8 @@
  * back/forward through a set
  * of paths.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

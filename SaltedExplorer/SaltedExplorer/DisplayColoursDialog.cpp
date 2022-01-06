@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: DisplayColoursDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Change Display Colors' dialog and associated messages.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -36,13 +36,13 @@ HICON		g_hDisplayWindowIcon;
 
 INT_PTR CALLBACK ChangeDisplayColoursStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 		{
-			pContainer = (Explorerplusplus *)lParam;
+			pContainer = (SaltedExplorer *)lParam;
 		}
 		break;
 	}
@@ -50,7 +50,7 @@ INT_PTR CALLBACK ChangeDisplayColoursStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPAR
 	return pContainer->ChangeDisplayColours(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::ChangeDisplayColours(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::ChangeDisplayColours(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -153,7 +153,7 @@ INT_PTR CALLBACK Explorerplusplus::ChangeDisplayColours(HWND hDlg,UINT uMsg,WPAR
 	return 0;
 }
 
-void Explorerplusplus::OnInitializeDisplayColorsDlg(HWND hDlg)
+void SaltedExplorer::OnInitializeDisplayColorsDlg(HWND hDlg)
 {
 	COLORREF CentreColor;
 	COLORREF SurroundColor;
@@ -281,7 +281,7 @@ void Explorerplusplus::OnInitializeDisplayColorsDlg(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnDisplayColorsDlgOk(HWND hDlg)
+void SaltedExplorer::OnDisplayColorsDlgOk(HWND hDlg)
 {
 	UINT r;
 	UINT g;
@@ -311,7 +311,7 @@ void Explorerplusplus::OnDisplayColorsDlgOk(HWND hDlg)
 	EndDialog(hDlg,1);
 }
 
-void Explorerplusplus::OnDisplayColorsChooseFont(HWND hDlg)
+void SaltedExplorer::OnDisplayColorsChooseFont(HWND hDlg)
 {
 	CHOOSEFONT cf;
 	LOGFONT LogFont;
@@ -339,7 +339,7 @@ void Explorerplusplus::OnDisplayColorsChooseFont(HWND hDlg)
 	DisplayWindow_SetTextColor(g_hPreviewDisplay,g_TextColor);
 }
 
-void Explorerplusplus::OnDisplayColorsHScroll(HWND hDlg)
+void SaltedExplorer::OnDisplayColorsHScroll(HWND hDlg)
 {
 	UINT r;
 	UINT g;
@@ -384,7 +384,7 @@ void Explorerplusplus::OnDisplayColorsHScroll(HWND hDlg)
 	}
 }
 
-void Explorerplusplus::OnDisplayColorsEnChange(HWND hDlg,LPARAM lParam)
+void SaltedExplorer::OnDisplayColorsEnChange(HWND hDlg,LPARAM lParam)
 {
 	HWND hEdit;
 	HWND hTrackBar = NULL;
@@ -438,7 +438,7 @@ void Explorerplusplus::OnDisplayColorsEnChange(HWND hDlg,LPARAM lParam)
 	SendMessage(g_hPreviewDisplay,DWM_SETCENTRECOLOR,rgb,0);
 }
 
-void Explorerplusplus::DisplayColorsSaveState(HWND hDlg)
+void SaltedExplorer::DisplayColorsSaveState(HWND hDlg)
 {
 	RECT rcTemp;
 

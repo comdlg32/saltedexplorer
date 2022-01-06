@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: SetFileAttributesDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -8,8 +8,8 @@
  * and creation/modification/access dates of a set
  * of files.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

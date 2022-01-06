@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: HelpFileMissingDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Manages the dialog shown when the help file is not found.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

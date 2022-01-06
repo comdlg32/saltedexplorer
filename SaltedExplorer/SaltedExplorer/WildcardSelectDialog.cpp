@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: WildcardSelectDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Allows items to be selected/deselected based
  * on a wildcard filter.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -27,7 +27,7 @@
 const TCHAR CWildcardSelectDialogPersistentSettings::SETTINGS_KEY[] = _T("WildcardSelect");
 
 CWildcardSelectDialog::CWildcardSelectDialog(HINSTANCE hInstance,
-	int iResource,HWND hParent,BOOL bSelect,IExplorerplusplus *pexpp) :
+	int iResource,HWND hParent,BOOL bSelect,ISaltedExplorer *pexpp) :
 CBaseDialog(hInstance,iResource,hParent,true)
 {
 	m_bSelect = bSelect;

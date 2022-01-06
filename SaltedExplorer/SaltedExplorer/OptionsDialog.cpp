@@ -1,6 +1,6 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: OptionsDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
@@ -12,8 +12,8 @@
  *    has been initialised (i.e. any dialog that has
  *    had the focus set to itself).
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -59,7 +59,7 @@ static HWND g_hOptionsPropertyDialog	= NULL;
 HICON g_hNewTabDirIcon;
 TCHAR g_szNewTabDirectory[MAX_PATH];
 
-void Explorerplusplus::OnShowOptions(void)
+void SaltedExplorer::OnShowOptions(void)
 {
 	PROPSHEETPAGE	psp[NUM_DIALOG_OPTIONS_PAGES];
 	HPROPSHEETPAGE	hpsp[NUM_DIALOG_OPTIONS_PAGES];
@@ -172,7 +172,7 @@ int CALLBACK PropSheetProcStub(HWND hDlg,UINT msg,LPARAM lParam)
 
 INT_PTR CALLBACK GeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer;
+	static SaltedExplorer *pContainer;
 
 	switch(uMsg)
 	{
@@ -181,7 +181,7 @@ INT_PTR CALLBACK GeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 				PROPSHEETPAGE *ppsp;
 
 				ppsp = (PROPSHEETPAGE *)lParam;
-				pContainer = (Explorerplusplus *)ppsp->lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
 			}
 			break;
 	}
@@ -189,7 +189,7 @@ INT_PTR CALLBACK GeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 	return pContainer->GeneralSettingsProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -292,6 +292,10 @@ INT_PTR CALLBACK Explorerplusplus::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARA
 					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
 					break;
 
+				case IDC_OPTION_SHELL_MODE:
+					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					break;
+
 				case IDC_DEFAULT_NEWTABDIR_BUTTON:
 					OnDefaultSettingsNewTabDir(hDlg);
 					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
@@ -379,7 +383,7 @@ INT_PTR CALLBACK Explorerplusplus::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARA
 							}
 							else
 							{
-								MessageBox(hDlg,szErrorMsg,NExplorerplusplus::WINDOW_NAME,MB_ICONWARNING);
+								MessageBox(hDlg,szErrorMsg,NSaltedExplorer::WINDOW_NAME,MB_ICONWARNING);
 
 								int nIDButton;
 
@@ -471,7 +475,7 @@ INT_PTR CALLBACK Explorerplusplus::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARA
 
 INT_PTR CALLBACK FilesFoldersProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer;
+	static SaltedExplorer *pContainer;
 
 	switch(uMsg)
 	{
@@ -480,7 +484,7 @@ INT_PTR CALLBACK FilesFoldersProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM l
 				PROPSHEETPAGE *ppsp;
 
 				ppsp = (PROPSHEETPAGE *)lParam;
-				pContainer = (Explorerplusplus *)ppsp->lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
 			}
 			break;
 	}
@@ -488,7 +492,7 @@ INT_PTR CALLBACK FilesFoldersProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM l
 	return pContainer->FilesFoldersProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -717,7 +721,7 @@ INT_PTR CALLBACK Explorerplusplus::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM w
 
 INT_PTR CALLBACK WindowProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer;
+	static SaltedExplorer *pContainer;
 
 	switch(uMsg)
 	{
@@ -726,7 +730,7 @@ INT_PTR CALLBACK WindowProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 				PROPSHEETPAGE *ppsp;
 
 				ppsp = (PROPSHEETPAGE *)lParam;
-				pContainer = (Explorerplusplus *)ppsp->lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
 			}
 			break;
 	}
@@ -734,7 +738,7 @@ INT_PTR CALLBACK WindowProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 	return pContainer->WindowProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -952,7 +956,7 @@ INT_PTR CALLBACK Explorerplusplus::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,
 
 INT_PTR CALLBACK TabSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer;
+	static SaltedExplorer *pContainer;
 
 	switch(uMsg)
 	{
@@ -961,7 +965,7 @@ INT_PTR CALLBACK TabSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lP
 				PROPSHEETPAGE *ppsp;
 
 				ppsp = (PROPSHEETPAGE *)lParam;
-				pContainer = (Explorerplusplus *)ppsp->lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
 			}
 			break;
 	}
@@ -969,7 +973,7 @@ INT_PTR CALLBACK TabSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lP
 	return pContainer->TabSettingsProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -1067,7 +1071,7 @@ INT_PTR CALLBACK Explorerplusplus::TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wP
 
 INT_PTR CALLBACK DefaultSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer;
+	static SaltedExplorer *pContainer;
 
 	switch(uMsg)
 	{
@@ -1076,7 +1080,7 @@ INT_PTR CALLBACK DefaultSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 				PROPSHEETPAGE *ppsp;
 
 				ppsp = (PROPSHEETPAGE *)lParam;
-				pContainer = (Explorerplusplus *)ppsp->lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
 			}
 			break;
 	}
@@ -1084,7 +1088,7 @@ INT_PTR CALLBACK DefaultSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 	return pContainer->DefaultSettingsProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
 	switch(uMsg)
 	{
@@ -1222,7 +1226,7 @@ INT_PTR CALLBACK Explorerplusplus::DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARA
 	return 0;
 }
 
-void Explorerplusplus::OnDefaultSettingsNewTabDir(HWND hDlg)
+void SaltedExplorer::OnDefaultSettingsNewTabDir(HWND hDlg)
 {
 	BROWSEINFO bi;
 	PIDLIST_ABSOLUTE pidl = NULL;
@@ -1284,7 +1288,7 @@ int CALLBACK NewTabDirectoryBrowseCallbackProc(HWND hwnd,UINT uMsg,LPARAM lParam
 	return 0;
 }
 
-void Explorerplusplus::DefaultSettingsSetNewTabDir(HWND hEdit,TCHAR *szPath)
+void SaltedExplorer::DefaultSettingsSetNewTabDir(HWND hEdit,TCHAR *szPath)
 {
 	LPITEMIDLIST	pidl = NULL;
 	HRESULT			hr;
@@ -1299,7 +1303,7 @@ void Explorerplusplus::DefaultSettingsSetNewTabDir(HWND hEdit,TCHAR *szPath)
 	}
 }
 
-void Explorerplusplus::DefaultSettingsSetNewTabDir(HWND hEdit,LPITEMIDLIST pidl)
+void SaltedExplorer::DefaultSettingsSetNewTabDir(HWND hEdit,LPITEMIDLIST pidl)
 {
 	SFGAOF			Attributes;
 	DWORD			uNameFlags;
@@ -1320,7 +1324,7 @@ void Explorerplusplus::DefaultSettingsSetNewTabDir(HWND hEdit,LPITEMIDLIST pidl)
 	SendMessage(hEdit,WM_SETTEXT,0,(LPARAM)szNewTabDir);
 }
 
-void Explorerplusplus::AddLanguages(HWND hDlg)
+void SaltedExplorer::AddLanguages(HWND hDlg)
 {
 	HWND			hLanguageComboBox;
 	WIN32_FIND_DATA	wfd;
@@ -1374,7 +1378,7 @@ void Explorerplusplus::AddLanguages(HWND hDlg)
 	SendMessage(hLanguageComboBox,CB_SETCURSEL,iSel,0);
 }
 
-WORD Explorerplusplus::AddLanguageToComboBox(HWND hComboBox,
+WORD SaltedExplorer::AddLanguageToComboBox(HWND hComboBox,
 TCHAR *szImageDirectory,TCHAR *szFileName)
 {
 	TCHAR			szFullFileName[MAX_PATH];
@@ -1433,7 +1437,7 @@ TCHAR *szImageDirectory,TCHAR *szFileName)
 	return wRet;
 }
 
-int Explorerplusplus::GetLanguageIDFromIndex(HWND hDlg,int iIndex)
+int SaltedExplorer::GetLanguageIDFromIndex(HWND hDlg,int iIndex)
 {
 	HWND	hComboBox;
 	int		iLanguage;
@@ -1445,7 +1449,7 @@ int Explorerplusplus::GetLanguageIDFromIndex(HWND hDlg,int iIndex)
 	return iLanguage;
 }
 
-void Explorerplusplus::SetInfoTipWindowStates(HWND hDlg)
+void SaltedExplorer::SetInfoTipWindowStates(HWND hDlg)
 {
 	HWND	hCheckSystemInfoTips;
 	HWND	hCheckCustomInfoTips;
@@ -1461,7 +1465,7 @@ void Explorerplusplus::SetInfoTipWindowStates(HWND hDlg)
 	EnableWindow(hCheckCustomInfoTips,bEnable);
 }
 
-void Explorerplusplus::SetFolderSizeWindowState(HWND hDlg)
+void SaltedExplorer::SetFolderSizeWindowState(HWND hDlg)
 {
 	HWND hFolderSizesNeworkRemovable;
 	BOOL bEnable;

@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: CustomizeColorsDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles the customize colors dialog.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -360,7 +360,7 @@ void CCustomizeColorsDialog::OnDelete()
 			szInfoMsg,SIZEOF_ARRAY(szInfoMsg));
 
 		int iRes = MessageBox(m_hDlg,szInfoMsg,
-			NExplorerplusplus::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
+			NSaltedExplorer::WINDOW_NAME,MB_YESNO|MB_ICONINFORMATION|MB_DEFBUTTON2);
 
 		if(iRes == IDYES)
 		{

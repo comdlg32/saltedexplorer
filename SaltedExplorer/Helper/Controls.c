@@ -6,8 +6,8 @@
  *
  * Generic implementation of control creation.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

@@ -1,14 +1,14 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: DisplayWindowLinePropertiesDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the 'Display Window Line
  * Properties' dialog box.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -26,13 +26,13 @@ HICON	g_hCommandsArrowIcon;
 
 INT_PTR CALLBACK DWLinePropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
 {
-	static Explorerplusplus *pContainer = NULL;
+	static SaltedExplorer *pContainer = NULL;
 
 	switch(uMsg)
 	{
 		case WM_INITDIALOG:
 		{
-			pContainer = (Explorerplusplus *)lParam;
+			pContainer = (SaltedExplorer *)lParam;
 		}
 		break;
 	}
@@ -40,7 +40,7 @@ INT_PTR CALLBACK DWLinePropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPAR
 	return pContainer->DWLinePropertiesProc(hDlg,uMsg,wParam,lParam);
 }
 
-INT_PTR CALLBACK Explorerplusplus::DWLinePropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
+INT_PTR CALLBACK SaltedExplorer::DWLinePropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
 	//switch(Msg)
 	//{

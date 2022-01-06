@@ -13,7 +13,7 @@
 CRITICAL_SECTION	g_csDirMonCallback;
 
 /* IUnknown interface members. */
-HRESULT __stdcall Explorerplusplus::QueryInterface(REFIID iid, void **ppvObject)
+HRESULT __stdcall SaltedExplorer::QueryInterface(REFIID iid, void **ppvObject)
 {
 	*ppvObject = NULL;
 
@@ -31,12 +31,12 @@ HRESULT __stdcall Explorerplusplus::QueryInterface(REFIID iid, void **ppvObject)
 	return E_NOINTERFACE;
 }
 
-ULONG __stdcall Explorerplusplus::AddRef(void)
+ULONG __stdcall SaltedExplorer::AddRef(void)
 {
 	return ++m_iRefCount;
 }
 
-ULONG __stdcall Explorerplusplus::Release(void)
+ULONG __stdcall SaltedExplorer::Release(void)
 {
 	m_iRefCount--;
 	
@@ -50,9 +50,9 @@ ULONG __stdcall Explorerplusplus::Release(void)
 }
 
 /*
- * Constructor for the main Explorerplusplus class.
+ * Constructor for the main SaltedExplorer class.
  */
-Explorerplusplus::Explorerplusplus(HWND hwnd)
+SaltedExplorer::SaltedExplorer(HWND hwnd)
 {
 	m_iRefCount = 1;
 
@@ -188,9 +188,9 @@ Explorerplusplus::Explorerplusplus(HWND hwnd)
 }
 
 /*
- * Deconstructor for the main Explorerplusplus class.
+ * Deconstructor for the main SaltedExplorer class.
  */
-Explorerplusplus::~Explorerplusplus()
+SaltedExplorer::~SaltedExplorer()
 {
 	m_pDirMon->Release();
 
@@ -200,7 +200,7 @@ Explorerplusplus::~Explorerplusplus()
 	}
 }
 
-void Explorerplusplus::InitializeMainToolbars(void)
+void SaltedExplorer::InitializeMainToolbars(void)
 {
 	/* Initialize the main toolbar styles and settings here. The visibility and gripper
 	styles will be set after the settings have been loaded (needed to keep compatibility
@@ -259,7 +259,7 @@ void Explorerplusplus::InitializeMainToolbars(void)
 /*
  * Sets the default values used within the program.
  */
-void Explorerplusplus::SetDefaultValues(void)
+void SaltedExplorer::SetDefaultValues(void)
 {
 	/* User options. */
 	m_bOpenNewTabNextToCurrent		= FALSE;
@@ -301,6 +301,7 @@ void Explorerplusplus::SetDefaultValues(void)
 	/* Window states. */
 	m_bShowStatusBar				= TRUE;
 	m_bShowFolders					= FALSE;
+	m_bShowMenuBar					= FALSE;
 	m_bShowAddressBar				= TRUE;
 	m_bShowMainToolbar				= TRUE;
 	m_bShowBookmarksToolbar			= FALSE;
@@ -328,7 +329,7 @@ void Explorerplusplus::SetDefaultValues(void)
 	m_bHideLinkExtensionGlobal		= FALSE;
 }
 
-HMENU Explorerplusplus::CreateRebarHistoryMenu(BOOL bBack)
+HMENU SaltedExplorer::CreateRebarHistoryMenu(BOOL bBack)
 {
 	HMENU hSubMenu = NULL;
 	std::list<LPITEMIDLIST> lHistory;
@@ -378,20 +379,20 @@ HMENU Explorerplusplus::CreateRebarHistoryMenu(BOOL bBack)
 	return hSubMenu;
 }
 
-Explorerplusplus::CLoadSaveRegistry::CLoadSaveRegistry(Explorerplusplus *pContainer)
+SaltedExplorer::CLoadSaveRegistry::CLoadSaveRegistry(SaltedExplorer *pContainer)
 {
 	m_iRefCount = 1;
 
 	m_pContainer = pContainer;
 }
 
-Explorerplusplus::CLoadSaveRegistry::~CLoadSaveRegistry()
+SaltedExplorer::CLoadSaveRegistry::~CLoadSaveRegistry()
 {
 
 }
 
 /* IUnknown interface members. */
-HRESULT __stdcall Explorerplusplus::CLoadSaveRegistry::QueryInterface(REFIID iid, void **ppvObject)
+HRESULT __stdcall SaltedExplorer::CLoadSaveRegistry::QueryInterface(REFIID iid, void **ppvObject)
 {
 	*ppvObject = NULL;
 
@@ -404,12 +405,12 @@ HRESULT __stdcall Explorerplusplus::CLoadSaveRegistry::QueryInterface(REFIID iid
 	return E_NOINTERFACE;
 }
 
-ULONG __stdcall Explorerplusplus::CLoadSaveRegistry::AddRef(void)
+ULONG __stdcall SaltedExplorer::CLoadSaveRegistry::AddRef(void)
 {
 	return ++m_iRefCount;
 }
 
-ULONG __stdcall Explorerplusplus::CLoadSaveRegistry::Release(void)
+ULONG __stdcall SaltedExplorer::CLoadSaveRegistry::Release(void)
 {
 	m_iRefCount--;
 	
@@ -422,7 +423,7 @@ ULONG __stdcall Explorerplusplus::CLoadSaveRegistry::Release(void)
 	return m_iRefCount;
 }
 
-HRESULT Explorerplusplus::QueryService(REFGUID guidService,REFIID riid,void **ppv)
+HRESULT SaltedExplorer::QueryService(REFGUID guidService,REFIID riid,void **ppv)
 {
 	*ppv = NULL;
 
@@ -444,22 +445,22 @@ HRESULT Explorerplusplus::QueryService(REFGUID guidService,REFIID riid,void **pp
 	return E_NOINTERFACE;
 }
 
-HRESULT Explorerplusplus::CreateViewWindow2(LPSV2CVW2_PARAMS lpParams)
+HRESULT SaltedExplorer::CreateViewWindow2(LPSV2CVW2_PARAMS lpParams)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::GetView(SHELLVIEWID *pvid,ULONG uView)
+HRESULT SaltedExplorer::GetView(SHELLVIEWID *pvid,ULONG uView)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::HandleRename(LPCITEMIDLIST pidlNew)
+HRESULT SaltedExplorer::HandleRename(LPCITEMIDLIST pidlNew)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::SelectAndPositionItem(LPCITEMIDLIST pidlItem,UINT uFlags,POINT *ppt)
+HRESULT SaltedExplorer::SelectAndPositionItem(LPCITEMIDLIST pidlItem,UINT uFlags,POINT *ppt)
 {
 	LPITEMIDLIST pidlComplete = NULL;
 	LPITEMIDLIST pidlDirectory = NULL;
@@ -477,72 +478,72 @@ HRESULT Explorerplusplus::SelectAndPositionItem(LPCITEMIDLIST pidlItem,UINT uFla
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::GetWindow(HWND *)
+HRESULT SaltedExplorer::GetWindow(HWND *)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::ContextSensitiveHelp(BOOL bHelp)
+HRESULT SaltedExplorer::ContextSensitiveHelp(BOOL bHelp)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::TranslateAccelerator(MSG *msg)
+HRESULT SaltedExplorer::TranslateAccelerator(MSG *msg)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::EnableModeless(BOOL fEnable)
+HRESULT SaltedExplorer::EnableModeless(BOOL fEnable)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::UIActivate(UINT uActivate)
+HRESULT SaltedExplorer::UIActivate(UINT uActivate)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::Refresh(void)
+HRESULT SaltedExplorer::Refresh(void)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::CreateViewWindow(IShellView *psvPrevious,LPCFOLDERSETTINGS pfs,IShellBrowser *psb,RECT *prcView,HWND *phWnd)
+HRESULT SaltedExplorer::CreateViewWindow(IShellView *psvPrevious,LPCFOLDERSETTINGS pfs,IShellBrowser *psb,RECT *prcView,HWND *phWnd)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::DestroyViewWindow(void)
+HRESULT SaltedExplorer::DestroyViewWindow(void)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::GetCurrentInfo(LPFOLDERSETTINGS pfs)
+HRESULT SaltedExplorer::GetCurrentInfo(LPFOLDERSETTINGS pfs)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::AddPropertySheetPages(DWORD dwReserved,LPFNSVADDPROPSHEETPAGE pfn,LPARAM lparam)
+HRESULT SaltedExplorer::AddPropertySheetPages(DWORD dwReserved,LPFNSVADDPROPSHEETPAGE pfn,LPARAM lparam)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::SaveViewState(void)
+HRESULT SaltedExplorer::SaveViewState(void)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::SelectItem(LPCITEMIDLIST pidlItem,SVSIF uFlags)
+HRESULT SaltedExplorer::SelectItem(LPCITEMIDLIST pidlItem,SVSIF uFlags)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::GetItemObject(UINT uItem,REFIID riid,void **ppv)
+HRESULT SaltedExplorer::GetItemObject(UINT uItem,REFIID riid,void **ppv)
 {
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::IncludeItems(NMCII_FLAGS *pFlags)
+HRESULT SaltedExplorer::IncludeItems(NMCII_FLAGS *pFlags)
 {
 	/* pFlags will be one of:
 	NMCII_ITEMS
@@ -562,7 +563,7 @@ HRESULT Explorerplusplus::IncludeItems(NMCII_FLAGS *pFlags)
 	return S_OK;
 }
 
-HRESULT Explorerplusplus::SelectAndEditItem(PCIDLIST_ABSOLUTE pidlItem,NMCSAEI_FLAGS flags)
+HRESULT SaltedExplorer::SelectAndEditItem(PCIDLIST_ABSOLUTE pidlItem,NMCSAEI_FLAGS flags)
 {
 	switch(flags)
 	{

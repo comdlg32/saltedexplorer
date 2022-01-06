@@ -1,13 +1,13 @@
 /******************************************************************
  *
- * Project: Explorer++
+ * Project: SaltedExplorer
  * File: SearchDialog.cpp
  * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the 'Search' dialog box.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
@@ -42,7 +42,7 @@ namespace NSearchDialog
 const TCHAR CSearchDialogPersistentSettings::SETTINGS_KEY[] = _T("Search");
 
 CSearchDialog::CSearchDialog(HINSTANCE hInstance,int iResource,
-	HWND hParent,TCHAR *szSearchDirectory,IExplorerplusplus *pexpp) :
+	HWND hParent,TCHAR *szSearchDirectory,ISaltedExplorer *pexpp) :
 CBaseDialog(hInstance,iResource,hParent,true)
 {
 	StringCchCopy(m_szSearchDirectory,SIZEOF_ARRAY(m_szSearchDirectory),

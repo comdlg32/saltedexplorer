@@ -7,8 +7,8 @@
  * Includes code for placing items into
  * groups.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 

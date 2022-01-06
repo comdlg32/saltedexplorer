@@ -19,7 +19,7 @@
 
 /* Used to share global data across the
 classes within the Explorer++ project. */
-namespace NExplorerplusplus
+namespace NSaltedExplorer
 {
 	const TCHAR WINDOW_NAME[]		= _T("SaltedExplorer");
 	const TCHAR CLASS_NAME[]		= _T("SaltedExplorer");
@@ -41,7 +41,7 @@ extern HINSTANCE g_hLanguageModule;
 
 /* Used when setting Explorer++ as the default
 file manager. */
-#define SHELL_DEFAULT_INTERNAL_COMMAND_NAME _T("openinexplorer++")
+#define SHELL_DEFAULT_INTERNAL_COMMAND_NAME _T("openinsaltedexplorer")
 #define SHELL_DEFAULT_MENU_TEXT _T("Open In SaltedExplorer")
 
 #define LANG_SINHALA	1115
@@ -93,7 +93,7 @@ SelectAndEdit() method of INewClient. */
 #define DEFAULT_DISPLAYWINDOW_HEIGHT	90
 
 #define DEFAULT_DISPLAYWINDOW_CENTRE_COLOR		Gdiplus::Color(255,255,255)
-#define DEFAULT_DISPLAYWINDOW_SURROUND_COLOR	Gdiplus::Color(0,94,138)
+#define DEFAULT_DISPLAYWINDOW_SURROUND_COLOR	Gdiplus::Color(255,255,255)
 
 #define WM_USER_TABMCLICK		(WM_APP + 53)
 #define WM_USER_ASSOCCHANGED	(WM_APP + 54)
@@ -109,6 +109,7 @@ main rebar. */
 #define	ID_BOOKMARKSTOOLBAR		2
 #define	ID_DRIVESTOOLBAR		3
 #define	ID_APPLICATIONSTOOLBAR	4
+#define ID_MENUBAR				5
 
 /* Rebar menu id's. */
 #define ID_REBAR_MENU_BACK_START	2000
@@ -263,9 +264,9 @@ bitmap). */
 #define SHELLIMAGES_PASTESHORTCUT		30
 #define SHELLIMAGES_DELETEPERMANENTLY	31
 
-/* Basic interface between Explorerplusplus
+/* Basic interface between SaltedExplorer
 and the dialogs. */
-__interface IExplorerplusplus
+__interface ISaltedExplorer
 {
 	virtual HWND			GetActiveListView();
 	virtual IShellBrowser2	*GetActiveShellBrowser();

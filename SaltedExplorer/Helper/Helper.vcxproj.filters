@@ -80,9 +80,6 @@
     <ClInclude Include="Controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CustomMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DropHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -149,6 +146,7 @@
     <ClInclude Include="Macros.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomMenu.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

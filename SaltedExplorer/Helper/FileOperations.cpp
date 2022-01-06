@@ -6,8 +6,8 @@
  *
  * Provides a set of file operation functions.
  *
- * Written by David Erceg
- * www.explorerplusplus.com
+ 
+ * www.saltedexplorer.ml
  *
  *****************************************************************/
 
