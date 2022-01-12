@@ -1,3 +1,0 @@
-[bugtraq]
-	url = https://github.com/derceg/explorerplusplus/issues/%BUGID%
-	logregex = "#(\\d+)"
