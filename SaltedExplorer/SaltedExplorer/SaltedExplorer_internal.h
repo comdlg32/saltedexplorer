@@ -18,7 +18,7 @@
 #include "MainResource.h"
 
 /* Used to share global data across the
-classes within the Explorer++ project. */
+classes within the SaltedExplorer project. */
 namespace NSaltedExplorer
 {
 	const TCHAR WINDOW_NAME[]		= _T("SaltedExplorer");
@@ -39,7 +39,7 @@ namespace NSaltedExplorer
 
 extern HINSTANCE g_hLanguageModule;
 
-/* Used when setting Explorer++ as the default
+/* Used when setting SaltedExplorer as the default
 file manager. */
 #define SHELL_DEFAULT_INTERNAL_COMMAND_NAME _T("openinsaltedexplorer")
 #define SHELL_DEFAULT_MENU_TEXT _T("Open In SaltedExplorer")
@@ -151,8 +151,8 @@ the folders pane. */
 /* Small/large toolbar image sizes. */
 #define TOOLBAR_IMAGE_SIZE_SMALL_X	16
 #define TOOLBAR_IMAGE_SIZE_SMALL_Y	16
-#define TOOLBAR_IMAGE_SIZE_LARGE_X	24
-#define TOOLBAR_IMAGE_SIZE_LARGE_Y	24
+#define TOOLBAR_IMAGE_SIZE_LARGE_X	20
+#define TOOLBAR_IMAGE_SIZE_LARGE_Y	20
 
 #define TAB_TOOLBAR_X_OFFSET		(-20)
 #define TAB_TOOLBAR_Y_OFFSET		5

@@ -80,9 +80,9 @@
     <ClInclude Include="Controls.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CustomMenu.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+	<ClInclude Include="CustomMenu.h" />
+	  <Filter>Header Files</Filter>
+	</ClInclude>
     <ClInclude Include="DropHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -160,8 +160,5 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{e8f7900c-74b7-46e5-a93a-ea871a69c786}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>

@@ -173,7 +173,7 @@ void SaltedExplorer::OnWindowCreate(void)
 
 	/* The internal variable that controls whether or not
 	taskbar thumbnails are shown in Windows 7 should only
-	be set once during execution (i.e. when Explorer++
+	be set once during execution (i.e. when SaltedExplorer
 	starts up).
 	Therefore, we'll only ever show the user a provisional
 	setting, to stop them from changing the actual value. */
@@ -307,7 +307,7 @@ void SaltedExplorer::SetLanguageModule(void)
 		corresponding DLL. */
 		GetCurrentProcessImageName(szLanguageModule,SIZEOF_ARRAY(szLanguageModule));
 		PathRemoveFileSpec(szLanguageModule);
-		StringCchPrintf(szName,SIZEOF_ARRAY(szName),_T("Explorer++%2s.dll"),g_szLang);
+		StringCchPrintf(szName,SIZEOF_ARRAY(szName),_T("SaltedExplorer%2s.dll"),g_szLang);
 		PathAppend(szLanguageModule,szName);
 
 		wLanguage = GetFileLanguage(szLanguageModule);
@@ -336,7 +336,7 @@ void SaltedExplorer::SetLanguageModule(void)
 		PathRemoveFileSpec(szLanguageModule);
 
 		StringCchCopy(szNamePattern,SIZEOF_ARRAY(szNamePattern),szLanguageModule);
-		PathAppend(szNamePattern,_T("Explorer++??.dll"));
+		PathAppend(szNamePattern,_T("SaltedExplorer??.dll"));
 
 		hFindFile = FindFirstFile(szNamePattern,&wfd);
 

@@ -5,7 +5,7 @@
  * License: GPL - See COPYING in the top level directory
  *
  * Loads and saves all settings associated with
- * Explorer++ from/to an XML configuration file.
+ * SaltedExplorer from/to an XML configuration file.
  *
  * Notes:
  *  - Attribute names and values must conform to
@@ -2560,7 +2560,7 @@ void SaltedExplorer::CLoadSaveXML::InitializeSaveEnvironment(void)
 	bstr1 = NULL;
 
 	/* Short header comment, explaining file purpose. */
-	bstr = SysAllocString(L" Preference file for Explorer++ ");
+	bstr = SysAllocString(L" Preference file for SaltedExplorer ");
 	m_pXMLDom->createComment(bstr, &pc);
 	NXMLSettings::AppendChildToParent(pc, m_pXMLDom);
 	SysFreeString(bstr);

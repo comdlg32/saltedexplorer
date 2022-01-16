@@ -1,15 +1,3 @@
-/******************************************************************
- *
- * Project: Helper
- * File: CustomMenu.cpp
- * License: GPL - See COPYING in the top level directory
- *
- * Implements a custom menu system.
- *
- * www.saltedexplorer.ml
- *
- *****************************************************************/
-
 #include "stdafx.h"
 #include "CustomMenu.h"
 #include "Macros.h"

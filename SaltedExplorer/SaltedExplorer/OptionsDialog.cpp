@@ -1345,7 +1345,7 @@ void SaltedExplorer::AddLanguages(HWND hDlg)
 	GetCurrentProcessImageName(szImageDirectory,SIZEOF_ARRAY(szImageDirectory));
 	PathRemoveFileSpec(szImageDirectory);
 	StringCchCopy(szNamePattern,SIZEOF_ARRAY(szNamePattern),szImageDirectory);
-	PathAppend(szNamePattern,_T("Explorer++??.dll"));
+	PathAppend(szNamePattern,_T("SaltedExplorer??.dll"));
 
 	hFindFile = FindFirstFile(szNamePattern,&wfd);
 

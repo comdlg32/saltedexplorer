@@ -42,7 +42,7 @@ PANTHEIOS_CALL(void) pantheios_fe_uninit(void *token)
 
 PANTHEIOS_CALL(PAN_CHAR_T const *) pantheios_fe_getProcessIdentity(void *token)
 {
-	return L"Explorer++";
+	return L"SaltedExplorer";
 }
 
 PANTHEIOS_CALL(int) pantheios_fe_isSeverityLogged(void *token,int severity,int backEndId)

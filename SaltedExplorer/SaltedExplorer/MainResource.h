@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Explorer++Main.rc
+// Used by SaltedExplorerMain.rc
 //
 
 #include "resource.h"

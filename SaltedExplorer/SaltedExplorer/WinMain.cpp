@@ -40,8 +40,8 @@ BOOL g_bForceLanguageLoad = FALSE;
  * Processes the specified command line.
  *
  * Command line options:
- * -l	Specifies the language for Explorer++ to use.
- * /?	Causes Explorer++ to show a small help message and exit.
+ * -l	Specifies the language for SaltedExplorer to use.
+ * /?	Causes SaltedExplorer to show a small help message and exit.
  *
  * Directories can also be passed at any point (no preceding
  * arguments needed).
@@ -129,7 +129,7 @@ ensure you have administrator privileges."),NSaltedExplorer::WINDOW_NAME,MB_ICON
 		{
 			/* This will be called when the user clicks the
 			'New Tab' item on the tasks menu in Windows 7.
-			Find the already opened version of Explorer++,
+			Find the already opened version of SaltedExplorer,
 			and tell it to open a new tab. */
 			HANDLE hMutex;
 
@@ -182,18 +182,18 @@ ensure you have administrator privileges."),NSaltedExplorer::WINDOW_NAME,MB_ICON
 
 /*
  * Shows a brief message explaining the
- * command line paramters Explorer++
+ * command line paramters SaltedExplorer
  * uses.
  */
 void ShowUsage(void)
 {
-	TCHAR UsageString[] = _T("Usage:\nexplorer++.exe dir1 dir2 ... dirN\n \
+	TCHAR UsageString[] = _T("Usage:\nSaltedExplorer.exe dir1 dir2 ... dirN\n \
 where dir1 to dirN are the directories to \
-open.\n\ne.g. explorer++.exe C:\\ D:\\\nwill open the \
+open.\n\ne.g. SaltedExplorer.exe C:\\ D:\\\nwill open the \
 directories C:\\ and D:\\, each in their own tabs\n\n\
 Virtual folders can be opened simply by \
 supplying their name:\n\
-e.g. explorer++.exe \"control panel\"\nwill open the \
+e.g. SaltedExplorer.exe \"control panel\"\nwill open the \
 Control Panel\n");
 
 	MessageBox(NULL,UsageString,NSaltedExplorer::WINDOW_NAME,MB_OK);
@@ -277,7 +277,7 @@ LONG WINAPI MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *pExceptionInf
 
 				/* If this is enabled, it needs to have a proper error message, and block
 				access to the main window. */
-				/*StringCchPrintf(szMsg,SIZEOF_ARRAY(szMsg),_T("Explorer++ has encountered an error and needs to close. \
+				/*StringCchPrintf(szMsg,SIZEOF_ARRAY(szMsg),_T("SaltedExplorer has encountered an error and needs to close. \
 A minidump has been saved to:\n%s\nPlease report this to the developer."),szFileName);
 				MessageBox(NULL,szMsg,szAppName,MB_OK);
 

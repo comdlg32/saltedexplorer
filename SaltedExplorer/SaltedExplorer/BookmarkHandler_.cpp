@@ -2,11 +2,13 @@
  *
  * Project: SaltedExplorer
  * File: BookmarkHandler.cpp
+ * License: GPL - See COPYING in the top level directory
  *
  * Handles tasks associated with bookmarks,
  * such as creating a bookmarks menu, and
  * adding bookmarks to a toolbar.
  *
+ 
  * www.saltedexplorer.ml
  *
  *****************************************************************/

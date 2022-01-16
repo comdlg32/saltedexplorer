@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Explorer++_NoTranslation.rc
+// Used by SaltedExplorer_NoTranslation.rc
 //
 #define IDB_FOLDERLOCKED                101
 #define IDB_TABTOOLBAR_CLOSE            102

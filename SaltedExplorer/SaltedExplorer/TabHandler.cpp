@@ -393,7 +393,7 @@ void SaltedExplorer::CreateTabProxy(LPITEMIDLIST pidlDirectory,int iTabId,BOOL b
 
 	static int iCount = 0;
 
-	StringCchPrintf(szClassName,SIZEOF_ARRAY(szClassName),_T("Explorer++TabProxy%d"),iCount++);
+	StringCchPrintf(szClassName,SIZEOF_ARRAY(szClassName),_T("SaltedExplorerTabProxy%d"),iCount++);
 
 	aRet = RegisterTabProxyClass(szClassName,pidlDirectory);
 
