@@ -78,6 +78,7 @@ will need to be changed correspondingly. */
 #define HASH_SHOWSTATUSBAR			3554629247
 #define HASH_SHOWINFOTIPS			3018038962
 #define HASH_SHOWTOOLBAR			1852868921
+#define HASH_SHOWMENUBAR			1853964589
 #define HASH_SORTASCENDINGGLOBAL	2605638058
 #define HASH_STARTUPMODE			1344265373
 #define HASH_TOOLBARSTATE			3436473849
@@ -118,6 +119,7 @@ will need to be changed correspondingly. */
 #define HASH_OVERWRITEEXISTINGFILESCONFIRMATION	1625342835
 #define HASH_LARGETOOLBARICONS		10895007
 #define HASH_PLAYNAVIGATIONSOUND	1987363412
+#define HASH_SHELL_THEME			3998265761
 
 typedef struct
 {
@@ -364,6 +366,8 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFriendlyDates"),NXMLSettings::EncodeBoolValue(m_bShowFriendlyDatesGlobal));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShellMode"),NXMLSettings::EncodeBoolValue(m_bShellMode));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFullTitlePath"),NXMLSettings::EncodeBoolValue(m_bShowFullTitlePath));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowGridlinesGlobal"),NXMLSettings::EncodeBoolValue(m_bShowGridlinesGlobal));
@@ -384,6 +388,8 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowToolbar"),NXMLSettings::EncodeBoolValue(m_bShowMainToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowMenuBar"),NXMLSettings::EncodeBoolValue(m_bShowMenuBar));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowUserNameTitleBar"),NXMLSettings::EncodeBoolValue(m_bShowUserNameInTitleBar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("SizeDisplayFormat"),NXMLSettings::EncodeIntValue(m_SizeDisplayFormat));
@@ -400,6 +406,9 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("TVAutoExpandSelected"),NXMLSettings::EncodeBoolValue(m_bTVAutoExpandSelected));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("UseFullRowSelect"),NXMLSettings::EncodeBoolValue(m_bUseFullRowSelect));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	_itow_s(m_ShellTheme,szValue,SIZEOF_ARRAY(szValue),10);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShellTheme"),szValue);
 
 	TBBUTTON tbButton;
 	TCHAR szButtonAttributeName[32];
@@ -2193,6 +2202,10 @@ WCHAR *wszName,WCHAR *wszValue)
 		m_bShowMainToolbar = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
+	case HASH_SHOWMENUBAR:
+		m_bShowMenuBar = NXMLSettings::DecodeBoolValue(wszValue);
+		break;
+
 	case HASH_SHOWUSERNAMETITLEBAR:
 		m_bShowUserNameInTitleBar = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
@@ -2366,6 +2379,11 @@ WCHAR *wszName,WCHAR *wszValue)
 
 	case HASH_INFOTIPTYPE:
 		m_InfoTipType = NXMLSettings::DecodeIntValue(wszValue);
+		break;
+
+	case HASH_SHELL_THEME:
+		m_ShellTheme = NXMLSettings::DecodeIntValue(wszValue);
+		m_bShellThemeLoaded = TRUE;
 		break;
 	}
 }

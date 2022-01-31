@@ -157,6 +157,7 @@
     <ClCompile Include="SaltedExplorer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MenuBarHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iDropSource.h">
@@ -254,9 +255,6 @@
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\Filtering Applied.bmp">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="res\Folder Empty.bmp">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="res\Folder Locked.bmp">

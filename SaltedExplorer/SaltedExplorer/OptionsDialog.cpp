@@ -26,9 +26,10 @@
 #include "../Helper/Macros.h"
 
 
-#define NUM_DIALOG_OPTIONS_PAGES	5
+#define NUM_DIALOG_OPTIONS_PAGES	6
 
 INT_PTR CALLBACK	FilesFoldersProcStub(HWND,UINT,WPARAM,LPARAM);
+INT_PTR CALLBACK	ThemesProcStub(HWND,UINT,WPARAM,LPARAM);
 INT_PTR CALLBACK	WindowProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	GeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	DefaultSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
@@ -72,7 +73,7 @@ void SaltedExplorer::OnShowOptions(void)
 	himl = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,48);
 
 	/* Contains all images used on the menus. */
-	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 
 	ImageList_Add(himl,hBitmap,NULL);
 
@@ -85,6 +86,16 @@ void SaltedExplorer::OnShowOptions(void)
 	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_GENERAL);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= GeneralSettingsProcStub;
+
+	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
+	nSheet++;
+
+	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
+	psp[nSheet].dwFlags		= PSP_DEFAULT;
+	psp[nSheet].hInstance	= g_hLanguageModule;
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_THEMES);
+	psp[nSheet].lParam		= (LPARAM)this;
+	psp[nSheet].pfnDlgProc	= ThemesProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
@@ -251,6 +262,9 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 
 				if(m_bSavePreferencesToXMLFile)
 					CheckDlgButton(hDlg,IDC_OPTION_XML,BST_CHECKED);
+
+				if(m_bShellMode)
+					CheckDlgButton(hDlg,IDC_OPTION_SHELL_MODE,BST_CHECKED);
 
 				hButton = GetDlgItem(hDlg,IDC_DEFAULT_NEWTABDIR_BUTTON);
 				SendMessage(hButton,BM_SETIMAGE,IMAGE_ICON,(LPARAM)g_hNewTabDirIcon);
@@ -434,6 +448,9 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 						m_bSavePreferencesToXMLFile = (IsDlgButtonChecked(hDlg,IDC_OPTION_XML)
 							== BST_CHECKED);
 
+						m_bShellMode = (IsDlgButtonChecked(hDlg,IDC_OPTION_SHELL_MODE)
+							== BST_CHECKED);
+
 						hEdit = GetDlgItem(hDlg,IDC_DEFAULT_NEWTABDIR_EDIT);
 
 						SendMessage(hEdit,WM_GETTEXT,SIZEOF_ARRAY(szNewTabDir),
@@ -467,6 +484,63 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 
 		case WM_DESTROY:
 			DestroyIcon(g_hNewTabDirIcon);
+			break;
+	}
+
+	return 0;
+}
+
+INT_PTR CALLBACK ThemesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+{
+	static SaltedExplorer *pContainer;
+
+	switch(uMsg)
+	{
+		case WM_INITDIALOG:
+			{
+				PROPSHEETPAGE *ppsp;
+
+				ppsp = (PROPSHEETPAGE *)lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
+			}
+			break;
+	}
+
+	return pContainer->ThemesProc(hDlg,uMsg,wParam,lParam);
+}
+
+INT_PTR CALLBACK SaltedExplorer::ThemesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_INITDIALOG:
+			{
+				AddShellThemes(hDlg);
+			}
+			break;
+
+
+		case WM_NOTIFY:
+			{
+				NMHDR	*nmhdr = NULL;
+				nmhdr = (NMHDR *)lParam;
+
+				switch(nmhdr->code)
+				{
+				case PSN_APPLY:
+					{
+						int iSel;
+						iSel = (int)SendMessage(GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES),CB_GETCURSEL,0,0);
+						m_ShellTheme = GetShellThemeIDFromIndex(hDlg,iSel);
+						SaveAllSettings();
+					}
+					break;
+				}
+			}
+			break;
+
+		case WM_CLOSE:
+			EndDialog(hDlg,0);
 			break;
 	}
 
@@ -1324,6 +1398,17 @@ void SaltedExplorer::DefaultSettingsSetNewTabDir(HWND hEdit,LPITEMIDLIST pidl)
 	SendMessage(hEdit,WM_SETTEXT,0,(LPARAM)szNewTabDir);
 }
 
+void SaltedExplorer::AddShellThemes(HWND hDlg)
+{
+	HWND			hShellThemesComboBox;
+	int				iSel = 0;
+
+	hShellThemesComboBox = GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES);
+	SendMessage(hShellThemesComboBox,CB_ADDSTRING,0,(LPARAM)_T("2000"));
+	SendMessage(hShellThemesComboBox,CB_SETITEMDATA,0,9);
+	SendMessage(hShellThemesComboBox,CB_SETCURSEL,iSel,0);
+}
+
 void SaltedExplorer::AddLanguages(HWND hDlg)
 {
 	HWND			hLanguageComboBox;
@@ -1336,6 +1421,7 @@ void SaltedExplorer::AddLanguages(HWND hDlg)
 	int				iSel = 0;
 
 	hLanguageComboBox = GetDlgItem(hDlg,IDC_OPTIONS_LANGUAGE);
+
 
 	/* English will always be added to the combox, and will
 	always be the first item. */
@@ -1435,6 +1521,18 @@ TCHAR *szImageDirectory,TCHAR *szFileName)
 	}
 
 	return wRet;
+}
+
+int SaltedExplorer::GetShellThemeIDFromIndex(HWND hDlg,int iIndex)
+{
+	HWND	hComboBox;
+	int		iShellTheme;
+
+	hComboBox = GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES);
+
+	iShellTheme = (int)SendMessage(hComboBox,CB_GETITEMDATA,iIndex,0);
+
+	return iShellTheme;
 }
 
 int SaltedExplorer::GetLanguageIDFromIndex(HWND hDlg,int iIndex)

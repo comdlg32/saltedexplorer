@@ -171,7 +171,7 @@ void SaltedExplorer::OnOrganizeBookmarksInit(HWND hDlg)
 	hFolders = GetDlgItem(hDlg,IDC_ORGANIZE_FOLDERS);
 
 	himl = ImageList_Create(16,16,ILC_COLOR32 | ILC_MASK,0,1);
-	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 	ImageList_Add(himl,hb,NULL);
 	DeleteObject(hb);
 	SendMessage(hFolders,TVM_SETIMAGELIST,TVSIL_NORMAL,(LPARAM)himl);

@@ -1583,7 +1583,7 @@ void SaltedExplorer::AddDefaultTabIcons(HIMAGELIST himlTab)
 
 	himlTemp = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,48);
 
-	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 
 	ImageList_Add(himlTemp,hBitmap,NULL);
 	GetIconInfo(ImageList_GetIcon(himlTemp,SHELLIMAGES_LOCK,

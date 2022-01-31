@@ -1,6 +1,5 @@
-/******************************************************************
- *
- * Project: SaltedExplroer
+/*****************************************************************
+ * Project: SaltedExplorer
  * File: SaltedExplorer.cpp
  *****************************************************************/
 
@@ -254,6 +253,16 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[4].cyIntegral	= 0;
 	m_ToolbarInformation[4].cxHeader	= 0;
 	m_ToolbarInformation[4].lpText		= NULL;
+
+	m_ToolbarInformation[5].wID			= ID_MENUBAR;
+	m_ToolbarInformation[5].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
+	m_ToolbarInformation[5].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
+	m_ToolbarInformation[5].cx			= 0;
+	m_ToolbarInformation[5].cxIdeal		= 0;
+	m_ToolbarInformation[5].cxMinChild	= 0;
+	m_ToolbarInformation[5].cyIntegral	= 0;
+	m_ToolbarInformation[5].cxHeader	= 0;
+	m_ToolbarInformation[5].lpText		= NULL;
 }
 
 /*
@@ -299,9 +308,10 @@ void SaltedExplorer::SetDefaultValues(void)
 	m_InfoTipType					= INFOTIP_SYSTEM;
 
 	/* Window states. */
+	m_bShellMode					= FALSE;
 	m_bShowStatusBar				= TRUE;
 	m_bShowFolders					= FALSE;
-	m_bShowMenuBar					= FALSE;
+	m_bShowMenuBar					= TRUE;
 	m_bShowAddressBar				= TRUE;
 	m_bShowMainToolbar				= TRUE;
 	m_bShowBookmarksToolbar			= FALSE;

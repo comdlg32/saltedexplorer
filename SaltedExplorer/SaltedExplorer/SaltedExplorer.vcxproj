@@ -41,6 +41,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>Windows7.1SDK</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -281,6 +282,7 @@
     <ClCompile Include="DisplayWindowLinePropertiesDialog.cpp" />
     <ClCompile Include="DrivesToolbarHandler.cpp" />
     <ClCompile Include="EventSwitcher.cpp" />
+    <ClCompile Include="MenuBarHandler.cpp" />
     <ClCompile Include="SaltedExplorer.cpp" />
     <ClCompile Include="FilterDialog.cpp" />
     <ClCompile Include="HandleWindowState.cpp" />
@@ -360,7 +362,6 @@
     <None Include="res\SaltedExplorer Small.ico" />
     <None Include="res\SaltedExplorer.ico" />
     <None Include="res\Filtering Applied.bmp" />
-    <None Include="res\Folder Empty.bmp" />
     <None Include="res\Folder Locked.bmp" />
     <None Include="res\Navigation Start.wav" />
     <None Include="res\No Preview Available.bmp" />

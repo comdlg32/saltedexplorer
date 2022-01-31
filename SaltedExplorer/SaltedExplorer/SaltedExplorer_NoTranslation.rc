@@ -35,22 +35,23 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
 // remains consistent on all systems.
 IDI_MAIN                ICON                    "res\\SaltedExplorer.ico"
 IDI_DISPLAYWINDOW       ICON                    "res\\Display Window.ico"
-IDI_MAIN_SMALL          ICON                    "res\\SaltedExplorer Small.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDB_TABTOOLBAR_CLOSE    BITMAP                  "res\\Tab Close.bmp"
-IDB_SHELL_GO            BITMAP                  "res\\Shell Go.bmp"
-IDB_SHELLIMAGES         BITMAP                  "res\\Shell Images.bmp"
-IDB_FILTERINGAPPLIED    BITMAP                  "res\\Filtering Applied.bmp"
-IDB_FOLDEREMPTY         BITMAP                  "res\\Folder Empty.bmp"
-IDB_FOLDERLOCKED        BITMAP                  "res\\Folder Locked.bmp"
-IDB_ABOUT               BITMAP                  "res\\About Image.bmp"
-IDB_NOPREVIEWAVAILABLE  BITMAP                  "res\\No Preview Available.bmp"
-IDB_SHELLIMAGES_LARGE   BITMAP                  "res\\Shell Images Large.bmp"
+IDB_TABTOOLBAR_CLOSE				BITMAP                  "res\\Tab Close.bmp"
+IDB_SHELL_GO_2000					BITMAP                  "res\\Shell Go 2000.bmp"
+IDB_SHELL_GO_2000_INA				BITMAP					"res\\Shell Go 2000 Inactive.bmp"
+IDB_SHELLIMAGES_2000				BITMAP                  "res\\Shell Images 2000.bmp"
+IDB_SHELLIMAGES_2000_INA			BITMAP					"res\\Shell Images 2000 Inactive.bmp"
+IDB_FILTERINGAPPLIED				BITMAP                  "res\\Filtering Applied.bmp"
+IDB_FOLDERLOCKED					BITMAP                  "res\\Folder Locked.bmp"
+IDB_ABOUT							BITMAP                  "res\\About Image.bmp"
+IDB_NOPREVIEWAVAILABLE				BITMAP                  "res\\No Preview Available.bmp"
+IDB_SHELLIMAGES_2000_LARGE			BITMAP					"res\\Shell Images 2000 Large.bmp"
+IDB_SHELLIMAGES_2000_LARGE_INA		BITMAP					"res\\Shell Images 2000 Large Inactive.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -146,7 +147,6 @@ END
 // WAVE
 //
 
-IDR_WAVE_NAVIGATIONSTART WAVE                    "res\\Navigation Start.wav"
 #endif    // English (Australia) resources
 /////////////////////////////////////////////////////////////////////////////
 

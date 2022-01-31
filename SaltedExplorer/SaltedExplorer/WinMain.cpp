@@ -18,7 +18,7 @@ typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(
 BOOL ProcessCommandLine(TCHAR *pCommandLine);
 void ShowUsage(void);
 void ClearRegistrySettings(void);
-ATOM RegisterMainWindowClass(void);
+ATOM RegisterMainWindowClass(HINSTANCE hInstance);
 LONG WINAPI MyUnhandledExceptionFilter(struct _EXCEPTION_POINTERS *pExceptionInfo);
 
 extern LRESULT CALLBACK WndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
@@ -225,8 +225,8 @@ ATOM RegisterMainWindowClass(HINSTANCE hInstance)
 	wcex.cbClsExtra		= 0;
 	wcex.cbWndExtra		= sizeof(SaltedExplorer *);
 	wcex.hInstance		= hInstance;
-	wcex.hIcon			= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN),IMAGE_ICON,48,48,LR_VGACOLOR);
-	wcex.hIconSm		= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN_SMALL),IMAGE_ICON,16,16,LR_VGACOLOR);
+	wcex.hIcon			= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN),IMAGE_ICON,GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_DEFAULTCOLOR);
+	wcex.hIconSm		= (HICON)LoadImage(hInstance,MAKEINTRESOURCE(IDI_MAIN),IMAGE_ICON,GetSystemMetrics(SM_CXSMICON),GetSystemMetrics(SM_CYSMICON),LR_DEFAULTCOLOR);
 	wcex.hCursor		= LoadCursor(NULL,IDC_ARROW);
 	wcex.hbrBackground	= (HBRUSH)NULL;
 	wcex.lpszMenuName	= NULL;
@@ -315,7 +315,7 @@ LPSTR lpCmdLine,int nCmdShow)
 		{
 			MessageBox(NULL,
 				_T("This application needs at least Windows XP or above to run properly."),
-				_T("SaltedExplorer"),MB_ICONERROR | MB_OK);
+				NSaltedExplorer::WINDOW_NAME,MB_ICONERROR | MB_OK);
 
 			return 0;
 		}
@@ -402,7 +402,7 @@ LPSTR lpCmdLine,int nCmdShow)
 							{
 								LPITEMIDLIST pidlControlPanelCategory = NULL;
 
-								hr = GetIdlFromParsingName(CONTROL_PANEL_CATEGORY_VIEW,
+								hr = GetIdlFromParsingName(CONTROL_PANEL_ALLITEMS_VIEW,
 									&pidlControlPanelCategory);
 
 								if(SUCCEEDED(hr))
@@ -524,10 +524,13 @@ LPSTR lpCmdLine,int nCmdShow)
 	hRichEditLib = LoadLibrary(_T("Riched20.dll"));
 
 	res = RegisterMainWindowClass(hInstance);
+	int errCode = GetLastError();
+	wchar_t errorCodeBuffer[64];
+	swprintf(errorCodeBuffer, 64, L"Could not register class\r\nError code: %d", errCode);
 
 	if(res == 0)
 	{
-		MessageBox(NULL,_T("Could not register class"),NSaltedExplorer::WINDOW_NAME,
+		MessageBox(NULL, errorCodeBuffer,NSaltedExplorer::WINDOW_NAME,
 			MB_OK|MB_ICONERROR);
 
 		FreeLibrary(hRichEditLib);

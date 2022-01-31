@@ -173,6 +173,7 @@ public:
 	LRESULT CALLBACK	TabProxyWndProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam,int iTabId);
 	INT_PTR CALLBACK	GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
+	INT_PTR CALLBACK	ThemesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
@@ -470,6 +471,7 @@ private:
 	void					OnToolbarViews(void);
 	void					ShowToolbarViewsDropdown(void);
 	void					OnMainToolbarRClick(void);
+	void					OnMenuBarRClick(void);
 	void					OnApplicationToolbarRClick(void);
 	void					OnBookmarksToolbarRClick(int iItem);
 	void					OnAddressBarGo(void);
@@ -724,6 +726,7 @@ private:
 	void					AdjustFolderPanePosition(void);
 	void					SetComboBoxExTitleString(HWND CbEx,LPITEMIDLIST pidl,TCHAR *szDisplayText);
 	void					HandleToolbarItemStates(void);
+	void					HandleMenuBarItemStates(void);
 	HRESULT					HandleStatusText(void);
 	void					ToggleFolders(void);
 
@@ -946,24 +949,33 @@ private:
 	/* Miscellaneous. */
 	BOOL					CompareVirtualFolders(UINT uFolderCSIDL);
 	void					OnShowOptions(void);
+	void					AddShellThemes(HWND hDlg);
 	void					AddLanguages(HWND hDlg);
 	WORD					AddLanguageToComboBox(HWND hComboBox,TCHAR *szImageDirectory,TCHAR *szFileName);
 	int						GetLanguageIDFromIndex(HWND hDlg,int iIndex);
+	int						GetShellThemeIDFromIndex(HWND hDlg,int iIndex);
 	void					PushGlobalSettingsToTab(int iTabId);
 	void					PushGlobalSettingsToAllTabs(void);
 	void					CreateViewsMenu(POINT *ptOrigin);
-	void					SetMenuItemBitmap(HMENU hMenu,UINT ItemID,int iBitmap);
 	void					SetMenuOwnerDraw(HMENU hMenu);
 	void					SetMenuOwnerDrawInternal(HMENU hMenu,int nMenus);
 	void					SetMenuItemOwnerDrawn(HMENU hMenu,int iItem);
 	void					SetInitialToolbarButtons(void);
+	void					SetInitialMenuBarButtons(void);
 	int						LookupToolbarButtonTextID(int iButtonID);
+	int						LookupMenuBarButtonTextID(int iButtonID);
 	int						LookupToolbarButtonImage(int iButtonID);
+	int						LookupMenuBarButtonImage(int iButtonID);
 	BYTE					LookupToolbarButtonExtraStyles(int iButtonID);
+	BYTE					LookupMenuBarButtonExtraStyles(int iButtonID);
 	void					InsertToolbarButtons(void);
+	void					InsertMenuBarButtons(void);
 	void					InsertToolbarButton(ToolbarButton_t *ptb,int iPos);
+	void					InsertMenuBarButton(ToolbarButton_t *ptb,int iPos);
 	void					DeleteToolbarButton(int iButton);
+	void					DeleteMenuBarButton(int iButton);
 	void					AddStringsToMainToolbar(void);
+	void					AddStringsToMenuBar(void);
 	void					CreateStatusBar(void);
 	void					InitializeDisplayWindow(void);
 	void					InitializeTabs(void);
@@ -1042,6 +1054,7 @@ private:
 	TCHAR					m_DefaultTabDirectory[MAX_PATH];
 	TCHAR					m_OldTreeViewFileName[MAX_PATH];
 	DWORD					m_Language;
+	DWORD					m_ShellTheme;
 	DWORD					m_dwMajorVersion;
 	DWORD					m_dwMinorVersion;
 	LONG					m_DisplayWindowHeight;
@@ -1051,6 +1064,7 @@ private:
 	BOOL					m_bStickySelection;
 	BOOL					m_bAttemptToolbarRestore;
 	BOOL					m_bLanguageLoaded;
+	BOOL					m_bShellThemeLoaded;
 	BOOL					m_bTreeViewOpenInNewTab;
 	unsigned int			m_TreeViewWidth;
 	int						m_iObjectIndex;
@@ -1096,6 +1110,7 @@ private:
 	BOOL					m_bConfirmCloseTabs;
 	BOOL					m_bTreeViewDelayEnabled;
 	BOOL					m_bSavePreferencesToXMLFile;
+	BOOL					m_bShellMode;
 	BOOL					m_bLockToolbars;
 	BOOL					m_bExtendTabControl;
 	BOOL					m_bUseFullRowSelect;
@@ -1159,7 +1174,9 @@ private:
 
 	/* Main toolbar. */
 	HIMAGELIST				m_himlToolbarSmall;
+	HIMAGELIST				m_himlToolbarSmallInact;
 	HIMAGELIST				m_himlToolbarLarge;
+	HIMAGELIST				m_himlToolbarLargeInact;
 
 	/* Bookmark toolbar. */
 	UINT					m_uBookmarkToolbarMap[MAX_BOOKMARKTOOLBAR_ITEMS];

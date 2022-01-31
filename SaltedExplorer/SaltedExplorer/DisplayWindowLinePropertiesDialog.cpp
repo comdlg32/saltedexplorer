@@ -94,7 +94,7 @@ INT_PTR CALLBACK SaltedExplorer::DWLinePropertiesProc(HWND hDlg,UINT Msg,WPARAM 
 	//			himl = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,48);
 
 	//			/* Contains all images used on the menus. */
-	//			hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	//			hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 
 	//			ImageList_Add(himl,hBitmap,NULL);
 

@@ -88,7 +88,7 @@ void SaltedExplorer::OnNewBookmarkFolderInit(HWND hDlg)
 	HBITMAP			hb;
 
 	himl = ImageList_Create(16,16,ILC_COLOR32 | ILC_MASK,0,1);
-	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 	ImageList_Add(himl,hb,NULL);
 	DeleteObject(hb);
 	SendMessage(hCreateIn,CBEM_SETIMAGELIST,0,(LPARAM)himl);

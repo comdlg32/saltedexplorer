@@ -85,10 +85,10 @@ add a definition here. */
 #define CP_UNICODE	1200
 
 #define FRIENDLY_NAME_DESKTOP	_T("Desktop")
-#define FRIENDLY_NAME_PICTURES	_T("Pictures")
-#define FRIENDLY_NAME_MUSIC		_T("Music")
-#define FRIENDLY_NAME_VIDEOS	_T("Videos")
-#define FRIENDLY_NAME_DOCUMENTS	_T("Documents")
+#define FRIENDLY_NAME_PICTURES	_T("My Pictures")
+#define FRIENDLY_NAME_MUSIC		_T("My Music")
+#define FRIENDLY_NAME_VIDEOS	_T("My Videos")
+#define FRIENDLY_NAME_DOCUMENTS	_T("My Documents")
 
 /* See: http://msdn.microsoft.com/en-us/library/bb776902(v=VS.85).aspx#CFSTR_SHELLIDLIST */
 #define HIDA_GetPIDLFolder(pida) (LPCITEMIDLIST)(((LPBYTE)pida)+(pida)->aoffset[0])

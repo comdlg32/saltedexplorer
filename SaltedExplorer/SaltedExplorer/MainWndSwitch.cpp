@@ -211,8 +211,6 @@ LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPara
 		case WM_USER_FOLDEREMPTY:
 			{
 				if((BOOL)lParam == TRUE)
-					NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],IDB_FOLDEREMPTY);
-				else
 					NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],NULL);
 			}
 			break;
@@ -1774,10 +1772,6 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 					hToolbar = m_hMainToolbar;
 					break;
 
-				case ID_MENUBAR:
-					hToolbar = m_hMenuBar;
-					break;
-
 				case ID_BOOKMARKSTOOLBAR:
 					hToolbar = m_hBookmarksToolbar;
 					break;
@@ -1790,6 +1784,10 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 				case ID_APPLICATIONSTOOLBAR:
 					hToolbar = m_hApplicationToolbar;
 					himlMenu = himlSmall;
+					break;
+
+				case ID_MENUBAR:
+					hToolbar = m_hMenuBar;
 					break;
 				}
 
@@ -1825,7 +1823,7 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 								}
 								else
 								{
-									StringCchCopy(szText,SIZEOF_ARRAY(szText),(LPCWSTR)tbButton.iString);
+									StringCchCopy(szText,SIZEOF_ARRAY(szText),(LPCTSTR)tbButton.iString);
 								}
 
 								HMENU hSubMenu = NULL;
@@ -1881,6 +1879,19 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 												SetMenuOwnerDraw(hSubMenu);
 
 												fMask |= MIIM_SUBMENU;
+											}
+											break;
+										}
+									}
+									break;
+
+								case ID_MENUBAR:
+									{
+										switch(tbButton.idCommand)
+										{
+
+										case TOOLBAR_VIEWS:
+											{
 											}
 											break;
 										}
@@ -1944,7 +1955,6 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 								InsertMenuItem(hMenu,iMenu,TRUE,&mii);
 
 								SetMenuItemOwnerDrawn(hMenu,iMenu);
-								SetMenuItemBitmap(hMenu,tbButton.idCommand,tbButton.iBitmap);	
 							}
 							iMenu++;
 						}

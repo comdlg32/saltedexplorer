@@ -12,6 +12,10 @@ DWORD MainToolbarStyles		=	WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
 								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
 								TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE | CCS_ADJUSTABLE;
 
+DWORD MenuBarStyles			=	WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS |
+								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
+								TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
+
 DWORD GoToolbarStyles		=	WS_CHILD |WS_VISIBLE |WS_CLIPSIBLINGS |WS_CLIPCHILDREN |
 								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
 								TBSTYLE_FLAT | CCS_NODIVIDER| CCS_NORESIZE;
@@ -88,6 +92,17 @@ void SaltedExplorer::CreateMainControls(void)
 		{
 		case ID_MENUBAR:
 			CreateMenuBar();
+			ToolbarSize = (DWORD)SendMessage(m_hMenuBar,TB_GETBUTTONSIZE,0,0);
+			m_ToolbarInformation[i].cyMinChild = HIWORD(ToolbarSize);
+			m_ToolbarInformation[i].cyMaxChild = HIWORD(ToolbarSize);
+			m_ToolbarInformation[i].cyChild = HIWORD(ToolbarSize);
+			SendMessage(m_hMenuBar,TB_GETMAXSIZE,0,(LPARAM)&sz);
+
+			if(m_ToolbarInformation[i].cx == 0)
+				m_ToolbarInformation[i].cx = sz.cx;
+
+			m_ToolbarInformation[i].cxIdeal = sz.cx;
+			m_ToolbarInformation[i].hwndChild = m_hMenuBar;
 			break;
 		case ID_MAINTOOLBAR:
 			CreateMainToolbar();
@@ -167,6 +182,23 @@ void SaltedExplorer::CreateMainControls(void)
 
 void SaltedExplorer::CreateMenuBar(void)
 {
+	TBBUTTON tbButton[1];
+
+	m_hMenuBar = CreateToolbar(m_hMainRebar,MenuBarStyles,
+		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_DROPDOWN|
+		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
+
+	tbButton[0].iBitmap		= I_IMAGENONE;
+	tbButton[0].idCommand	= 0;
+	tbButton[0].fsState		= TBSTATE_ENABLED;
+	tbButton[0].fsStyle		= TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE;
+	tbButton[0].dwData		= 0;
+	tbButton[0].iString		= (INT_PTR)L"Test";
+
+	SendMessage(m_hMenuBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
+    SendMessage(m_hMenuBar,TB_ADDBUTTONS,(WPARAM)1,(LPARAM)&tbButton);
+
+	SendMessage(m_hMenuBar, TB_AUTOSIZE, 0, 0); 
 }
 void SaltedExplorer::CreateMainToolbar(void)
 {
@@ -175,6 +207,7 @@ void SaltedExplorer::CreateMainToolbar(void)
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 
 	HIMAGELIST *phiml = NULL;
+	HIMAGELIST *phiml2 = NULL;
 	int cx;
 	int cy;
 
@@ -183,19 +216,22 @@ void SaltedExplorer::CreateMainToolbar(void)
 		cx = TOOLBAR_IMAGE_SIZE_LARGE_X;
 		cy = TOOLBAR_IMAGE_SIZE_LARGE_Y;
 		phiml = &m_himlToolbarLarge;
+		phiml2 = &m_himlToolbarLargeInact;
 	}
 	else
 	{
 		cx = TOOLBAR_IMAGE_SIZE_SMALL_X;
 		cy = TOOLBAR_IMAGE_SIZE_SMALL_Y;
 		phiml = &m_himlToolbarSmall;
+		phiml2 = &m_himlToolbarSmallInact;
 	}
 
 	SendMessage(m_hMainToolbar,TB_SETBITMAPSIZE,0,MAKELONG(cx,cy));	
 	SendMessage(m_hMainToolbar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
 
 	/* Add the custom buttons to the toolbars image list. */
-	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml);
+	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml2);
+	SendMessage(m_hMainToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)*phiml);
 
 	AddStringsToMainToolbar();
 	InsertToolbarButtons();
@@ -218,6 +254,7 @@ void SaltedExplorer::CreateMainToolbar(void)
 void SaltedExplorer::CreateAddressToolbar(void)
 {
 	HIMAGELIST	himl;
+	HIMAGELIST	himl2;
 	HBITMAP		hb;
 	TBBUTTON	tbButton[2];
 	TCHAR		szGoText[32];
@@ -226,17 +263,21 @@ void SaltedExplorer::CreateAddressToolbar(void)
 	m_hAddressToolbar = CreateToolbar(m_hMainRebar,GoToolbarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_EX_DOUBLEBUFFER);
 
-	SendMessage(m_hAddressToolbar,TB_SETBITMAPSIZE,0,MAKELONG(16,16));
+	SendMessage(m_hAddressToolbar,TB_SETBITMAPSIZE,0,MAKELONG(18,16));
 	SendMessage(m_hAddressToolbar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
 
-	himl = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,1);
-	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELL_GO));
+	himl = ImageList_Create(18,16,ILC_COLOR32|ILC_MASK,0,1);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELL_GO_2000));
 	ImageList_Add(himl,hb,NULL);
-
 	DeleteObject(hb);
 
+	himl2 = ImageList_Create(18,16,ILC_COLOR32|ILC_MASK,0,1);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELL_GO_2000_INA));
+	ImageList_Add(himl2,hb,NULL);
+
 	/* Add the custom buttons to the toolbars image list. */
-	SendMessage(m_hAddressToolbar,TB_SETIMAGELIST,0,(LPARAM)himl);
+	SendMessage(m_hAddressToolbar,TB_SETIMAGELIST,0,(LPARAM)himl2);
+	SendMessage(m_hAddressToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)himl);
 
 	tbButton[iCurrent].iBitmap		= 0;
 	tbButton[iCurrent].idCommand	= 0;
@@ -1008,6 +1049,7 @@ void SaltedExplorer::OnAddressBarBeginDrag(void)
 void SaltedExplorer::AdjustMainToolbarSize(void)
 {
 	HIMAGELIST *phiml = NULL;
+	HIMAGELIST *phiml2 = NULL;
 	int cx;
 	int cy;
 
@@ -1016,16 +1058,19 @@ void SaltedExplorer::AdjustMainToolbarSize(void)
 		cx = TOOLBAR_IMAGE_SIZE_LARGE_X;
 		cy = TOOLBAR_IMAGE_SIZE_LARGE_Y;
 		phiml = &m_himlToolbarLarge;
+		phiml2 = &m_himlToolbarLargeInact;
 	}
 	else
 	{
 		cx = TOOLBAR_IMAGE_SIZE_SMALL_X;
 		cy = TOOLBAR_IMAGE_SIZE_SMALL_Y;
 		phiml = &m_himlToolbarSmall;
+		phiml2 = &m_himlToolbarSmallInact;
 	}
 
 	/* Switch the image list. */
-	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml);
+	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml2);
+	SendMessage(m_hMainToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)*phiml);
 	SendMessage(m_hMainToolbar,TB_SETBUTTONSIZE,0,MAKELPARAM(cx,cy));
 	SendMessage(m_hMainToolbar,TB_AUTOSIZE,0,0);
 

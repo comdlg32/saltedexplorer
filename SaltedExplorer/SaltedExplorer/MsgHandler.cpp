@@ -130,13 +130,23 @@ void SaltedExplorer::OnWindowCreate(void)
 
 	/* Large and small image lists for the main toolbar. */
 	m_himlToolbarSmall = ImageList_Create(TOOLBAR_IMAGE_SIZE_SMALL_X,TOOLBAR_IMAGE_SIZE_SMALL_Y,ILC_COLOR32|ILC_MASK,0,47);
-	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 	ImageList_Add(m_himlToolbarSmall,hb,NULL);
 	DeleteObject(hb);
 
+	m_himlToolbarSmallInact = ImageList_Create(TOOLBAR_IMAGE_SIZE_SMALL_X,TOOLBAR_IMAGE_SIZE_SMALL_Y,ILC_COLOR32|ILC_MASK,0,47);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_INA));
+	ImageList_Add(m_himlToolbarSmallInact,hb,NULL);
+	DeleteObject(hb);
+
 	m_himlToolbarLarge = ImageList_Create(TOOLBAR_IMAGE_SIZE_LARGE_X,TOOLBAR_IMAGE_SIZE_LARGE_Y,ILC_COLOR32|ILC_MASK,0,47);
-	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_LARGE));
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_LARGE));
 	ImageList_Add(m_himlToolbarLarge,hb,NULL);
+	DeleteObject(hb);
+
+	m_himlToolbarLargeInact = ImageList_Create(TOOLBAR_IMAGE_SIZE_LARGE_X,TOOLBAR_IMAGE_SIZE_LARGE_Y,ILC_COLOR32|ILC_MASK,0,47);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_LARGE_INA));
+	ImageList_Add(m_himlToolbarLargeInact,hb,NULL);
 	DeleteObject(hb);
 
 	CreateDirectoryMonitor(&m_pDirMon);
@@ -549,32 +559,6 @@ void SaltedExplorer::SetMenuItemOwnerDrawn(HMENU hMenu,int iItem)
 }
 
 /*
- * Sets the bitmap for an owner drawn menu.
- * The menu MUST have already been marked as
- * owner drawn (so that the owner drawn menu
- * structure is in place).
- */
-void SaltedExplorer::SetMenuItemBitmap(HMENU hMenu,UINT ItemID,int iBitmap)
-{
-	MENUITEMINFO		mi;
-	CustomMenuInfo_t	*pcmi = NULL;
-
-	BOOL bRes;
-
-	mi.cbSize		= sizeof(mi);
-	mi.fMask		= MIIM_DATA;
-	bRes = GetMenuItemInfo(hMenu,ItemID,FALSE,&mi);
-
-	if(bRes)
-	{
-		pcmi = (CustomMenuInfo_t *)mi.dwItemData;
-
-		pcmi->bUseImage = TRUE;
-		pcmi->iImage	= iBitmap;
-	}
-}
-
-/*
  * Creates a new tab. If a folder is selected,
  * that folder is opened in a new tab, else
  * the default directory is opened.
@@ -703,7 +687,7 @@ void SaltedExplorer::OpenItem(LPITEMIDLIST pidlItem,BOOL bOpenInNewTab,BOOL bOpe
 		if(ILIsParent(pidlControlPanel,pidlItem,FALSE) &&
 			!CompareIdls(pidlControlPanel,pidlItem))
 		{
-			bControlPanelParent = TRUE;
+			bControlPanelParent = FALSE;
 		}
 
 		CoTaskMemFree(pidlControlPanel);
@@ -731,7 +715,7 @@ void SaltedExplorer::OpenItem(LPITEMIDLIST pidlItem,BOOL bOpenInNewTab,BOOL bOpe
 	{
 		if(!bControlPanelParent)
 		{
-			hr = GetIdlFromParsingName(CONTROL_PANEL_CATEGORY_VIEW,&pidlControlPanel);
+			hr = GetIdlFromParsingName(CONTROL_PANEL_ALLITEMS_VIEW,&pidlControlPanel);
 
 			if(SUCCEEDED(hr))
 			{
@@ -741,7 +725,7 @@ void SaltedExplorer::OpenItem(LPITEMIDLIST pidlItem,BOOL bOpenInNewTab,BOOL bOpe
 				if(ILIsParent(pidlControlPanel,pidlItem,FALSE) &&
 					!CompareIdls(pidlControlPanel,pidlItem))
 				{
-					bControlPanelParent = TRUE;
+					bControlPanelParent = FALSE;
 				}
 
 				CoTaskMemFree(pidlControlPanel);
@@ -1190,7 +1174,9 @@ int SaltedExplorer::OnDestroy(void)
 	QueueUserAPC(QuitIconAPC,m_hIconThread,NULL);
 
 	ImageList_Destroy(m_himlToolbarSmall);
+	ImageList_Destroy(m_himlToolbarSmallInact);
 	ImageList_Destroy(m_himlToolbarLarge);
+	ImageList_Destroy(m_himlToolbarLargeInact);
 
 	delete m_pStatusBar;
 
@@ -2969,11 +2955,23 @@ void SaltedExplorer::SetupJumplistTasks()
 
 void SaltedExplorer::PlayNavigationSound(void)
 {
-	if(m_bPlayNavigationSound)
-	{
-		PlaySound(MAKEINTRESOURCE(IDR_WAVE_NAVIGATIONSTART),NULL,
-			SND_RESOURCE|SND_ASYNC);
-	}
+    if (m_bPlayNavigationSound)
+    {
+        TCHAR soundFile[MAX_PATH];
+        DWORD byteCount = MAX_PATH;
+        HKEY keyHandle;
+        
+        if (RegOpenKeyEx(HKEY_CURRENT_USER, TEXT("AppEvents\\Schemes\\Apps\\Explorer\\Navigating\\.Current"), NULL, KEY_READ, &keyHandle))
+            return;
+        
+        if (RegQueryValueEx(keyHandle, NULL, NULL, NULL, (BYTE*)soundFile, &byteCount))
+            return;
+
+        RegCloseKey(keyHandle);
+
+        if (byteCount > 0)
+            PlaySound(soundFile, NULL, SND_ASYNC | SND_FILENAME);
+    }
 }
 
 void SaltedExplorer::OnModelessDialogDestroy(int iResource)

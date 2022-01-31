@@ -23,7 +23,7 @@
 #include "../Helper/Macros.h"
 #include "../Helper/Bookmark.h"
 #include "MainResource.h"
-
+#include "gdiplus.h"
 
 extern HIMAGELIST himlMenu;
 
@@ -100,9 +100,9 @@ void SaltedExplorer::InitializeMenus(void)
 	}
 
 	himlMenu = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,48);
-
+	
 	/* Contains all images used on the menus. */
-	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES));
+	hBitmap = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 
 	ImageList_Add(himlMenu,hBitmap,NULL);
 
@@ -115,21 +115,16 @@ void SaltedExplorer::InitializeMenus(void)
 	SetMenuOwnerDraw(m_hTabRightClickMenu);
 
 	/* <---- Tab right click menu ----> */
-	SetMenuItemBitmap(m_hTabRightClickMenu,IDM_FILE_NEWTAB,SHELLIMAGES_NEWTAB);
-	SetMenuItemBitmap(m_hTabRightClickMenu,IDM_TAB_REFRESH,SHELLIMAGES_REFRESH);
+
 
 	/* <---- Toolbar right click menu ----> */
 	SetMenuOwnerDraw(m_hToolbarRightClickMenu);
 
 	/* <--- Bookmarks right click menu ----> */
 	SetMenuOwnerDraw(m_hBookmarksRightClickMenu);
-	SetMenuItemBitmap(m_hBookmarksRightClickMenu,IDM_BT_DELETE,SHELLIMAGES_DELETE);
-	SetMenuItemBitmap(m_hBookmarksRightClickMenu,IDM_BT_PROPERTIES,SHELLIMAGES_PROPERTIES);
 
 	/* <---- Application toolbar right click menu ----> */
 	SetMenuOwnerDraw(m_hApplicationRightClickMenu);
-	SetMenuItemBitmap(m_hApplicationRightClickMenu,IDM_APP_DELETE,SHELLIMAGES_DELETE);
-	SetMenuItemBitmap(m_hApplicationRightClickMenu,IDM_APP_PROPERTIES,SHELLIMAGES_PROPERTIES);
 
 	/* <---- Display window right click menu ----> */
 	SetMenuOwnerDraw(m_hDisplayWindowRightClickMenu);

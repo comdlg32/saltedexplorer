@@ -7,15 +7,15 @@
 #define IDB_FILTERINGAPPLIED            104
 #define IDI_MAIN                        105
 #define IDI_DISPLAYWINDOW               106
-#define IDB_FOLDEREMPTY                 149
 #define IDR_MAINACCELERATORS            152
-#define IDB_SHELL_GO                    194
-#define IDB_SHELLIMAGES                 205
-#define IDI_MAIN_SMALL                  206
+#define IDB_SHELL_GO_2000               194
+#define IDB_SHELL_GO_2000_INA			195
+#define IDB_SHELLIMAGES_2000	        205
 #define IDB_ABOUT                       231
-#define IDR_WAVE_NAVIGATIONSTART        235
 #define IDB_NOPREVIEWAVAILABLE          236
-#define IDB_SHELLIMAGES_LARGE           237
+#define IDB_SHELLIMAGES_2000_LARGE      237
+#define IDB_SHELLIMAGES_2000_INA		238
+#define IDB_SHELLIMAGES_2000_LARGE_INA	239
 #define IDM_FILE_NEWTAB                 40056
 #define IDM_FILE_CLOSETAB               40057
 #define IDM_FILE_COPYFOLDERPATH         40060
@@ -63,7 +63,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        241
+#define _APS_NEXT_RESOURCE_VALUE        242
 #define _APS_NEXT_COMMAND_VALUE         40433
 #define _APS_NEXT_CONTROL_VALUE         1255
 #define _APS_NEXT_SYMED_VALUE           101

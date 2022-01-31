@@ -71,7 +71,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StatusBar.cpp" />
-    <ClCompile Include="CustomMenu.cpp" />
+    <ClCompile Include="CustomMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bookmark.h">
