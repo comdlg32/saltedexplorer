@@ -247,6 +247,8 @@
 #define IDC_MERGE_STATIC_OUTPUT         1307
 #define IDC_MERGE_STATIC_ETCHED         1308
 #define IDC_SPLIT_STATIC_MESSAGE        1309
+#define IDC_TREE1                       1310
+#define IDC_BOOKMARK_TREEVIEW           1310
 #define IDS_COLUMN_DESCRIPTION_NAME     2000
 #define IDS_COLUMN_DESCRIPTION_TYPE     2001
 #define IDS_COLUMN_DESCRIPTION_SIZE     2002
@@ -725,7 +727,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        233
 #define _APS_NEXT_COMMAND_VALUE         40431
-#define _APS_NEXT_CONTROL_VALUE         1310
+#define _APS_NEXT_CONTROL_VALUE         1311
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
