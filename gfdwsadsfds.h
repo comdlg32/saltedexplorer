@@ -19,7 +19,6 @@
 #define IDD_WILDCARDSELECT              176
 #define IDD_DISPLAYCOLOURS              178
 #define IDD_ADD_BOOKMARK                179
-#define IDD_ORGANIZE_BOOKMARKS          180
 #define IDD_OPTIONS_DEFAULT             181
 #define IDD_BOOKMARK_PROPERTIES         182
 #define IDD_SPLITFILE                   183
@@ -77,7 +76,6 @@
 #define IDC_DEFAULTCOLUMNS_MOVEUP       1053
 #define IDC_COLUMNS_MOVEUP              1053
 #define IDC_CREATION_RESET              1054
-#define IDC_ORGANIZE_MOVEDOWN           1054
 #define IDC_MERGE_BUTTON_MOVEDOWN       1054
 #define IDC_BOOKMARK_DETAILS            1054
 #define IDC_DEFAULTCOLUMNS_MOVEDOWN     1054
@@ -119,10 +117,6 @@
 #define IDC_FILTER_COMBOBOX             1112
 #define IDC_EDIT_CENTRE_BLUE            1113
 #define IDC_BOOKMARK_NAME               1113
-#define IDC_ORGANIZE_BOOKMARKS          1114
-#define IDC_ORGANIZE_DELETE             1115
-#define IDC_ORGANIZE_PROPERTIES         1116
-#define IDC_ORGANIZE_MOVEUP             1117
 #define IDC_STATIC_PREVIEWDISPLAY       1118
 #define IDC_SHOWHIDDENGLOBAL            1123
 #define IDC_DEFAULT_SMALLICONS          1124
@@ -160,7 +154,6 @@
 #define IDC_BOOKMARK_SEPARATOR          1172
 #define IDC_STATIC_LOCATION             1173
 #define IDC_STATIC_DESCRIPTION          1174
-#define IDC_ORGANIZE_FOLDERS            1175
 #define IDC_OPTION_XML                  1176
 #define IDC_BFP_NAME                    1177
 #define IDC_BFP_DESCRIPTION             1178
