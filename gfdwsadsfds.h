@@ -28,7 +28,6 @@
 #define IDR_TOOLBAR_MENU                196
 #define IDR_BOOKMARKSTOOLBAR_MENU       210
 #define IDD_NEWBOOKMARKFOLDER           211
-#define IDD_BOOKMARKFOLDER_PROPERTIES   212
 #define IDR_BOOKMARK_MENU               212
 #define IDD_RENAMETAB                   213
 #define IDD_EDITAPPLICATIONBUTTON       216
@@ -155,11 +154,8 @@
 #define IDC_STATIC_LOCATION             1173
 #define IDC_STATIC_DESCRIPTION          1174
 #define IDC_OPTION_XML                  1176
-#define IDC_BFP_NAME                    1177
-#define IDC_BFP_DESCRIPTION             1178
 #define IDC_BOOKMARK_TOOLBAR            1180
 #define IDC_BP_SHOWONTOOLBAR            1181
-#define IDC_BFP_SHOWONTOOLBAR           1182
 #define IDC_RENAMETAB_USEFOLDERNAME     1183
 #define IDC_RENAMETAB_NEWTABNAME        1184
 #define IDC_DEFAULTCOLUMNS_COMBOBOX     1186
