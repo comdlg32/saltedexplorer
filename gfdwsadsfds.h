@@ -20,7 +20,6 @@
 #define IDD_DISPLAYCOLOURS              178
 #define IDD_ADD_BOOKMARK                179
 #define IDD_OPTIONS_DEFAULT             181
-#define IDD_BOOKMARK_PROPERTIES         182
 #define IDD_SPLITFILE                   183
 #define IDD_MERGEFILES                  185
 #define IDD_SETDEFAULTCOLUMNS           187
@@ -124,9 +123,6 @@
 #define IDC_SORTASCENDINGGLOBAL         1128
 #define IDC_AUTOARRANGEGLOBAL           1129
 #define IDC_SHOWINGROUPSGLOBAL          1130
-#define IDC_BP_EDIT_NAME                1131
-#define IDC_BP_EDIT_LOCATION            1132
-#define IDC_BP_EDIT_DESCRIPTION         1133
 #define IDC_BOOKMARK_DESCRIPTION        1134
 #define IDC_DEFAULT_THUMBNAILS          1135
 #define IDC_TABS_OPENNEXTTOCURRENT      1137
@@ -155,7 +151,6 @@
 #define IDC_STATIC_DESCRIPTION          1174
 #define IDC_OPTION_XML                  1176
 #define IDC_BOOKMARK_TOOLBAR            1180
-#define IDC_BP_SHOWONTOOLBAR            1181
 #define IDC_RENAMETAB_USEFOLDERNAME     1183
 #define IDC_RENAMETAB_NEWTABNAME        1184
 #define IDC_DEFAULTCOLUMNS_COMBOBOX     1186
