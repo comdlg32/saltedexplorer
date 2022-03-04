@@ -940,6 +940,21 @@ BEGIN
     END
 END
 
+IDR_MANAGEBOOKMARKS_BOOKMARK_RCLICK_MENU MENU
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "&Open",                       IDM_MB_BOOKMARK_OPEN
+        MENUITEM "Open in New &Tab",            IDM_MB_BOOKMARK_OPENINNEWTAB
+        MENUITEM "Open in New &Window",         IDM_MB_BOOKMARK_OPENINNEWWINDOW
+        MENUITEM SEPARATOR
+        MENUITEM "&Cut",                        IDM_MB_BOOKMARK_CUT
+        MENUITEM "Co&py",                       IDM_MB_BOOKMARK_COPY
+        MENUITEM SEPARATOR
+        MENUITEM "&Delete",                     IDM_MB_BOOKMARK_DELETE
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
