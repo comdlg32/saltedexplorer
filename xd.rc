@@ -514,7 +514,7 @@ BEGIN
 END
 
 IDD_MANAGE_BOOKMARKS DIALOGEX 0, 0, 451, 222
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "Manage Bookmarks"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
@@ -952,6 +952,31 @@ BEGIN
         MENUITEM "Co&py",                       IDM_MB_BOOKMARK_COPY
         MENUITEM SEPARATOR
         MENUITEM "&Delete",                     IDM_MB_BOOKMARK_DELETE
+    END
+END
+
+IDR_MANAGEBOOKMARKS_VIEW_MENU MENU
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        POPUP "Show &Columns"
+        BEGIN
+            MENUITEM "&Name",                       ID_SHOWCOLUMNS_NAME
+            MENUITEM "&Location",                   ID_SHOWCOLUMNS_LOCATION
+            MENUITEM "&Visit Date",                 ID_SHOWCOLUMNS_VISITDATE
+            MENUITEM "Visit &Count",                ID_SHOWCOLUMNS_VISITCOUNT
+            MENUITEM "&Added",                      ID_SHOWCOLUMNS_ADDED
+            MENUITEM "Last &Modified",              ID_SHOWCOLUMNS_LASTMODIFIED
+        END
+        POPUP "&Sort"
+        BEGIN
+            MENUITEM "Sort by &Name",               ID_SORT_SORTBYNAME
+            MENUITEM "Sort by &Location",           ID_SORT_SORTBYTAGS
+            MENUITEM "Sort by &Vist Date",          ID_SORT_SORTBYVISTDATE
+            MENUITEM "Sort By Visit &Count",        ID_SORT_SORTBYVISITCOUNT
+            MENUITEM "Sort By &Added",              ID_SORT_SORTBYADDED
+            MENUITEM "Sort By Last &Modified",      ID_SORT_SORTBYLASTMODIFIED
+        END
     END
 END
 
@@ -1682,6 +1707,8 @@ BEGIN
     IDS_MANAGE_BOOKMARKS_COLUMN_VISIT_COUNT "Visit Count"
     IDS_MANAGE_BOOKMARKS_COLUMN_ADDED "Added"
     IDS_MANAGE_BOOKMARKS_COLUMN_LAST_MODIFIED "Last Modified"
+    IDS_MANAGE_BOOKMARKS_TOOLBAR_VIEWS "Views"
+    IDS_MANAGE_BOOKMARKS_TOOLBAR_ORGANIZE "Organize"
 END
 
 #endif    // English (Australia) resources
