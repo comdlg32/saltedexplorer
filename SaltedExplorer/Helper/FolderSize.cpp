@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: FolderSize.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Calculates the size of a given folder.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -1,8 +1,7 @@
 /******************************************************************
  *
  * Project: SaltedExplorer
- * File: Settings.cpp
- * License: GPL - See COPYING in the top level directory
+ * File: RegistrySettings.cpp
  *
  * Saves and loads all main program settings.
  *
@@ -25,11 +24,12 @@
 #include "MergeFilesDialog.h"
 #include "SelectColumnsDialog.h"
 #include "SetDefaultColumnsDialog.h"
+#include "AddFavoritesDialog.h"
 #include "../Helper/RegistrySettings.h"
 #include "../Helper/Macros.h"
 
 
-#define REG_BOOKMARKS_KEY			_T("Software\\SaltedExplorer\\Bookmarks")
+#define REG_FAVORITES_KEY			_T("Software\\SaltedExplorer\\Favorites")
 #define REG_TABS_KEY				_T("Software\\SaltedExplorer\\Tabs")
 #define REG_TOOLBARS_KEY			_T("Software\\SaltedExplorer\\Toolbars")
 #define REG_COLUMNS_KEY				_T("Software\\SaltedExplorer\\DefaultColumns")
@@ -115,7 +115,7 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowAddressBar"),m_bShowAddressBar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowMenuBar"),m_bShowMenuBar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowToolbar"),m_bShowMainToolbar);
-		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowBookmarksToolbar"),m_bShowBookmarksToolbar);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFAVORITESToolbar"),m_bShowFAVORITESToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowDrivesToolbar"),m_bShowDrivesToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowApplicationToolbar"),m_bShowApplicationToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFullTitlePath"),m_bShowFullTitlePath);
@@ -123,10 +123,12 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("TreeViewWidth"),m_TreeViewWidth);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFriendlyDates"),m_bShowFriendlyDatesGlobal);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShellMode"),m_bShellMode);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("VistaControls"),m_bVistaControls);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowDisplayWindow"),m_bShowDisplayWindow);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFolderSizes"),m_bShowFolderSizes);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisableFolderSizesNetworkRemovable"),m_bDisableFolderSizesNetworkRemovable);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("StartupMode"),m_StartupMode);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("WebViewOptions"),m_WebViewOptions);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("NextToCurrent"),m_bOpenNewTabNextToCurrent);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ConfirmCloseTabs"),m_bConfirmCloseTabs);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowInfoTips"),m_bShowInfoTips);
@@ -154,6 +156,8 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowTabBarAtBottom"),m_bShowTabBarAtBottom);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("OverwriteExistingFilesConfirmation"),m_bOverwriteExistingFilesConfirmation);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("LargeToolbarIcons"),m_bLargeToolbarIcons);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ToolbarTitleButtons"),m_bToolbarTitleButtons);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("WebView"),m_bWebView);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("PlayNavigationSound"),m_bPlayNavigationSound);
 
 		NRegistrySettings::SaveStringToRegistry(hSettingsKey,_T("NewTabDirectory"),m_DefaultTabDirectory);
@@ -174,7 +178,9 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("TVAutoExpandSelected"),m_bTVAutoExpandSelected);
 
 		/* Display window settings. */
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisplayWindowWidth"),m_DisplayWindowWidth);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisplayWindowHeight"),m_DisplayWindowHeight);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisplayWindowVertical"),m_DisplayWindowVertical);
 
 		COLORREF CentreColor;
 		COLORREF SurroundColor;
@@ -236,7 +242,7 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowAddressBar"),(LPDWORD)&m_bShowAddressBar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowToolbar"),(LPDWORD)&m_bShowMainToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowMenuBar"),(LPDWORD)&m_bShowMenuBar);
-		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowBookmarksToolbar"),(LPDWORD)&m_bShowBookmarksToolbar);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFAVORITESToolbar"),(LPDWORD)&m_bShowFAVORITESToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowDrivesToolbar"),(LPDWORD)&m_bShowDrivesToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowApplicationToolbar"),(LPDWORD)&m_bShowApplicationToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFullTitlePath"),(LPDWORD)&m_bShowFullTitlePath);
@@ -244,10 +250,12 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("TreeViewWidth"),(LPDWORD)&m_TreeViewWidth);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFriendlyDates"),(LPDWORD)&m_bShowFriendlyDatesGlobal);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShellMode"),(LPDWORD)&m_bShellMode);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("VistaControls"),(LPDWORD)&m_bVistaControls);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowDisplayWindow"),(LPDWORD)&m_bShowDisplayWindow);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFolderSizes"),(LPDWORD)&m_bShowFolderSizes);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("DisableFolderSizesNetworkRemovable"),(LPDWORD)&m_bDisableFolderSizesNetworkRemovable);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("StartupMode"),(LPDWORD)&m_StartupMode);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("WebViewOptions"),(LPDWORD)&m_WebViewOptions);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("NextToCurrent"),(LPDWORD)&m_bOpenNewTabNextToCurrent);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ConfirmCloseTabs"),(LPDWORD)&m_bConfirmCloseTabs);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowInfoTips"),(LPDWORD)&m_bShowInfoTips);
@@ -278,6 +286,8 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("TVAutoExpandSelected"),(LPDWORD)&m_bTVAutoExpandSelected);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("OverwriteExistingFilesConfirmation"),(LPDWORD)&m_bOverwriteExistingFilesConfirmation);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("LargeToolbarIcons"),(LPDWORD)&m_bLargeToolbarIcons);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ToolbarTitleButtons"),(LPDWORD)&m_bToolbarTitleButtons);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("WebView"),(LPDWORD)&m_bWebView);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("PlayNavigationSound"),(LPDWORD)&m_bPlayNavigationSound);
 
 		NRegistrySettings::ReadStringFromRegistry(hSettingsKey,_T("NewTabDirectory"),m_DefaultTabDirectory,SIZEOF_ARRAY(m_DefaultTabDirectory));
@@ -303,7 +313,9 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("HideLinkExtensionGlobal"),(LPDWORD)&m_bHideLinkExtensionGlobal);
 
 		/* Display window settings. */
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisplayWindowWidth"),m_DisplayWindowWidth);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("DisplayWindowHeight"),(LPDWORD)&m_DisplayWindowHeight);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("DisplayWindowVertical"),m_DisplayWindowVertical);
 
 		COLORREF CentreColor;
 		COLORREF SurroundColor;
@@ -379,7 +391,7 @@ void DeleteKey(HKEY hKey)
 	LONG	ReturnValue;
 	int		i = 0;
 
-	/* Enumerate all the previous bookmarks keys and
+	/* Enumerate all the previous FAVORITES keys and
 	delete them. */
 	if(RegQueryInfoKey(hKey,NULL,NULL,NULL,&nSubKeys,NULL,NULL,
 		NULL,NULL,NULL,NULL,NULL) == ERROR_SUCCESS)
@@ -417,164 +429,26 @@ void DeleteKey(HKEY hKey)
 	}
 }
 
-void SaltedExplorer::SaveBookmarksToRegistry(void)
+void SaltedExplorer::SaveFavoritesToRegistry(void)
 {
-	HKEY			hBookmarksKey;
-	Bookmark_t		RootBookmark;
-	Bookmark_t		FirstChild;
-	DWORD			Disposition;
-	HRESULT			hr;
-	LONG			ReturnValue;
+	SHDeleteKey(HKEY_CURRENT_USER,REG_FAVORITES_KEY);
 
-	/* First, delete the 'Bookmarks' key, along
-	with all of its subkeys. */
-	SHDeleteKey(HKEY_CURRENT_USER,REG_BOOKMARKS_KEY);
+	m_bfAllFavorites->SerializeToRegistry(REG_FAVORITES_KEY);
+}
 
-	/* Simply open the 'main' registry key, as the 'bookmarks' sub-key
-	will be created by the root bookmark (called 'Bookmarks'). */
-	ReturnValue = RegCreateKeyEx(HKEY_CURRENT_USER,REG_BOOKMARKS_KEY,
-	0,NULL,REG_OPTION_NON_VOLATILE,KEY_WRITE,NULL,&hBookmarksKey,
-	&Disposition);
+void SaltedExplorer::LoadFavoritesFromRegistry(void)
+{
+	HKEY		hFAVORITESKey;
+	LONG		ReturnValue;
+
+	ReturnValue = RegOpenKeyEx(HKEY_CURRENT_USER,REG_FAVORITES_KEY,
+		0,KEY_READ,&hFAVORITESKey);
 
 	if(ReturnValue == ERROR_SUCCESS)
 	{
-		m_Bookmark.GetRoot(&RootBookmark);
+		/* TODO: Load FAVORITES. */
 
-		hr = m_Bookmark.GetChild(&RootBookmark,&FirstChild);
-
-		if(SUCCEEDED(hr))
-		{
-			SaveBookmarksToRegistryInternal(hBookmarksKey,&FirstChild,0);
-		}
-
-		RegCloseKey(hBookmarksKey);
-	}
-}
-
-void SaltedExplorer::SaveBookmarksToRegistryInternal(HKEY hKey,
-Bookmark_t *pBookmark,int count)
-{
-	HKEY		hKeyChild;
-	Bookmark_t	FirstChild;
-	Bookmark_t	SiblingBookmark;
-	TCHAR		szKeyName[32];
-	DWORD		Disposition;
-	HRESULT		hr;
-	LONG		ReturnValue;
-
-	_itow_s(count,szKeyName,SIZEOF_ARRAY(szKeyName),10);
-	ReturnValue = RegCreateKeyEx(hKey,szKeyName,0,NULL,
-		REG_OPTION_NON_VOLATILE,KEY_WRITE,NULL,&hKeyChild,
-		&Disposition);
-
-	NRegistrySettings::SaveStringToRegistry(hKeyChild,_T("Name"),pBookmark->szItemName);
-	NRegistrySettings::SaveStringToRegistry(hKeyChild,_T("Description"),pBookmark->szItemDescription);
-	NRegistrySettings::SaveDwordToRegistry(hKeyChild,_T("Type"),pBookmark->Type);
-	NRegistrySettings::SaveDwordToRegistry(hKeyChild,_T("ShowOnBookmarksToolbar"),pBookmark->bShowOnToolbar);
-
-	count++;
-
-	if(pBookmark->Type == BOOKMARK_TYPE_BOOKMARK)
-	{
-		NRegistrySettings::SaveStringToRegistry(hKeyChild,_T("Location"),pBookmark->szLocation);
-	}
-	
-	if(pBookmark->Type == BOOKMARK_TYPE_FOLDER)
-	{
-		hr = m_Bookmark.GetChild(pBookmark,&FirstChild);
-
-		if(SUCCEEDED(hr))
-		{
-			SaveBookmarksToRegistryInternal(hKeyChild,&FirstChild,0);
-		}
-	}
-
-	RegCloseKey(hKeyChild);
-
-	hr = m_Bookmark.GetNextBookmarkSibling(pBookmark,&SiblingBookmark);
-
-	if(SUCCEEDED(hr))
-	{
-		SaveBookmarksToRegistryInternal(hKey,&SiblingBookmark,count);
-	}
-
-	return;
-}
-
-void SaltedExplorer::LoadBookmarksFromRegistry(void)
-{
-	HKEY		hBookmarksKey;
-	Bookmark_t	RootBookmark;
-	LONG		ReturnValue;
-
-	ReturnValue = RegOpenKeyEx(HKEY_CURRENT_USER,REG_BOOKMARKS_KEY,
-		0,KEY_READ,&hBookmarksKey);
-
-	if(ReturnValue == ERROR_SUCCESS)
-	{
-		m_Bookmark.GetRoot(&RootBookmark);
-
-		LoadBookmarksFromRegistryInternal(hBookmarksKey,RootBookmark.pHandle);
-
-		RegCloseKey(hBookmarksKey);
-	}
-}
-
-void SaltedExplorer::LoadBookmarksFromRegistryInternal(HKEY hBookmarks,void *ParentFolder)
-{
-	HKEY	hKeyChild;
-	Bookmark_t	NewBookmark;
-	TCHAR	szKeyName[256];
-	DWORD	dwKeyLength;
-	LONG	lTypeStatus;
-	LONG	lNameStatus;
-	LONG	lDescriptionStatus;
-	LONG	lToolbarStatus;
-	LONG	lLocationStatus;
-	DWORD	dwIndex = 0;
-
-	dwKeyLength = SIZEOF_ARRAY(szKeyName);
-
-	/* Enumerate each of the subkeys. */
-	while(RegEnumKeyEx(hBookmarks,dwIndex++,szKeyName,&dwKeyLength,NULL,NULL,NULL,NULL) == ERROR_SUCCESS)
-	{
-		/* Open the subkey. First, attempt to load
-		the type. If there is no type specifier, ignore
-		the key. If any other values are missing, also
-		ignore the key. */
-		RegOpenKeyEx(hBookmarks,szKeyName,0,KEY_READ,&hKeyChild);
-
-		lTypeStatus = NRegistrySettings::ReadDwordFromRegistry(hKeyChild,_T("Type"),
-			(LPDWORD)&NewBookmark.Type);
-		lNameStatus = NRegistrySettings::ReadStringFromRegistry(hKeyChild,_T("Name"),
-			NewBookmark.szItemName,SIZEOF_ARRAY(NewBookmark.szItemName));
-		lToolbarStatus = NRegistrySettings::ReadDwordFromRegistry(hKeyChild,_T("ShowOnBookmarksToolbar"),
-			(LPDWORD)&NewBookmark.bShowOnToolbar);
-		lDescriptionStatus = NRegistrySettings::ReadStringFromRegistry(hKeyChild,_T("Description"),
-			NewBookmark.szItemDescription,SIZEOF_ARRAY(NewBookmark.szItemDescription));
-
-		if(lTypeStatus == ERROR_SUCCESS && lNameStatus == ERROR_SUCCESS &&
-			lToolbarStatus == ERROR_SUCCESS)
-		{
-			if(NewBookmark.Type == BOOKMARK_TYPE_FOLDER)
-			{
-				/* Create the bookmark folder. */
-				m_Bookmark.CreateNewBookmark(ParentFolder,&NewBookmark);
-
-				LoadBookmarksFromRegistryInternal(hKeyChild,NewBookmark.pHandle);
-			}
-			else
-			{
-				lLocationStatus = NRegistrySettings::ReadStringFromRegistry(hKeyChild,_T("Location"),
-					NewBookmark.szLocation,SIZEOF_ARRAY(NewBookmark.szLocation));
-
-				m_Bookmark.CreateNewBookmark(ParentFolder,&NewBookmark);
-			}
-		}
-
-		RegCloseKey(hKeyChild);
-
-		dwKeyLength = SIZEOF_ARRAY(szKeyName);
+		RegCloseKey(hFAVORITESKey);
 	}
 }
 
@@ -1380,9 +1254,7 @@ void SaltedExplorer::SaveStateToRegistry(void)
 
 	if(ReturnValue == ERROR_SUCCESS)
 	{
-		SaveAddBookmarkStateToRegistry(hKey);
 		SaveDisplayColorsStateToRegistry(hKey);
-		SaveOrganizeBookmarksStateToRegistry(hKey);
 
 		CSearchDialogPersistentSettings::GetInstance().SaveRegistrySettings(hKey);
 		CWildcardSelectDialogPersistentSettings::GetInstance().SaveRegistrySettings(hKey);
@@ -1398,28 +1270,7 @@ void SaltedExplorer::SaveStateToRegistry(void)
 		CSelectColumnsDialogPersistentSettings::GetInstance().SaveRegistrySettings(hKey);
 		CSetDefaultColumnsDialogPersistentSettings::GetInstance().SaveRegistrySettings(hKey);
 
-		RegCloseKey(hKey);
-	}
-}
-
-void SaltedExplorer::SaveAddBookmarkStateToRegistry(HKEY hParentKey)
-{
-	HKEY	hKey;
-	DWORD	Disposition;
-	LONG	ReturnValue;
-
-	ReturnValue = RegCreateKeyEx(hParentKey,REG_ADDBOOKMARK_KEY,
-		0,NULL,REG_OPTION_NON_VOLATILE,KEY_WRITE,NULL,&hKey,
-		&Disposition);
-
-	if(ReturnValue == ERROR_SUCCESS)
-	{
-		if(m_bAddBookmarkDlgStateSaved)
-		{
-			RegSetValueEx(hKey,_T("Position"),0,
-				REG_BINARY,(LPBYTE)&m_ptAddBookmark,
-				sizeof(m_ptAddBookmark));
-		}
+		CAddFavoritesDialogPersistentSettings::GetInstance().SaveRegistrySettings(hKey);
 
 		RegCloseKey(hKey);
 	}
@@ -1448,29 +1299,6 @@ void SaltedExplorer::SaveDisplayColorsStateToRegistry(HKEY hParentKey)
 	}
 }
 
-void SaltedExplorer::SaveOrganizeBookmarksStateToRegistry(HKEY hParentKey)
-{
-	HKEY	hKey;
-	DWORD	Disposition;
-	LONG	ReturnValue;
-
-	ReturnValue = RegCreateKeyEx(hParentKey,REG_ORGANIZEBOOKMARKS_KEY,
-		0,NULL,REG_OPTION_NON_VOLATILE,KEY_WRITE,NULL,&hKey,
-		&Disposition);
-
-	if(ReturnValue == ERROR_SUCCESS)
-	{
-		if(m_bOrganizeBookmarksDlgStateSaved)
-		{
-			RegSetValueEx(hKey,_T("Position"),0,
-				REG_BINARY,(LPBYTE)&m_ptOrganizeBookmarks,
-				sizeof(m_ptOrganizeBookmarks));
-		}
-
-		RegCloseKey(hKey);
-	}
-}
-
 void SaltedExplorer::LoadStateFromRegistry(void)
 {
 	HKEY				hKey;
@@ -1480,9 +1308,7 @@ void SaltedExplorer::LoadStateFromRegistry(void)
 
 	if(ReturnValue == ERROR_SUCCESS)
 	{
-		LoadAddBookmarkStateFromRegistry(hKey);
 		LoadDisplayColorsStateFromRegistry(hKey);
-		LoadOrganizeBookmarksStateFromRegistry(hKey);
 
 		CSearchDialogPersistentSettings::GetInstance().LoadRegistrySettings(hKey);
 		CWildcardSelectDialogPersistentSettings::GetInstance().LoadRegistrySettings(hKey);
@@ -1498,29 +1324,7 @@ void SaltedExplorer::LoadStateFromRegistry(void)
 		CSelectColumnsDialogPersistentSettings::GetInstance().LoadRegistrySettings(hKey);
 		CSetDefaultColumnsDialogPersistentSettings::GetInstance().LoadRegistrySettings(hKey);
 
-		RegCloseKey(hKey);
-	}
-}
-
-void SaltedExplorer::LoadAddBookmarkStateFromRegistry(HKEY hParentKey)
-{
-	HKEY				hKey;
-	DWORD				dwSize;
-	LONG				ReturnValue;
-
-	ReturnValue = RegOpenKeyEx(hParentKey,REG_ADDBOOKMARK_KEY,0,
-		KEY_READ,&hKey);
-
-	if(ReturnValue == ERROR_SUCCESS)
-	{
-		dwSize = sizeof(POINT);
-		ReturnValue = RegQueryValueEx(hKey,_T("Position"),
-			NULL,NULL,(LPBYTE)&m_ptAddBookmark,&dwSize);
-
-		if(ReturnValue == ERROR_SUCCESS)
-		{
-			m_bAddBookmarkDlgStateSaved = TRUE;
-		}
+		CAddFavoritesDialogPersistentSettings::GetInstance().LoadRegistrySettings(hKey);
 
 		RegCloseKey(hKey);
 	}
@@ -1550,38 +1354,14 @@ void SaltedExplorer::LoadDisplayColorsStateFromRegistry(HKEY hParentKey)
 	}
 }
 
-void SaltedExplorer::LoadOrganizeBookmarksStateFromRegistry(HKEY hParentKey)
-{
-	HKEY				hKey;
-	DWORD				dwSize;
-	LONG				ReturnValue;
-
-	ReturnValue = RegOpenKeyEx(hParentKey,REG_ORGANIZEBOOKMARKS_KEY,0,
-		KEY_READ,&hKey);
-
-	if(ReturnValue == ERROR_SUCCESS)
-	{
-		dwSize = sizeof(POINT);
-		ReturnValue = RegQueryValueEx(hKey,_T("Position"),
-			NULL,NULL,(LPBYTE)&m_ptOrganizeBookmarks,&dwSize);
-
-		if(ReturnValue == ERROR_SUCCESS)
-		{
-			m_bOrganizeBookmarksDlgStateSaved = TRUE;
-		}
-
-		RegCloseKey(hKey);
-	}
-}
-
 void SaltedExplorer::CLoadSaveRegistry::LoadGenericSettings(void)
 {
 	m_pContainer->LoadSettings(REG_MAIN_KEY);
 }
 
-void SaltedExplorer::CLoadSaveRegistry::LoadBookmarks(void)
+void SaltedExplorer::CLoadSaveRegistry::LoadFavorites(void)
 {
-	m_pContainer->LoadBookmarksFromRegistry();
+	m_pContainer->LoadFavoritesFromRegistry();
 }
 
 int SaltedExplorer::CLoadSaveRegistry::LoadPreviousTabs(void)
@@ -1619,9 +1399,9 @@ void SaltedExplorer::CLoadSaveRegistry::SaveGenericSettings(void)
 	m_pContainer->SaveSettings();
 }
 
-void SaltedExplorer::CLoadSaveRegistry::SaveBookmarks(void)
+void SaltedExplorer::CLoadSaveRegistry::SaveFavorites(void)
 {
-	m_pContainer->SaveBookmarksToRegistry();
+	m_pContainer->SaveFavoritesToRegistry();
 }
 
 void SaltedExplorer::CLoadSaveRegistry::SaveTabs(void)

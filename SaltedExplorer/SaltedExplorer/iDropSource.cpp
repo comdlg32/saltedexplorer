@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: iDropSource.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides support for acting as a drop source.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

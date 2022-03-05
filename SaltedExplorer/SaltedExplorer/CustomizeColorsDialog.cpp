@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: CustomizeColorsDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the customize colors dialog.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -19,7 +18,6 @@
 #include "../Helper/Helper.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/Macros.h"
-
 
 const TCHAR CCustomizeColorsDialogPersistentSettings::SETTINGS_KEY[] = _T("CustomizeColors");
 

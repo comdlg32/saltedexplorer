@@ -8,15 +8,15 @@
 #include "../Helper/BaseDialog.h"
 #include "../Helper/SetDefaultFileManager.h"
 #include "../Helper/FileActionHandler.h"
+#include "../Helper/Favorites.h"
 #include "SaltedExplorer_internal.h"
+#include "MainToolbar.h"
 #import <msxml3.dll> raw_interfaces_only
 
-void InsertFolderItemsIntoComboBoxInternal(HWND hCreateIn,Bookmark_t *pBookmark);
-
 #define MAX_TABS					100
-#define MENU_BOOKMARK_STARTPOS		3
-#define MENU_BOOKMARK_STARTID		10000
-#define MENU_BOOKMARK_ENDID			11000
+#define MENU_FAVORITE_STARTPOS		3
+#define MENU_FAVORITE_STARTID		10000
+#define MENU_FAVORITE_ENDID			11000
 #define MENU_HEADER_STARTID			12000
 #define MENU_HEADER_ENDID			13000
 
@@ -37,17 +37,15 @@ lParam not currently used. */
 #define FROM_TREEVIEW				1
 #define FROM_DRIVEBAR				3
 
-#define MAX_BOOKMARKTOOLBAR_ITEMS	100
+#define MAX_FAVORITETOOLBAR_ITEMS	100
 
 /* Registry keys used to store program settings. */
 #define REG_MAIN_KEY				_T("Software\\SaltedExplorer")
 #define REG_SETTINGS_KEY			_T("Software\\SaltedExplorer\\Settings")
 
 /* Dialog keys (relative to REG_DIALOGS_KEY). */
-#define REG_ADDBOOKMARK_KEY			_T("AddBookmark")
 #define REG_DISPLAYCOLORS_KEY		_T("DisplayColors")
 #define REG_MERGEFILES_KEY			_T("MergeFiles")
-#define REG_ORGANIZEBOOKMARKS_KEY	_T("OrganizeBookmarks")
 #define REG_SELECTCOLUMNS_KEY		_T("SelectColumns")
 #define REG_SELECTDEFAULTCOLUMNS_KEY	_T("SelectDefaultColumns")
 
@@ -135,6 +133,12 @@ typedef enum
 
 typedef enum
 {
+	OPTION_WEBVIEW	= 1,
+	OPTION_NOWEBVIEW	= 2
+} WEBVIEW_OPTIONS;
+
+typedef enum
+{
 	INFOTIP_SYSTEM	= 0,
 	INFOTIP_CUSTOM	= 1
 } INFOTIP_TYPE;
@@ -164,24 +168,21 @@ public:
 	LRESULT CALLBACK	ListViewEditProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	EditSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	RebarSubclass(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
-	LRESULT CALLBACK	BookmarksToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+	LRESULT CALLBACK	FavoritesToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	DrivesToolbarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
+	LRESULT CALLBACK	MenuBarSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	TabBackingProc(HWND hTabCtrl,UINT msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	TreeViewHolderProc(HWND hwnd,UINT msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	TabSubclassProc(HWND hTab,UINT msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	TreeViewSubclass(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK	TabProxyWndProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam,int iTabId);
 	INT_PTR CALLBACK	GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
+	INT_PTR CALLBACK	OldGeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ThemesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-	INT_PTR CALLBACK	BookmarkTabDlgProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-	INT_PTR CALLBACK	NewBookmarkFolderProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-	INT_PTR CALLBACK	OrganizeBookmarks(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-	INT_PTR CALLBACK	BookmarkPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-	INT_PTR CALLBACK	BookmarkFolderPropertiesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ChangeDisplayColours(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ApplicationButtonPropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ApplicationToolbarNewButtonProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
@@ -269,7 +270,7 @@ private:
 
 		/* Loading functions. */
 		void	LoadGenericSettings(void);
-		void	LoadBookmarks(void);
+		void	LoadFavorites(void);
 		int		LoadPreviousTabs(void);
 		void	LoadDefaultColumns(void);
 		void	LoadApplicationToolbar(void);
@@ -279,7 +280,7 @@ private:
 
 		/* Saving functions. */
 		void	SaveGenericSettings(void);
-		void	SaveBookmarks(void);
+		void	SaveFavorites(void);
 		void	SaveTabs(void);
 		void	SaveDefaultColumns(void);
 		void	SaveApplicationToolbar(void);
@@ -313,7 +314,7 @@ private:
 
 		/* Loading functions. */
 		void	LoadGenericSettings(void);
-		void	LoadBookmarks(void);
+		void	LoadFavorites(void);
 		int		LoadPreviousTabs(void);
 		void	LoadDefaultColumns(void);
 		void	LoadApplicationToolbar(void);
@@ -323,7 +324,7 @@ private:
 
 		/* Saving functions. */
 		void	SaveGenericSettings(void);
-		void	SaveBookmarks(void);
+		void	SaveFavorites(void);
 		void	SaveTabs(void);
 		void	SaveDefaultColumns(void);
 		void	SaveApplicationToolbar(void);
@@ -349,38 +350,6 @@ private:
 	};
 
 	friend CLoadSaveXML;
-
-	class CBookmarkToolbarDrop : public IDropTarget
-	{
-	public:
-		CBookmarkToolbarDrop(SaltedExplorer *pContainer);
-		~CBookmarkToolbarDrop();
-
-		/* IUnknown methods. */
-		HRESULT __stdcall	QueryInterface(REFIID iid,void **ppvObject);
-		ULONG __stdcall		AddRef(void);
-		ULONG __stdcall		Release(void);
-
-		/* Drag and drop. */
-		HRESULT _stdcall	DragEnter(IDataObject *pDataObject,DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect);
-		HRESULT _stdcall	DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
-		HRESULT _stdcall	DragLeave(void);
-		HRESULT _stdcall	Drop(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
-
-	private:
-		int m_iRefCount;
-
-		SaltedExplorer *m_pContainer;
-
-		/* Drag and drop. */
-		IDragSourceHelper *	m_pDragSourceHelper;
-		IDropTargetHelper *	m_pDropTargetHelper;
-		BOOL m_bAcceptData;
-
-		HRESULT	InitializeDragDropHelpers(void);
-	};
-
-	friend CBookmarkToolbarDrop;
 
 	class CApplicationToolbarDrop : public IDropTarget
 	{
@@ -424,7 +393,6 @@ private:
 	/* Main window private message handlers. */
 	LRESULT CALLBACK		CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
 	LRESULT CALLBACK		NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
-	void					OnMenuCommand(WPARAM wParam,LPARAM lParam);
 	BOOL					OnSize(int MainWindowWidth,int MainWindowHeight);
 	int						OnClose(void);
 	int						OnDestroy(void);
@@ -473,7 +441,6 @@ private:
 	void					OnMainToolbarRClick(void);
 	void					OnMenuBarRClick(void);
 	void					OnApplicationToolbarRClick(void);
-	void					OnBookmarksToolbarRClick(int iItem);
 	void					OnAddressBarGo(void);
 	void					OnSortByAscending(BOOL bSortAscending);
 	void					OnPreviousWindow(void);
@@ -649,7 +616,7 @@ private:
 	void					CreateMenuBar(void);
 	void					CreateAddressToolbar(void);
 	void					CreateAddressBar(void);
-	void					CreateBookmarksToolbar(void);
+	void					CreateFAVORITESToolbar(void);
 	void					CreateDrivesToolbar(void);
 	void					CreateApplicationToolbar(void);
 	HWND					CreateTabToolbar(HWND hParent,int idCommand,TCHAR *szTip);
@@ -672,6 +639,7 @@ private:
 	void					ValidateColumns(void);
 	void					ValidateSingleColumnSet(int iColumnSet,std::list<Column_t> *pColumnList);
 	void					ApplyLoadedSettings(void);
+	void					ApplyDisplayWindowPosition();
 	void					ApplyToolbarSettings(void);
 	void					AddStyleToToolbar(UINT *fStyle,UINT fStyleToAdd);
 	void					SetDefaultValues(void);
@@ -684,11 +652,9 @@ private:
 	void					SaveColumnWidthsToRegistry(HKEY hColumnsKey,TCHAR *szKeyName,std::list<Column_t> *pColumns);
 	void					LoadDefaultColumnsFromRegistry(void);
 	void					SaveDefaultColumnsToRegistry(void);
-	void					InitializeBookmarks(void);
-	void					SaveBookmarksToRegistry(void);
-	void					SaveBookmarksToRegistryInternal(HKEY hKey,Bookmark_t *pBookmark,int count);
-	void					LoadBookmarksFromRegistry(void);
-	void					LoadBookmarksFromRegistryInternal(HKEY hBookmarks,void *ParentFolder);
+	void					InitializeFAVORITES(void);
+	void					SaveFavoritesToRegistry(void);
+	void					LoadFavoritesFromRegistry(void);
 	void					LoadApplicationToolbarFromRegistry(void);
 	void					LoadApplicationToolbarFromRegistryInternal(HKEY hKey);
 	void					SaveApplicationToolbarToRegistry(void);
@@ -701,12 +667,8 @@ private:
 	void					LoadToolbarInformationFromRegistry(void);
 	void					SaveStateToRegistry(void);
 	void					LoadStateFromRegistry(void);
-	void					SaveAddBookmarkStateToRegistry(HKEY hParentKey);
-	void					LoadAddBookmarkStateFromRegistry(HKEY hParentKey);
 	void					SaveDisplayColorsStateToRegistry(HKEY hParentKey);
 	void					LoadDisplayColorsStateFromRegistry(HKEY hParentKey);
-	void					SaveOrganizeBookmarksStateToRegistry(HKEY hParentKey);
-	void					LoadOrganizeBookmarksStateFromRegistry(HKEY hParentKey);
 
 	/* Window state update. */
 	void					UpdateWindowStates(void);
@@ -726,7 +688,6 @@ private:
 	void					AdjustFolderPanePosition(void);
 	void					SetComboBoxExTitleString(HWND CbEx,LPITEMIDLIST pidl,TCHAR *szDisplayText);
 	void					HandleToolbarItemStates(void);
-	void					HandleMenuBarItemStates(void);
 	HRESULT					HandleStatusText(void);
 	void					ToggleFolders(void);
 
@@ -822,60 +783,12 @@ private:
 	void					OnDisplayColorsHScroll(HWND hDlg);
 	void					OnDisplayColorsEnChange(HWND hDlg,LPARAM lParam);
 
-	/* Add bookmark dialog. */
-	void					OnAddBookmarkInit(HWND hDlg,LPARAM lParam);
-	void					OnAddBookmarkOk(HWND hDlg);
-	void					OnAddBookmarkNewFolder(HWND hDlg);
-	void					OnBookmarkDetails(HWND hDlg);
-	int						LocateBookmarkInComboBox(HWND hComboBox,void *pBookmarkHandle);
-	void					InsertFolderItemsIntoComboBox(HWND hCreateIn,Bookmark_t *pBookmark);
-	void					InsertFolderItemsIntoComboBoxInternal(HWND hCreateIn,Bookmark_t *pBookmark,int iIndent,int iBookmarkFolderItem);
-	void					AddBookmarkSaveState(HWND hDlg);
+	/* FAVORITES. */
+	void					InsertFavoriteToolbarButtons(void);
 
-	/* New bookmark folder dialog. */
-	void					OnNewBookmarkFolderInit(HWND hDlg);
-	void					OnNewBookmarkFolderOk(HWND hDlg);
-
-	/* Bookmarks organization dialog. */
-	void					OnOrganizeBookmarksInit(HWND hDlg);
-	void					MoveColumnItem(HWND hDlg,BOOL bUp);
-	void					OrganizeBookmarksMove(HWND hDlg,BOOL bUp);
-	void					OnOrganizeBookmarksDelete(HWND hDlg);
-	void					OnOrganizeBookmarksOk(HWND hDlg);
-	void					OnOrganizeBookmarksProperties(HWND hDlg);
-	void					OnOrganizeBookmarksDoubleClick(HWND hDlg,LPARAM lParam);
-	void					OnOrganizeBookmarksRightClick(HWND hDlg,LPARAM lParam);
-	void					OrganizeBookmarksRefreshItem(HWND hDlg,int iItem);
-	void					OnOrganizeBookmarksTvnSelChanged(HWND hDlg,LPARAM lParam);
-	void					OnOrganizeBookmarksInitMenu(HWND hDlg,WPARAM wParam);
-	void					OnOrganizeBookmarksShowOnToolbar(HWND hDlg);
-	void					OnOrganizeBookmarksOpen(HWND hDlg,BOOL bOpenInNewTab);
-	void					ShowBookmarkProperties(HWND hDlg,HWND hListView,int iItem);
-	void					InsertBookmarksIntoTreeView(HWND hTreeView,HTREEITEM hParent,Bookmark_t *pBookmark);
-	void					InsertBookmarksIntoTreeViewInternal(HWND hTreeView,HTREEITEM hParent,Bookmark_t *pBookmark);
-	void					InsertBookmarkFolderItemsIntoTreeView(HWND hFolders,HTREEITEM hParent,Bookmark_t *pBookmark);
-	void					InsertBookmarksIntoListView(HWND hBookmarks,Bookmark_t *pBookmark);
-	void					InitializeBookmarkToolbarMap(void);
-	int						GenerateUniqueBookmarkToolbarId(void);
-	void					GetBookmarkMenuItemDirectory(HMENU hMenu,int iBookmarkId,TCHAR *szDirectory,UINT uBufSize);
-	void					OrganizeBookmarksTrackInTreeView(HWND hDlg,void *pBookmarkHandle);
-	void					OrganizeBookmarksSaveState(HWND hDlg);
-
-	/* Bookmark properties dialog. */
-	void					OnBookmarkPropertiesInit(HWND hDlg,LPARAM lParam);
-	void					OnBookmarkPropertiesOk(HWND hDlg);
-
-	/* Bookmark folder properties dialog. */
-	void					OnBookmarkFolderPropertiesInit(HWND hDlg,LPARAM lParam);
-	void					OnBookmarkFolderPropertiesOk(HWND hDlg);
-
-	/* Helper functions for the bookmark toolbar. */
-	void					BookmarkToolbarOpenItem(int iItem,BOOL bOpenInNewTab);
-	void					BookmarkToolbarDeleteItem(int iItem);
-	void					BookmarkToolbarShowItemProperties(int iItem);
-	void					BookmarkToolbarNewBookmark(int iItem);
-	void					BookmarkToolbarNewFolder(int iItem);
-	void					RemoveItemFromBookmarksToolbar(void *pBookmarkHandle);
+	/* Helper functions for the Favorite toolbar. */
+	void					FavoriteToolbarNewFavorite(int iItem);
+	void					FavoriteToolbarNewFolder(int iItem);
 
 	/* Columns. */
 	void					OnSelectColumns();
@@ -883,19 +796,10 @@ private:
 	int						LookupColumnDescriptionStringIndex(int iColumnId);
 	void					CopyColumnInfoToClipboard(void);
 
-	/* Bookmarks. */
-	void					InsertBookmarkToolbarButtons(void);
-	void					InsertToolbarButtonsInternal(Bookmark_t *pBookmark);
-	void					InsertBookmarkIntoToolbar(Bookmark_t *pBookmark,int id);
-	void					UpdateToolbarButton(Bookmark_t *pBookmark);
-
-	/* Bookmark handling. */
+	/* Favorite handling. */
 	HRESULT					ExpandAndBrowsePath(TCHAR *szPath);
 	HRESULT					ExpandAndBrowsePath(TCHAR *szPath,BOOL bOpenInNewTab,BOOL bSwitchToNewTab);
-	void					InsertBookmarksIntoMenu(void);
-	void					InsertBookmarksIntoMenuInternal(HMENU hMenu,Bookmark_t *pBookmark,int iStartPos,int iStartId);
-	void					InsertBookmarksIntoMenuInternal(HMENU hMenu,Bookmark_t *pBookmark,int iStartPos);
-	BOOL					DeleteBookmarkSafe(HWND hwnd,void *pBookmarkHandle);
+	void					InsertFavoritesIntoMenu(void);
 
 	/* Filtering. */
 	void					SetFilterStatus(void);
@@ -917,10 +821,8 @@ private:
 	void					SaveTabSettingsToXMLnternal(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pe);
 	int						LoadColumnFromXML(MSXML2::IXMLDOMNode *pNode,std::list<Column_t> *pColumns);
 	void					SaveColumnToXML(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pColumnsNode,std::list<Column_t> *pColumns,TCHAR *szColumnSet,int iIndent);
-	int						LoadBookmarksFromXML(MSXML2::IXMLDOMDocument *pXMLDom);
-	void					LoadBookmarksFromXMLInternal(MSXML2::IXMLDOMNode *pNode,void *pParentFolder);
-	void					SaveBookmarksToXML(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pRoot);
-	void					SaveBookmarksToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pe,Bookmark_t *pBookmark);
+	int						LoadFavoritesFromXML(MSXML2::IXMLDOMDocument *pXMLDom);
+	void					SaveFavoritesToXML(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pRoot);
 	int						LoadDefaultColumnsFromXML(MSXML2::IXMLDOMDocument *pXMLDom);
 	void					SaveDefaultColumnsToXML(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pRoot);
 	void					SaveDefaultColumnsToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,MSXML2::IXMLDOMElement *pColumnsNode);
@@ -948,7 +850,7 @@ private:
 
 	/* Miscellaneous. */
 	BOOL					CompareVirtualFolders(UINT uFolderCSIDL);
-	void					OnShowOptions(void);
+	void					OnShowPreferences(void);
 	void					AddShellThemes(HWND hDlg);
 	void					AddLanguages(HWND hDlg);
 	WORD					AddLanguageToComboBox(HWND hComboBox,TCHAR *szImageDirectory,TCHAR *szFileName);
@@ -956,31 +858,24 @@ private:
 	int						GetShellThemeIDFromIndex(HWND hDlg,int iIndex);
 	void					PushGlobalSettingsToTab(int iTabId);
 	void					PushGlobalSettingsToAllTabs(void);
+	void					InitializeMenus(void);
 	void					CreateViewsMenu(POINT *ptOrigin);
+	void					SetMenuItemBitmap(HMENU hMenu,UINT ItemID,int iBitmap);
 	void					SetMenuOwnerDraw(HMENU hMenu);
 	void					SetMenuOwnerDrawInternal(HMENU hMenu,int nMenus);
 	void					SetMenuItemOwnerDrawn(HMENU hMenu,int iItem);
 	void					SetInitialToolbarButtons(void);
-	void					SetInitialMenuBarButtons(void);
 	int						LookupToolbarButtonTextID(int iButtonID);
-	int						LookupMenuBarButtonTextID(int iButtonID);
 	int						LookupToolbarButtonImage(int iButtonID);
-	int						LookupMenuBarButtonImage(int iButtonID);
 	BYTE					LookupToolbarButtonExtraStyles(int iButtonID);
-	BYTE					LookupMenuBarButtonExtraStyles(int iButtonID);
 	void					InsertToolbarButtons(void);
-	void					InsertMenuBarButtons(void);
 	void					InsertToolbarButton(ToolbarButton_t *ptb,int iPos);
-	void					InsertMenuBarButton(ToolbarButton_t *ptb,int iPos);
 	void					DeleteToolbarButton(int iButton);
-	void					DeleteMenuBarButton(int iButton);
 	void					AddStringsToMainToolbar(void);
-	void					AddStringsToMenuBar(void);
 	void					CreateStatusBar(void);
 	void					InitializeDisplayWindow(void);
 	void					InitializeTabs(void);
 	void					AddDefaultTabIcons(HIMAGELIST himlTab);
-	void					InitializeMenus(void);
 	void					SetGoMenuName(HMENU hMenu,UINT uMenuID,UINT csidl);
 	int						CreateDriveFreeSpaceString(TCHAR *szPath,TCHAR *szBuffer,int nBuffer);
 	BOOL					CheckItemSelection(void);
@@ -1016,7 +911,7 @@ private:
 	HWND					m_hFoldersToolbar;
 	HWND					m_hTabBacking;
 	HWND					m_hAddressToolbar;
-	HWND					m_hBookmarksToolbar;
+	HWND					m_hFavoritesToolbar;
 	HWND					m_hDrivesToolbar;
 	HWND					m_hApplicationToolbar;
 
@@ -1026,7 +921,7 @@ private:
 	IShellBrowser2 *		m_pActiveShellBrowser;
 	IDirectoryMonitor *		m_pDirMon;
 	CMyTreeView *			m_pMyTreeView;
-	CBookmark				m_Bookmark;
+	FavoriteFolder *		m_bfAllFavorites;
 	CCustomMenu *			m_pCustomMenu;
 	CStatusBar *			m_pStatusBar;
 	HANDLE					m_hIconThread;
@@ -1042,12 +937,11 @@ private:
 	HMENU					m_hGroupBySubMenu;
 	HMENU					m_hArrangeSubMenuRClick;
 	HMENU					m_hGroupBySubMenuRClick;
-	HMENU					m_hBookmarksMenu;
+	HMENU					m_hFavoritesMenu;
 	HMENU					m_hTabRightClickMenu;
 	HMENU					m_hToolbarRightClickMenu;
-	HMENU					m_hBookmarksRightClickMenu;
-	HMENU					m_hApplicationRightClickMenu;
 	HMENU					m_hDisplayWindowRightClickMenu;
+	HMENU					m_hApplicationRightClickMenu;
 	HMENU					m_hViewsMenu;
 	TCHAR					m_CurrentDirectory[MAX_PATH];
 	TCHAR					m_DefaultTabDirectoryStatic[MAX_PATH];
@@ -1057,7 +951,9 @@ private:
 	DWORD					m_ShellTheme;
 	DWORD					m_dwMajorVersion;
 	DWORD					m_dwMinorVersion;
+	LONG					m_DisplayWindowWidth;
 	LONG					m_DisplayWindowHeight;
+	BOOL					m_DisplayWindowVertical;
 	BOOL					m_bTreeViewRightClick;
 	BOOL					m_bSelectingTreeViewDirectory;
 	BOOL					m_bInVirtualFolder;
@@ -1096,7 +992,7 @@ private:
 	BOOL					m_bShowDisplayWindow;
 	BOOL					m_bShowMenuBar;
 	BOOL					m_bShowMainToolbar;
-	BOOL					m_bShowBookmarksToolbar;
+	BOOL					m_bShowFAVORITESToolbar;
 	BOOL					m_bShowDrivesToolbar;
 	BOOL					m_bShowApplicationToolbar;
 	BOOL					m_bAlwaysShowTabBar;
@@ -1111,6 +1007,7 @@ private:
 	BOOL					m_bTreeViewDelayEnabled;
 	BOOL					m_bSavePreferencesToXMLFile;
 	BOOL					m_bShellMode;
+	BOOL					m_bVistaControls;
 	BOOL					m_bLockToolbars;
 	BOOL					m_bExtendTabControl;
 	BOOL					m_bUseFullRowSelect;
@@ -1134,9 +1031,12 @@ private:
 	BOOL					m_bSynchronizeTreeview;
 	BOOL					m_bTVAutoExpandSelected;
 	BOOL					m_bLargeToolbarIcons;
+	BOOL					m_bToolbarTitleButtons;
+	BOOL					m_bWebView;
 	BOOL					m_bPlayNavigationSound;
 	SizeDisplayFormat_t		m_SizeDisplayFormat;
 	UINT					m_StartupMode;
+	UINT					m_WebViewOptions;
 	NDefaultFileManager::ReplaceExplorerModes_t	m_ReplaceExplorerMode;
 
 	/* Infotips (user options). */
@@ -1175,12 +1075,10 @@ private:
 	/* Main toolbar. */
 	HIMAGELIST				m_himlToolbarSmall;
 	HIMAGELIST				m_himlToolbarSmallInact;
+	HIMAGELIST				m_himlToolbarSmallDisabled;
 	HIMAGELIST				m_himlToolbarLarge;
 	HIMAGELIST				m_himlToolbarLargeInact;
-
-	/* Bookmark toolbar. */
-	UINT					m_uBookmarkToolbarMap[MAX_BOOKMARKTOOLBAR_ITEMS];
-	int						m_iSelectedRClick;
+	HIMAGELIST				m_himlToolbarLargeDisabled;
 
 	/* Toolbar buttons. */
 	std::list<ToolbarButton_t>	m_tbInitial;
@@ -1193,6 +1091,7 @@ private:
 	ApplicationButton_t		*m_pAppButtonSelected;
 	int						m_nAppButtons;
 	int						m_iAppIdOffset;
+	int						m_iSelectedRClick;
 
 	/* Display window details. */
 	std::list<DWRule_t>		m_DWRules;
@@ -1252,14 +1151,6 @@ private:
 	DragTypes_t				m_DragType;
 	BOOL					m_bDataAccept;
 	int						m_iTabDragTab;
-
-	/* Add bookmark dialog. */
-	BOOL					m_bAddBookmarkDlgStateSaved;
-	POINT					m_ptAddBookmark;
-
-	/* Organize bookmarks dialog. */
-	BOOL					m_bOrganizeBookmarksDlgStateSaved;
-	POINT					m_ptOrganizeBookmarks;
 
 	/* Display colors dialog. */
 	BOOL					m_bDisplayColorsDlgStateSaved;

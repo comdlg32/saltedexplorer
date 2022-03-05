@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: FileContextMenuManager.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Manages the file context menu.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

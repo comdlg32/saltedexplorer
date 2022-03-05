@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: FilterDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Filter' dialog.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

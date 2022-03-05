@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: ApplicationToolbarDropHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles drag and drop for the application toolbar.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

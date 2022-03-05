@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: SetDefaultFileManager.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Sets/removes an application as the default file manager.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -32,6 +31,7 @@ The value of the "command" sub-key will be of the form:
 #include "stdafx.h"
 #include "Helper.h"
 #include "SetDefaultFileManager.h"
+#include "ProcessHelper.h"
 #include "Macros.h"
 
 
@@ -128,8 +128,8 @@ BOOL NDefaultFileManagerInternal::SetAsDefaultFileManagerInternal(NDefaultFileMa
 
 				/* Get the current location of the program, and use
 				it as part of the command. */
-				GetCurrentProcessImageName(szExecutable,
-					SIZEOF_ARRAY(szExecutable));
+				GetProcessImageName(GetCurrentProcessId(), szExecutable,
+						SIZEOF_ARRAY(szExecutable));
 
 				StringCchPrintf(szCommand,SIZEOF_ARRAY(szCommand),
 					_T("\"%s\" \"%%1\""),szExecutable);

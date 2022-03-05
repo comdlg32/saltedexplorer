@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: MsgHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles messages passed back from the main GUI components.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -17,6 +16,7 @@
 #include "WildcardSelectDialog.h"
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -118,12 +118,11 @@ void SaltedExplorer::OnWindowCreate(void)
 	m_hArrangeSubMenuRClick			= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_ARRANGEMENU)),0);
 	m_hGroupBySubMenu				= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_GROUPBY_MENU)),0);
 	m_hGroupBySubMenuRClick			= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_GROUPBY_MENU)),0);
-	m_hBookmarksMenu				= GetSubMenu(GetMenu(m_hContainer),6);
+	m_hFavoritesMenu				= GetSubMenu(GetMenu(m_hContainer),6);
 	m_hTabRightClickMenu			= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_TAB_RCLICK)),0);
 	m_hToolbarRightClickMenu		= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_TOOLBAR_MENU)),0);
-	m_hBookmarksRightClickMenu		= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_BOOKMARKSTOOLBAR_MENU)),0);
+	m_hDisplayWindowRightClickMenu  = GetSubMenu(LoadMenu(g_hLanguageModule, MAKEINTRESOURCE(IDR_DISPLAYWINDOW_RCLICK)), 0);
 	m_hApplicationRightClickMenu	= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_APPLICATIONTOOLBAR_MENU)),0);
-	m_hDisplayWindowRightClickMenu	= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_DISPLAYWINDOW_RCLICK)),0);
 	m_hViewsMenu					= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_VIEWS_MENU)),0);
 
 	HBITMAP hb;
@@ -139,7 +138,14 @@ void SaltedExplorer::OnWindowCreate(void)
 	ImageList_Add(m_himlToolbarSmallInact,hb,NULL);
 	DeleteObject(hb);
 
-	m_himlToolbarLarge = ImageList_Create(TOOLBAR_IMAGE_SIZE_LARGE_X,TOOLBAR_IMAGE_SIZE_LARGE_Y,ILC_COLOR32|ILC_MASK,0,47);
+	/*
+	m_himlToolbarSmallDisabled = ImageList_Create(TOOLBAR_IMAGE_SIZE_SMALL_X,TOOLBAR_IMAGE_SIZE_SMALL_Y,ILC_COLOR32|ILC_MASK,0,47);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_DIS));
+	ImageList_Add(m_himlToolbarSmallDisabled,hb,NULL);
+	DeleteObject(hb);
+	*/
+
+	m_himlToolbarLarge = ImageList_Create(TOOLBAR_IMAGE_SIZE_LARGE_X,TOOLBAR_IMAGE_SIZE_LARGE_Y,ILC_COLOR8|ILC_MASK,0,47);
 	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_LARGE));
 	ImageList_Add(m_himlToolbarLarge,hb,NULL);
 	DeleteObject(hb);
@@ -148,6 +154,13 @@ void SaltedExplorer::OnWindowCreate(void)
 	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_LARGE_INA));
 	ImageList_Add(m_himlToolbarLargeInact,hb,NULL);
 	DeleteObject(hb);
+
+	/*
+	m_himlToolbarLargeDisabled = ImageList_Create(TOOLBAR_IMAGE_SIZE_LARGE_X,TOOLBAR_IMAGE_SIZE_LARGE_Y,ILC_COLOR8|ILC_MASK,0,47);
+	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000_LARGE_DIS));
+	ImageList_Add(m_himlToolbarLargeDisabled,hb,NULL);
+	DeleteObject(hb);
+	*/
 
 	CreateDirectoryMonitor(&m_pDirMon);
 
@@ -213,7 +226,7 @@ void SaltedExplorer::OnWindowCreate(void)
 	/* Mark the main menus as owner drawn. */
 	InitializeMenus();
 
-	InitializeBookmarks();
+	InitializeFAVORITES();
 	InitializeArrangeMenuItems();
 
 	/* Place the main window in the clipboard chain. This
@@ -240,7 +253,7 @@ BOOL TestConfigFileInternal(void)
 	/* To ensure the configuration file is loaded from the same directory
 	as the executable, determine the fully qualified path of the executable,
 	then save the configuration file in that directory. */
-	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
+	GetProcessImageName(GetCurrentProcessId(),szConfigFile,SIZEOF_ARRAY(szConfigFile));
 
 	PathRemoveFileSpec(szConfigFile);
 	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
@@ -283,7 +296,7 @@ void SaltedExplorer::LoadAllSettings(ILoadSave **pLoadSave)
 		*pLoadSave = new CLoadSaveRegistry(this);
 	}
 
-	(*pLoadSave)->LoadBookmarks();
+	(*pLoadSave)->LoadFavorites();
 	(*pLoadSave)->LoadGenericSettings();
 	(*pLoadSave)->LoadDefaultColumns();
 	(*pLoadSave)->LoadApplicationToolbar();
@@ -315,7 +328,7 @@ void SaltedExplorer::SetLanguageModule(void)
 		/* Language has been forced on the command
 		line by the user. Attempt to find the
 		corresponding DLL. */
-		GetCurrentProcessImageName(szLanguageModule,SIZEOF_ARRAY(szLanguageModule));
+		GetProcessImageName(GetCurrentProcessId(),szLanguageModule,SIZEOF_ARRAY(szLanguageModule));
 		PathRemoveFileSpec(szLanguageModule);
 		StringCchPrintf(szName,SIZEOF_ARRAY(szName),_T("SaltedExplorer%2s.dll"),g_szLang);
 		PathAppend(szLanguageModule,szName);
@@ -342,7 +355,7 @@ void SaltedExplorer::SetLanguageModule(void)
 	}
 	else
 	{
-		GetCurrentProcessImageName(szLanguageModule,SIZEOF_ARRAY(szLanguageModule));
+		GetProcessImageName(GetCurrentProcessId(),szLanguageModule,SIZEOF_ARRAY(szLanguageModule));
 		PathRemoveFileSpec(szLanguageModule);
 
 		StringCchCopy(szNamePattern,SIZEOF_ARRAY(szNamePattern),szLanguageModule);
@@ -874,7 +887,7 @@ void SaltedExplorer::OnMainToolbarRClick(void)
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_MENUBAR,m_bShowMenuBar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_ADDRESSBAR,m_bShowAddressBar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_MAINTOOLBAR,m_bShowMainToolbar);
-	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_BOOKMARKSTOOLBAR,m_bShowBookmarksToolbar);
+	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFAVORITESToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_DRIVES,m_bShowDrivesToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_APPLICATIONTOOLBAR,m_bShowApplicationToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_LOCKTOOLBARS,m_bLockToolbars);
@@ -885,22 +898,6 @@ void SaltedExplorer::OnMainToolbarRClick(void)
 	ptCursor.y = GET_Y_LPARAM(dwPos);
 
 	TrackPopupMenu(m_hToolbarRightClickMenu,TPM_LEFTALIGN,
-		ptCursor.x,ptCursor.y,0,m_hMainRebar,NULL);
-}
-
-void SaltedExplorer::OnBookmarksToolbarRClick(int iItem)
-{
-	POINT ptCursor;
-	DWORD dwPos;
-
-	SetFocus(m_hMainToolbar);
-	dwPos = GetMessagePos();
-	ptCursor.x = GET_X_LPARAM(dwPos);
-	ptCursor.y = GET_Y_LPARAM(dwPos);
-
-	m_iSelectedRClick = iItem;
-
-	TrackPopupMenu(m_hBookmarksRightClickMenu,TPM_LEFTALIGN,
 		ptCursor.x,ptCursor.y,0,m_hMainRebar,NULL);
 }
 
@@ -963,6 +960,7 @@ BOOL SaltedExplorer::OnSize(int MainWindowWidth,int MainWindowHeight)
 	UINT			uFlags;
 	int				IndentBottom = 0;
 	int				IndentTop = 0;
+	int				IndentRight = 0;
 	int				IndentLeft = 0;
 	int				iIndentRebar = 0;
 	int				iHolderWidth;
@@ -987,7 +985,14 @@ BOOL SaltedExplorer::OnSize(int MainWindowWidth,int MainWindowHeight)
 
 	if(m_bShowDisplayWindow)
 	{
-		IndentBottom += m_DisplayWindowHeight;
+		if (m_DisplayWindowVertical)
+		{
+			IndentRight += m_DisplayWindowWidth;
+		}
+		else
+		{
+			IndentBottom += m_DisplayWindowHeight;
+		}
 	}
 
 	if(m_bShowFolders)
@@ -1016,7 +1021,7 @@ BOOL SaltedExplorer::OnSize(int MainWindowWidth,int MainWindowHeight)
 	else
 	{
 		iTabBackingLeft = IndentLeft;
-		iTabBackingWidth = MainWindowWidth - IndentLeft;
+		iTabBackingWidth = MainWindowWidth - IndentLeft - IndentRight;
 	}
 
 	uFlags = m_bShowTabBar?SWP_SHOWWINDOW:SWP_HIDEWINDOW;
@@ -1086,8 +1091,16 @@ BOOL SaltedExplorer::OnSize(int MainWindowWidth,int MainWindowHeight)
 
 	/* <---- Display window ----> */
 
-	SetWindowPos(m_hDisplayWindow,NULL,0,MainWindowHeight - IndentBottom,
-		MainWindowWidth,m_DisplayWindowHeight,SWP_SHOWWINDOW|SWP_NOZORDER);
+	if (m_DisplayWindowVertical)
+	{
+		SetWindowPos(m_hDisplayWindow,NULL,MainWindowWidth - IndentRight,iIndentRebar,
+			m_DisplayWindowWidth,MainWindowHeight - iIndentRebar - IndentBottom,SWP_SHOWWINDOW|SWP_NOZORDER);
+	}
+	else
+	{
+		SetWindowPos(m_hDisplayWindow, nullptr,0,MainWindowHeight - IndentBottom,
+			MainWindowWidth, m_DisplayWindowHeight,SWP_SHOWWINDOW|SWP_NOZORDER);
+	}
 
 
 	/* <---- ALL listview windows ----> */
@@ -1175,8 +1188,10 @@ int SaltedExplorer::OnDestroy(void)
 
 	ImageList_Destroy(m_himlToolbarSmall);
 	ImageList_Destroy(m_himlToolbarSmallInact);
+	ImageList_Destroy(m_himlToolbarSmallDisabled);
 	ImageList_Destroy(m_himlToolbarLarge);
 	ImageList_Destroy(m_himlToolbarLargeInact);
+	ImageList_Destroy(m_himlToolbarLargeDisabled);
 
 	delete m_pStatusBar;
 
@@ -1484,6 +1499,21 @@ void SaltedExplorer::OnTbnDropDown(LPARAM lParam)
 	{
 		ShowToolbarViewsDropdown();
 	}
+	else if (nmTB->iItem > MENUBAR_START && 
+		     nmTB->iItem < MENUBAR_END)
+	{
+		//HMENU menu = LoadMenu(GetModuleHandle(NULL), /*MAKEINTRESOURCE((IDR_SUBMENU_START - MENUBAR_START) + nmTB->iItem)*/MAKEINTRESOURCE(IDR_MAINMENU));
+		HMENU menu = GetMenu(m_hContainer);
+		HMENU subMenu = GetSubMenu(menu, nmTB->iItem - MENUBAR_START - 1);
+		POINT menuLocation = {nmTB->rcButton.left, nmTB->rcButton.bottom};
+		ClientToScreen(m_hMenuBar, &menuLocation);
+
+		SendMessage(m_hMenuBar, TB_PRESSBUTTON, nmTB->iItem, TRUE);
+		TrackPopupMenuEx(subMenu, NULL, menuLocation.x, menuLocation.y, m_hContainer, NULL);
+		SendMessage(m_hMenuBar, TB_PRESSBUTTON, nmTB->iItem, FALSE);
+
+		SendMessage(m_hMenuBar, TBN_HOTITEMCHANGE, nmTB->iItem, TRUE);
+	}
 }
 
 void SaltedExplorer::OnTabMClick(WPARAM wParam,LPARAM lParam)
@@ -1518,13 +1548,18 @@ void SaltedExplorer::OnTabMClick(WPARAM wParam,LPARAM lParam)
 
 void SaltedExplorer::OnDisplayWindowResized(WPARAM wParam)
 {
-	RECT	rc;
+	if (m_DisplayWindowVertical)
+	{
+		m_DisplayWindowWidth = max(LOWORD(wParam), MINIMUM_DISPLAYWINDOW_WIDTH);
+	}
+	else
+	{
+		m_DisplayWindowHeight = max(HIWORD(wParam), MINIMUM_DISPLAYWINDOW_HEIGHT);
+	}
 
-	if((int)wParam >= MINIMUM_DISPLAYWINDOW_HEIGHT)
-		m_DisplayWindowHeight = (int)wParam;
+	RECT rc;
 
 	GetClientRect(m_hContainer,&rc);
-
 	SendMessage(m_hContainer,WM_SIZE,SIZE_RESTORED,(LPARAM)MAKELPARAM(rc.right,rc.bottom));
 }
 
@@ -1591,6 +1626,7 @@ BOOL SaltedExplorer::OnDrawItem(WPARAM wParam,LPARAM lParam)
 
 	return TRUE;
 }
+
 
 /* Cycle through the current views. */
 void SaltedExplorer::OnToolbarViews(void)
@@ -1821,14 +1857,6 @@ void SaltedExplorer::SetGoMenuName(HMENU hMenu,UINT uMenuID,UINT csidl)
 	}
 	else
 	{
-		mii.cbSize		= sizeof(mii);
-		mii.fMask		= MIIM_DATA;
-		GetMenuItemInfo(hMenu,uMenuID,FALSE,&mii);
-
-		/* Free the custom menu information. */
-		free((CustomMenuInfo_t *)mii.dwItemData);
-
-		/* Now, delete the menu .*/
 		DeleteMenu(hMenu,uMenuID,MF_BYCOMMAND);
 	}
 }
@@ -1920,7 +1948,7 @@ BOOL bOpenInNewTab,BOOL bSwitchToNewTab,BOOL bOpenInNewWindow)
 		TCHAR szPath[MAX_PATH];
 		TCHAR szParameters[512];
 
-		GetCurrentProcessImageName(szCurrentProcess,SIZEOF_ARRAY(szCurrentProcess));
+		GetProcessImageName(GetCurrentProcessId(),szCurrentProcess,SIZEOF_ARRAY(szCurrentProcess));
 
 		GetDisplayName(pidlDirectory,szPath,SHGDN_FORPARSING);
 		StringCchPrintf(szParameters,SIZEOF_ARRAY(szParameters),_T("\"%s\""),szPath);
@@ -2528,7 +2556,7 @@ void SaltedExplorer::OnCloneWindow(void)
 	TCHAR szQuotedCurrentDirectory[MAX_PATH];
 	SHELLEXECUTEINFO sei;
 
-	GetCurrentProcessImageName(szExecutable,
+	GetProcessImageName(GetCurrentProcessId(),szExecutable,
 		SIZEOF_ARRAY(szExecutable));
 
 	m_pActiveShellBrowser->QueryCurrentDirectory(SIZEOF_ARRAY(szCurrentDirectory),
@@ -2836,7 +2864,7 @@ void SaltedExplorer::SaveAllSettings(void)
 	pLoadSave->SaveGenericSettings();
 	pLoadSave->SaveTabs();
 	pLoadSave->SaveDefaultColumns();
-	pLoadSave->SaveBookmarks();
+	pLoadSave->SaveFavorites();
 	pLoadSave->SaveApplicationToolbar();
 	pLoadSave->SaveToolbarInformation();
 	pLoadSave->SaveColorRules();
@@ -2933,7 +2961,7 @@ void SaltedExplorer::SetupJumplistTasks()
 
 	TCHAR szCurrentProcess[MAX_PATH];
 
-	GetCurrentProcessImageName(szCurrentProcess,
+	GetProcessImageName(GetCurrentProcessId(),szCurrentProcess,
 		SIZEOF_ARRAY(szCurrentProcess));
 
 	TCHAR szName[256];
@@ -2981,6 +3009,10 @@ void SaltedExplorer::OnModelessDialogDestroy(int iResource)
 	case IDD_SEARCH:
 		g_hwndSearch = NULL;
 		break;
+
+	case IDD_MANAGE_FAVORITES:
+	g_hwndManageFavorites = NULL;
+	break;
 	}
 }
 

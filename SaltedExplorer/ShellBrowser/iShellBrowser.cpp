@@ -2,11 +2,10 @@
  *
  * Project: ShellBrowser
  * File: iShellBrowser.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Main file for folder browsing support.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

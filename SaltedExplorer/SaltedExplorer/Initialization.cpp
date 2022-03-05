@@ -2,43 +2,44 @@
  *
  * Project: SaltedExplorer
  * File: Initialization.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Includes miscellaneous functions related to
  * the top-level GUI component.
  *
- 
+ * Toiletflusher and XP Pro
+ *
  * www.saltedexplorer.ml
  *
  *****************************************************************/
 
 #include "stdafx.h"
 #include <list>
-#include <shobjidl.h>
 #include "SaltedExplorer.h"
 #include "CustomizeColorsDialog.h"
 #include "../Helper/FileOperations.h"
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
 #include "../Helper/Macros.h"
-#include "../Helper/Bookmark.h"
 #include "MainResource.h"
 #include "gdiplus.h"
 
 extern HIMAGELIST himlMenu;
 
-void SaltedExplorer::InitializeBookmarks(void)
+void SaltedExplorer::InitializeFAVORITES(void)
 {
-	HMENU	hMenu;
-	HMENU	hBookmarkMenu;
+	TCHAR szTemp[64];
 
-	hMenu = GetMenu(m_hContainer);
-	hBookmarkMenu = GetSubMenu(hMenu,6);
+	LoadString(g_hLanguageModule,IDS_FAVORITES_ALLFAVORITES,szTemp,SIZEOF_ARRAY(szTemp));
+	m_bfAllFavorites = FavoriteFolder::CreateNew(szTemp);
 
-	InitializeBookmarkToolbarMap();
+	/* Set up the 'FAVORITES Toolbar' and 'FAVORITES Menu' folders. */
+	LoadString(g_hLanguageModule,IDS_FAVORITES_FAVORITESTOOLBAR,szTemp,SIZEOF_ARRAY(szTemp));
+	FavoriteFolder bfFAVORITESToolbar = FavoriteFolder::Create(szTemp);
+	m_bfAllFavorites->InsertFavoriteFolder(bfFAVORITESToolbar);
 
-	InsertBookmarksIntoMenu();
-	InsertBookmarkToolbarButtons();
+	LoadString(g_hLanguageModule,IDS_FAVORITES_FAVORITESMENU,szTemp,SIZEOF_ARRAY(szTemp));
+	FavoriteFolder bfFAVORITESMenu = FavoriteFolder::Create(szTemp);
+	m_bfAllFavorites->InsertFavoriteFolder(bfFAVORITESMenu);
 }
 
 void SaltedExplorer::InitializeDisplayWindow(void)
@@ -110,18 +111,11 @@ void SaltedExplorer::InitializeMenus(void)
 
 	/* <---- Main menu ----> */
 
-
-
-	SetMenuOwnerDraw(m_hTabRightClickMenu);
-
 	/* <---- Tab right click menu ----> */
-
+	SetMenuOwnerDraw(m_hTabRightClickMenu);
 
 	/* <---- Toolbar right click menu ----> */
 	SetMenuOwnerDraw(m_hToolbarRightClickMenu);
-
-	/* <--- Bookmarks right click menu ----> */
-	SetMenuOwnerDraw(m_hBookmarksRightClickMenu);
 
 	/* <---- Application toolbar right click menu ----> */
 	SetMenuOwnerDraw(m_hApplicationRightClickMenu);
@@ -148,6 +142,22 @@ void SaltedExplorer::InitializeMenus(void)
 	SetGoMenuName(hMenu,IDM_GO_NETWORKCONNECTIONS,CSIDL_CONNECTIONS);
 
 	DeleteObject(hBitmap);
+
+	LANGID language = GetUserDefaultUILanguage();
+	HMODULE baseBrd = LoadMUILibrary(TEXT("C:\\Windows\\Branding\\Basebrd\\basebrd.dll"), MUI_LANGUAGE_NAME, language);
+	const DWORD bufferSize = 256;
+	TCHAR brandingString[bufferSize];
+	LoadString(baseBrd, 10, brandingString, bufferSize);
+	
+	TCHAR buffer[bufferSize];
+	mii.cbSize	     = sizeof(mii);
+	GetMenuItemInfo(hMenu, IDM_HELP_LEGAL, FALSE, &mii);
+	_stprintf(buffer, bufferSize, mii.dwTypeData, brandingString);
+
+	mii.cbSize	    = sizeof(mii);
+	mii.fMask		= MIIM_STRING;
+	mii.dwTypeData	= buffer;
+	SetMenuItemInfo(hMenu, IDM_HELP_LEGAL, FALSE, &mii);
 
 	/* Arrange submenu. */
 	SetMenuOwnerDraw(m_hArrangeSubMenu);

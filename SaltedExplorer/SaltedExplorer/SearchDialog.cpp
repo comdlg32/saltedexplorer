@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: SearchDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the 'Search' dialog box.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

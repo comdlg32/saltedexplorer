@@ -86,3 +86,8 @@
 #include <propvarutil.h>
 #include <assert.h>
 #include <list>
+
+#ifdef _WIN32_WINNT_WIN8
+#define IAsyncOperation IDataObjectAsyncCapability
+#define IID_IAsyncOperation IID_IDataObjectAsyncCapability
+#endif

@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: StatusBar.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides a degree of abstraction for a status bar.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

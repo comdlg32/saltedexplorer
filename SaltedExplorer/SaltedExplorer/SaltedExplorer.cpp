@@ -85,15 +85,14 @@ SaltedExplorer::SaltedExplorer(HWND hwnd)
 	m_bDragAllowed					= FALSE;
 	m_pActiveShellBrowser			= NULL;
 	g_hwndSearch					= NULL;
-	g_hwndOptions					= NULL;
+	g_hwndPreferences					= NULL;
+	g_hwndManageFavorites			= NULL;
 	m_ListViewMButtonItem			= -1;
 	m_nDrivesInToolbar				= 0;
 	m_zDeltaTotal					= 0;
 
 	/* Dialog states. */
-	m_bAddBookmarkDlgStateSaved		= FALSE;
 	m_bDisplayColorsDlgStateSaved	= FALSE;
-	m_bOrganizeBookmarksDlgStateSaved	= FALSE;
 
 	m_pTaskbarList3					= NULL;
 
@@ -204,7 +203,8 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	/* Initialize the main toolbar styles and settings here. The visibility and gripper
 	styles will be set after the settings have been loaded (needed to keep compatibility
 	with versions older than 0.9.5.4). */
-	m_ToolbarInformation[0].wID			= ID_MAINTOOLBAR;
+
+	m_ToolbarInformation[0].wID			= ID_MENUBAR;
 	m_ToolbarInformation[0].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
 	m_ToolbarInformation[0].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
 	m_ToolbarInformation[0].cx			= 0;
@@ -214,9 +214,9 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[0].cxHeader	= 0;
 	m_ToolbarInformation[0].lpText		= NULL;
 
-	m_ToolbarInformation[1].wID			= ID_ADDRESSTOOLBAR;
-	m_ToolbarInformation[1].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_STYLE|RBBIM_TEXT;
-	m_ToolbarInformation[1].fStyle		= RBBS_BREAK;
+	m_ToolbarInformation[1].wID			= ID_MAINTOOLBAR;
+	m_ToolbarInformation[1].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
+	m_ToolbarInformation[1].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
 	m_ToolbarInformation[1].cx			= 0;
 	m_ToolbarInformation[1].cxIdeal		= 0;
 	m_ToolbarInformation[1].cxMinChild	= 0;
@@ -224,9 +224,9 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[1].cxHeader	= 0;
 	m_ToolbarInformation[1].lpText		= NULL;
 
-	m_ToolbarInformation[2].wID			= ID_BOOKMARKSTOOLBAR;
-	m_ToolbarInformation[2].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
-	m_ToolbarInformation[2].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
+	m_ToolbarInformation[2].wID			= ID_ADDRESSTOOLBAR;
+	m_ToolbarInformation[2].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_STYLE|RBBIM_TEXT;
+	m_ToolbarInformation[2].fStyle		= RBBS_BREAK;
 	m_ToolbarInformation[2].cx			= 0;
 	m_ToolbarInformation[2].cxIdeal		= 0;
 	m_ToolbarInformation[2].cxMinChild	= 0;
@@ -234,7 +234,7 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[2].cxHeader	= 0;
 	m_ToolbarInformation[2].lpText		= NULL;
 
-	m_ToolbarInformation[3].wID			= ID_DRIVESTOOLBAR;
+	m_ToolbarInformation[3].wID			= ID_FAVORITESTOOLBAR;
 	m_ToolbarInformation[3].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
 	m_ToolbarInformation[3].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
 	m_ToolbarInformation[3].cx			= 0;
@@ -244,7 +244,7 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[3].cxHeader	= 0;
 	m_ToolbarInformation[3].lpText		= NULL;
 
-	m_ToolbarInformation[4].wID			= ID_APPLICATIONSTOOLBAR;
+	m_ToolbarInformation[4].wID			= ID_DRIVESTOOLBAR;
 	m_ToolbarInformation[4].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
 	m_ToolbarInformation[4].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
 	m_ToolbarInformation[4].cx			= 0;
@@ -254,7 +254,7 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[4].cxHeader	= 0;
 	m_ToolbarInformation[4].lpText		= NULL;
 
-	m_ToolbarInformation[5].wID			= ID_MENUBAR;
+	m_ToolbarInformation[5].wID			= ID_APPLICATIONSTOOLBAR;
 	m_ToolbarInformation[5].fMask		= RBBIM_ID|RBBIM_CHILD|RBBIM_CHILDSIZE|RBBIM_SIZE|RBBIM_IDEALSIZE|RBBIM_STYLE;
 	m_ToolbarInformation[5].fStyle		= RBBS_BREAK|RBBS_USECHEVRON;
 	m_ToolbarInformation[5].cx			= 0;
@@ -263,6 +263,7 @@ void SaltedExplorer::InitializeMainToolbars(void)
 	m_ToolbarInformation[5].cyIntegral	= 0;
 	m_ToolbarInformation[5].cxHeader	= 0;
 	m_ToolbarInformation[5].lpText		= NULL;
+
 }
 
 /*
@@ -280,6 +281,7 @@ void SaltedExplorer::SetDefaultValues(void)
 	m_bDisableFolderSizesNetworkRemovable	 = FALSE;
 	m_bUnlockFolders				= TRUE;
 	m_StartupMode					= STARTUP_PREVIOUSTABS;
+	m_WebViewOptions				= OPTION_WEBVIEW;
 	m_bExtendTabControl				= FALSE;
 	m_bShowUserNameInTitleBar		= FALSE;
 	m_bShowPrivilegeLevelInTitleBar	= FALSE;
@@ -300,6 +302,8 @@ void SaltedExplorer::SetDefaultValues(void)
 	m_bTVAutoExpandSelected			= FALSE;
 	m_bCloseMainWindowOnTabClose	= TRUE;
 	m_bLargeToolbarIcons			= FALSE;
+	m_bToolbarTitleButtons			= FALSE;
+	m_bWebView						= FALSE;
 	m_bShowTaskbarThumbnails		= TRUE;
 	m_bPlayNavigationSound			= TRUE;
 
@@ -309,19 +313,22 @@ void SaltedExplorer::SetDefaultValues(void)
 
 	/* Window states. */
 	m_bShellMode					= FALSE;
+	m_bVistaControls				= FALSE;
 	m_bShowStatusBar				= TRUE;
 	m_bShowFolders					= FALSE;
 	m_bShowMenuBar					= TRUE;
 	m_bShowAddressBar				= TRUE;
 	m_bShowMainToolbar				= TRUE;
-	m_bShowBookmarksToolbar			= FALSE;
+	m_bShowFAVORITESToolbar			= FALSE;
 	m_bShowDisplayWindow			= FALSE;
 	m_bShowDrivesToolbar			= FALSE;
 	m_bShowApplicationToolbar		= FALSE;
 	m_bAlwaysShowTabBar				= FALSE;
 	m_bShowTabBar					= FALSE;
 	m_bLockToolbars					= FALSE;
+	m_DisplayWindowWidth			= DEFAULT_DISPLAYWINDOW_WIDTH;
 	m_DisplayWindowHeight			= DEFAULT_DISPLAYWINDOW_HEIGHT;
+	m_DisplayWindowVertical			= FALSE;
 	m_TreeViewWidth					= DEFAULT_TREEVIEW_WIDTH;
 	m_bUseFullRowSelect				= FALSE;
 	m_bShowTabBarAtBottom			= FALSE;

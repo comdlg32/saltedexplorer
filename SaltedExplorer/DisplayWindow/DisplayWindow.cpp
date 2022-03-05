@@ -2,7 +2,7 @@
  *
  * Project: DisplayWindow
  * File: DisplayWindow.cpp
- * License: GPL - See COPYING in the top level directory
+ *
  *
  * Creates and manages a 'display window'. This window
  * can be used to show various information (e.g. file
@@ -138,6 +138,7 @@ DWInitialSettings_t *pInitialSettings)
 	m_SurroundColor	= pInitialSettings->SurroundColor;
 	m_TextColor		= pInitialSettings->TextColor;
 	m_hDisplayFont	= pInitialSettings->hFont;
+	m_bVertical		= FALSE;
 
 	m_hbmThumbnail = NULL;
 	m_bShowThumbnail = FALSE;
@@ -365,6 +366,11 @@ WPARAM wParam,LPARAM lParam)
 
 		case WM_SIZE:
 			OnSize(wParam,lParam);
+			break;
+
+		case WM_USER_DISPLAYWINDOWMOVED:
+			m_bVertical = (BOOL)wParam;
+			InvalidateRect(m_hDisplayWindow, NULL, TRUE);
 			break;
 
 		case WM_DESTROY:

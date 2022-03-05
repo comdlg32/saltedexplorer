@@ -2,7 +2,6 @@
  *
  * Project: SaltedExplorer
  * File: ApplicationToolbar.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the application toolbar.
  *
@@ -13,7 +12,7 @@
  *	<name="App2" command="D:\...">
  * </ApplicationToolbar>
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

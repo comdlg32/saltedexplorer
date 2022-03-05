@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: Misc.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Includes miscellaneous functions related to
  * the top-level GUI component.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -20,11 +19,12 @@
 #include "../Helper/FileOperations.h"
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
-#include "../Helper/Bookmark.h"
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 #include "MainResource.h"
+#include "../DisplayWindow/DisplayWindow.h"
 
 
 extern std::list<std::wstring> g_TabDirs;
@@ -184,6 +184,9 @@ void SaltedExplorer::ValidateLoadedSettings(void)
 	if(m_TreeViewWidth <= 0)
 		m_TreeViewWidth = DEFAULT_TREEVIEW_WIDTH;
 
+	if(m_DisplayWindowWidth < MINIMUM_DISPLAYWINDOW_WIDTH)
+		m_DisplayWindowWidth = DEFAULT_DISPLAYWINDOW_WIDTH;
+
 	if(m_DisplayWindowHeight < MINIMUM_DISPLAYWINDOW_HEIGHT)
 		m_DisplayWindowHeight = DEFAULT_DISPLAYWINDOW_HEIGHT;
 
@@ -340,6 +343,11 @@ void SaltedExplorer::ApplyLoadedSettings(void)
 	m_pMyTreeView->SetShowHidden(m_bShowHiddenGlobal);
 }
 
+void SaltedExplorer::ApplyDisplayWindowPosition()
+{
+	SendMessage(m_hDisplayWindow, WM_USER_DISPLAYWINDOWMOVED, m_DisplayWindowVertical, NULL);
+}
+
 void SaltedExplorer::ApplyToolbarSettings(void)
 {
 	BOOL bVisible = FALSE;
@@ -355,16 +363,12 @@ void SaltedExplorer::ApplyToolbarSettings(void)
 			bVisible = m_bShowMainToolbar;
 			break;
 
-		case ID_MENUBAR:
-			bVisible = m_bShowMenuBar;
-			break;
-
 		case ID_ADDRESSTOOLBAR:
 			bVisible = m_bShowAddressBar;
 			break;
 
-		case ID_BOOKMARKSTOOLBAR:
-			bVisible = m_bShowBookmarksToolbar;
+		case ID_FAVORITESTOOLBAR:
+			bVisible = m_bShowFAVORITESToolbar;
 			break;
 
 		case ID_DRIVESTOOLBAR:
@@ -373,6 +377,10 @@ void SaltedExplorer::ApplyToolbarSettings(void)
 
 		case ID_APPLICATIONSTOOLBAR:
 			bVisible = m_bShowApplicationToolbar;
+			break;
+
+		case ID_MENUBAR:
+			bVisible = m_bShowMenuBar;
 			break;
 		}
 
@@ -498,7 +506,7 @@ void SaltedExplorer::AdjustFolderPanePosition(void)
 		IndentBottom += m_hStatusBarRect.bottom - m_hStatusBarRect.top;
 	}
 
-	if(m_bShowDisplayWindow)
+	if(m_bShowDisplayWindow && !m_DisplayWindowVertical)
 	{
 		RECT rc;
 
@@ -1870,7 +1878,7 @@ BOOL SaltedExplorer::VerifyLanguageVersion(TCHAR *szLanguageModule)
 	BOOL bSuccess1;
 	BOOL bSuccess2;
 
-	dwRet = GetCurrentProcessImageName(szImageName,SIZEOF_ARRAY(szImageName));
+	dwRet = GetProcessImageName(GetCurrentProcessId(),szImageName,SIZEOF_ARRAY(szImageName));
 
 	if(dwRet != 0)
 	{

@@ -113,14 +113,14 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(BOOST);$(STLSOFT);C:\Pantheios\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0c09</Culture>
       <ResourceOutputFileName>$(IntDir)SaltedExplorerMain.res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;muiload.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)SaltedExplorer.exe</OutputFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -137,7 +137,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>$(BOOST_LIB);C:\Pantheios\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_LIB)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -162,13 +162,13 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>Cdecl</CallingConvention>
-      <AdditionalIncludeDirectories>$(BOOST);C:\Pantheios\include;$(PANTHEIOS)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <Culture>0x0c09</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;muiload.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)SaltedExplorer.exe</OutputFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -184,7 +184,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>$(BOOST_LIB);C:\Pantheios\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_LIB)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -202,13 +202,13 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>C:\Program Files (x86)\boost\boost_1_54_0;C:\stlsoft-1.9;C:\Pantheios\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Program Files (x86)\boost\boost_1_54_0</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <ResourceOutputFileName>$(IntDir)SaltedExplorerMain.res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;muiload.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)SaltedExplorer.exe</OutputFile>
       <TypeLibraryFile>
       </TypeLibraryFile>
@@ -220,7 +220,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\lib64-msvc-10.0;C:\Pantheios\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\lib64-msvc-10.0</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -241,13 +241,13 @@
       <WarningLevel>Level4</WarningLevel>
       <TreatWarningAsError>true</TreatWarningAsError>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>$(BOOST);$(STLSOFT)\include;C:\Pantheios\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(BOOST)</AdditionalIncludeDirectories>
     </ClCompile>
     <ResourceCompile>
       <ResourceOutputFileName>$(IntDir)SaltedExplorerMain.res</ResourceOutputFileName>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;shell32.lib;gdiplus.lib;msimg32.lib;shlwapi.lib;psapi.lib;mpr.lib;uxtheme.lib;vfw32.lib;winmm.lib;muiload.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)SaltedExplorer.exe</OutputFile>
       <TypeLibraryFile>shobjidl.idl</TypeLibraryFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -258,7 +258,7 @@
       <RandomizedBaseAddress>true</RandomizedBaseAddress>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <TargetMachine>MachineX64</TargetMachine>
-      <AdditionalLibraryDirectories>$(BOOST_LIB);C:\Pantheios\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(BOOST_LIB)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -266,14 +266,13 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="AddBookmarkDialog.cpp" />
+    <ClCompile Include="AddFavoritesDialog.cpp" />
     <ClCompile Include="AddressBarHandler.cpp" />
     <ClCompile Include="ApplicationToolbarDropHandler.cpp" />
     <ClCompile Include="ApplicationToolbarHandler.cpp" />
     <ClCompile Include="ArrangeMenuHandler.cpp" />
-    <ClCompile Include="BookmarkHandler.cpp" />
-    <ClCompile Include="BookmarkPropertiesDialog.cpp" />
-    <ClCompile Include="BookmarkToolbarDropHandler.cpp" />
+    <ClCompile Include="FavoritesHandler.cpp" />
+    <ClCompile Include="FavoritesHelper.cpp" />
     <ClCompile Include="ChangeDisplayWindowDetailsDialog.cpp" />
     <ClCompile Include="ColorRuleDialog.cpp" />
     <ClCompile Include="CustomizeColorsDialog.cpp" />
@@ -282,7 +281,7 @@
     <ClCompile Include="DisplayWindowLinePropertiesDialog.cpp" />
     <ClCompile Include="DrivesToolbarHandler.cpp" />
     <ClCompile Include="EventSwitcher.cpp" />
-    <ClCompile Include="MenuBarHandler.cpp" />
+    <ClCompile Include="ManageFavoritesDialog.cpp" />
     <ClCompile Include="SaltedExplorer.cpp" />
     <ClCompile Include="FilterDialog.cpp" />
     <ClCompile Include="HandleWindowState.cpp" />
@@ -290,17 +289,14 @@
     <ClCompile Include="iDropSource.cpp" />
     <ClCompile Include="Initialization.cpp" />
     <ClCompile Include="ListViewHandler.cpp" />
-    <ClCompile Include="LoggingFrontend.cpp" />
-    <ClCompile Include="LoggingImplicitLink.cpp" />
     <ClCompile Include="MainToolbarHandler.cpp" />
     <ClCompile Include="MainWndSwitch.cpp" />
     <ClCompile Include="MassRenameDialog.cpp" />
     <ClCompile Include="MergeFilesDialog.cpp" />
     <ClCompile Include="Misc.cpp" />
     <ClCompile Include="MsgHandler.cpp" />
-    <ClCompile Include="NewBookmarkFolderDialog.cpp" />
-    <ClCompile Include="OptionsDialog.cpp" />
-    <ClCompile Include="OrganizeBookmarksDialog.cpp" />
+    <ClCompile Include="NewFavoriteFolderDialog.cpp" />
+    <ClCompile Include="PreferencesDialog.cpp" />
     <ClCompile Include="RegistrySettings.cpp" />
     <ClCompile Include="RenameTabDialog.cpp" />
     <ClCompile Include="SearchDialog.cpp" />
@@ -331,16 +327,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AboutDialog.h" />
+    <ClInclude Include="AddFavoritesDialog.h" />
     <ClInclude Include="ColorRuleDialog.h" />
     <ClInclude Include="CustomizeColorsDialog.h" />
     <ClInclude Include="DestroyFilesDialog.h" />
     <ClInclude Include="DialogHelper.h" />
+    <ClInclude Include="FavoritesHelper.h" />
+    <ClInclude Include="MainToolbar.h" />
+    <ClInclude Include="ManageFavoritesDialog.h" />
+    <ClInclude Include="NewFavoriteFolderDialog.h" />
     <ClInclude Include="SaltedExplorer.h" />
     <ClInclude Include="SaltedExplorer_internal.h" />
     <ClInclude Include="FilterDialog.h" />
     <ClInclude Include="HelpFileMissingDialog.h" />
     <ClInclude Include="iDropSource.h" />
-    <ClInclude Include="LoggingFrontend.h" />
     <ClInclude Include="MainResource.h" />
     <ClInclude Include="MassRenameDialog.h" />
     <ClInclude Include="MergeFilesDialog.h" />

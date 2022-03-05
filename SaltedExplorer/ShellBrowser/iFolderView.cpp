@@ -2,13 +2,12 @@
  *
  * Project: ShellBrowser
  * File: iFolderView.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Constructs/deconstructs the browser
  * object. Also contains some auxillary
  * code.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

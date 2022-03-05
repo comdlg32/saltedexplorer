@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: SplitFileDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides the ability to split a file into several
  * pieces.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -2,7 +2,6 @@
  *
  * Project: MyTreeView
  * File: MyTreeView.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Wraps a treeview control. Specifically handles
  * adding directories to it and selecting directories.
@@ -14,7 +13,7 @@
  *     - Items on the desktop
  *     - Items in My Computer
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -2,12 +2,11 @@
  *
  * Project: HolderWindow
  * File: HolderWindow.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Manages the 'holder window'. This window acts as a generic
  * container for child windows.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

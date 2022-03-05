@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: AddressBarHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the address bar.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

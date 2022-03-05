@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: MainToolbarHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles functionality associated with the main toolbar.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -88,10 +87,10 @@ void SaltedExplorer::SetInitialToolbarButtons(void)
 	tb.iItemID		= TOOLBAR_SEPARATOR;
 	m_tbInitial.push_back(tb);
 
-	tb.iItemID		= TOOLBAR_ADDBOOKMARK;
+	tb.iItemID		= TOOLBAR_ADDFAVORITE;
 	m_tbInitial.push_back(tb);
 
-	tb.iItemID		= TOOLBAR_ORGANIZEBOOKMARKS;
+	tb.iItemID		= TOOLBAR_ORGANIZEFAVORITES;
 	m_tbInitial.push_back(tb);
 }
 
@@ -167,12 +166,12 @@ int SaltedExplorer::LookupToolbarButtonTextID(int iButtonID)
 		return IDS_TOOLBAR_REFRESH;
 		break;
 
-	case TOOLBAR_ADDBOOKMARK:
-		return IDS_TOOLBAR_ADDBOOKMARK;
+	case TOOLBAR_ADDFAVORITE:
+		return IDS_TOOLBAR_ADDFAVORITE;
 		break;
 
-	case TOOLBAR_ORGANIZEBOOKMARKS:
-		return IDS_TOOLBAR_ORGANIZEBOOKMARKS;
+	case TOOLBAR_ORGANIZEFAVORITES:
+		return IDS_TOOLBAR_MANAGEFAVORITES;
 		break;
 
 	case TOOLBAR_NEWTAB:
@@ -259,11 +258,11 @@ int SaltedExplorer::LookupToolbarButtonImage(int iButtonID)
 			return SHELLIMAGES_REFRESH;
 			break;
 
-		case TOOLBAR_ADDBOOKMARK:
+		case TOOLBAR_ADDFAVORITE:
 			return SHELLIMAGES_ADDFAV;
 			break;
 
-		case TOOLBAR_ORGANIZEBOOKMARKS:
+		case TOOLBAR_ORGANIZEFAVORITES:
 			return SHELLIMAGES_FAV;
 			break;
 
@@ -351,11 +350,11 @@ BYTE SaltedExplorer::LookupToolbarButtonExtraStyles(int iButtonID)
 			return 0;
 			break;
 
-		case TOOLBAR_ADDBOOKMARK:
+		case TOOLBAR_ADDFAVORITE:
 			return 0;
 			break;
 
-		case TOOLBAR_ORGANIZEBOOKMARKS:
+		case TOOLBAR_ORGANIZEFAVORITES:
 			return 0;
 			break;
 
@@ -471,7 +470,7 @@ void SaltedExplorer::AddStringsToMainToolbar(void)
 	szText[lstrlen(szText) + 1] = '\0';
 	SendMessage(m_hMainToolbar,TB_ADDSTRING,(WPARAM)0,(LPARAM)szText);
 
-	LoadString(g_hLanguageModule,LookupToolbarButtonTextID(TOOLBAR_ADDBOOKMARK),
+	LoadString(g_hLanguageModule,LookupToolbarButtonTextID(TOOLBAR_ADDFAVORITE),
 		szText,SIZEOF_ARRAY(szText));
 	/* Double NULL terminated. */
 	szText[lstrlen(szText) + 1] = '\0';
@@ -489,7 +488,7 @@ void SaltedExplorer::AddStringsToMainToolbar(void)
 	szText[lstrlen(szText) + 1] = '\0';
 	SendMessage(m_hMainToolbar,TB_ADDSTRING,(WPARAM)0,(LPARAM)szText);
 
-	LoadString(g_hLanguageModule,LookupToolbarButtonTextID(TOOLBAR_ORGANIZEBOOKMARKS),
+	LoadString(g_hLanguageModule,LookupToolbarButtonTextID(TOOLBAR_ORGANIZEFAVORITES),
 		szText,SIZEOF_ARRAY(szText));
 	/* Double NULL terminated. */
 	szText[lstrlen(szText) + 1] = '\0';

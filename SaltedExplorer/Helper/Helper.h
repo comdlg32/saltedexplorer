@@ -162,7 +162,6 @@ WORD			GetFileLanguage(TCHAR *szFullFileName);
 BOOL			GetFileProductVersion(TCHAR *szFullFileName,DWORD *pdwProductVersionLS,DWORD *pdwProductVersionMS);
 
 /* Ownership and access. */
-BOOL			GetProcessOwner(TCHAR *szOwner,DWORD BufSize);
 BOOL			CheckGroupMembership(GroupType_t GroupType);
 
 /* Menu helpers. */
@@ -200,9 +199,6 @@ BOOL			GetFileNameFromUser(HWND hwnd,TCHAR *FullFileName,TCHAR *InitialDirectory
 TCHAR			*DecodePrinterStatus(DWORD dwStatus);
 void			RetrieveAdapterInfo(void);
 
-/* Process helpers. */
-DWORD			GetCurrentProcessImageName(TCHAR *szImageName,DWORD nSize);
-
 /* Computer information. */
 void			GetCPUBrandString(char *pszCPUBrand,UINT cchBuf);
 
@@ -213,7 +209,6 @@ HRESULT			GetMediaMetadata(TCHAR *szFileName,LPCWSTR szAttribute,BYTE **pszOutpu
 void			FormatSizeString(ULARGE_INTEGER lFileSize,TCHAR *pszFileSize,size_t cchBuf);
 void			FormatSizeString(ULARGE_INTEGER lFileSize,TCHAR *pszFileSize,size_t cchBuf,BOOL bForceSize,SizeDisplayFormat_t sdf);
 HINSTANCE		StartCommandPrompt(TCHAR *Directory);
-BOOL			SetProcessTokenPrivilege(DWORD ProcessId,TCHAR *PrivilegeName,BOOL bEnablePrivilege);
 void			ShowLastError(void);
 int				GetRectHeight(RECT *rc);
 int				GetRectWidth(RECT *rc);

@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: FileOperations.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides a set of file operation functions.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

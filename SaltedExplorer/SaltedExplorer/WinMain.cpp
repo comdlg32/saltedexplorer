@@ -1,10 +1,9 @@
 #include "stdafx.h"
-#include <pantheios\backends\bec.file.h>
 #include "SaltedExplorer.h"
-#include "LoggingFrontend.h"
 #include "Version.h"
 #include "../Helper/ShellHelper.h"
 #include "../Helper/SetDefaultFileManager.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -28,9 +27,10 @@ DWORD dwControlClasses = ICC_BAR_CLASSES|ICC_COOL_CLASSES|
 	ICC_LINK_CLASS;
 std::list<std::wstring> g_TabDirs;
 
-/* Search and options dialogs. */
+/* Modeless dialog handles. */
 HWND g_hwndSearch;
-HWND g_hwndOptions;
+HWND g_hwndPreferences;
+HWND g_hwndManageFavorites;
 
 HINSTANCE g_hLanguageModule;
 TCHAR g_szLang[32];
@@ -161,14 +161,14 @@ ensure you have administrator privileges."),NSaltedExplorer::WINDOW_NAME,MB_ICON
 		}
 		else if(lstrcmp(szPath,_T("-enable_logging")) == 0)
 		{
-			NLoggingFrontend::EnableLogging(true);
+
 		}
 		else
 		{
 			TCHAR szParsingPath[MAX_PATH];
 			TCHAR szCurrentDirectory[MAX_PATH];
 
-			GetCurrentProcessImageName(szCurrentDirectory,
+			GetProcessImageName(GetCurrentProcessId(),szCurrentDirectory,
 				SIZEOF_ARRAY(szCurrentDirectory));
 			PathRemoveFileSpec(szCurrentDirectory);
 
@@ -334,27 +334,6 @@ LPSTR lpCmdLine,int nCmdShow)
 	pCommandLine = GetCommandLine();
 
 	bExit = ProcessCommandLine(pCommandLine);
-
-	/* The stock backend file implementation will
-	create the file specified in pantheios_be_file_setFilePath
-	as soon as it is called.
-	Therefore, to avoid creating the log file when
-	it isn't needed, we'll simply avoid calling
-	pantheios_be_file_setFilePath. Note that the
-	backend implementation will then buffer entries
-	until a file is specified. However, the custom
-	frontend will block all entries when logging is
-	disabled, which ensures nothing is actually buffered. */
-	if(NLoggingFrontend::CheckLoggingEnabled())
-	{
-		TCHAR szLogFile[MAX_PATH];
-		GetCurrentProcessImageName(szLogFile,SIZEOF_ARRAY(szLogFile));
-
-		PathRemoveFileSpec(szLogFile);
-		PathAppend(szLogFile,NSaltedExplorer::LOG_FILENAME);
-
-		pantheios_be_file_setFilePath(szLogFile);
-	}
 
 	/* Can't open folders that are children of the
 	control panel. If the command line only refers
@@ -626,7 +605,7 @@ LPSTR lpCmdLine,int nCmdShow)
 		otherwise various accelerator keys (such as tab)
 		would be taken even when the dialog has focus. */
 		if(!IsDialogMessage(g_hwndSearch,&msg) &&
-			!PropSheet_IsDialogMessage(g_hwndOptions,&msg))
+			!PropSheet_IsDialogMessage(g_hwndPreferences,&msg))
 		{
 			if(!TranslateAccelerator(hwnd,hAccl,&msg))
 			{
@@ -635,10 +614,10 @@ LPSTR lpCmdLine,int nCmdShow)
 			}
 		}
 
-		if(PropSheet_GetCurrentPageHwnd(g_hwndOptions) == NULL)
+		if(PropSheet_GetCurrentPageHwnd(g_hwndPreferences) == NULL)
 		{
-			DestroyWindow(g_hwndOptions);
-			g_hwndOptions = NULL;
+			DestroyWindow(g_hwndPreferences);
+			g_hwndPreferences = NULL;
 		}
 	}
 

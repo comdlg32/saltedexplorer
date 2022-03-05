@@ -2,13 +2,12 @@
  *
  * Project: Helper
  * File: iDirectoryMonitor.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Class to monitor directories for changes (e.g. file renaming,
  * deleting, creation, etc.). Monitoring is performed
  * asynchronously.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

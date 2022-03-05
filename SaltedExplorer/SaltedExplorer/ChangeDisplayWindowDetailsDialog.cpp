@@ -2,7 +2,6 @@
  *
  * Project: SaltedExplorer
  * File: ChangeDisplayWindowDetailsDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the 'Change Display Window
  * details' dialog box.
@@ -24,7 +23,7 @@
  *
  * Show preview (checkbox)
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

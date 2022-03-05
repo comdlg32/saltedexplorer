@@ -1,13 +1,12 @@
 /******************************************************************
  *
  * Project: SaltedExplorer
- * File: Settings.cpp
- * License: GPL - See COPYING in the top level directory
+ * File: MainWndSwitch.cpp
  *
  * Processes and forwards incoming messages for the main
  * window.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -22,8 +21,11 @@
 #include "DestroyFilesDialog.h"
 #include "MergeFilesDialog.h"
 #include "HelpFileMissingDialog.h"
+#include "AddFavoritesDialog.h"
+#include "ManageFavoritesDialog.h"
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -339,10 +341,6 @@ LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPara
 			OnAppCommand(wParam,lParam);
 			break;
 
-		case WM_MENUCOMMAND:
-			OnMenuCommand(wParam,lParam);
-			break;
-
 		case WM_COMMAND:
 			return CommandHandler(hwnd,Msg,wParam,lParam);
 			break;
@@ -369,39 +367,15 @@ LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPara
 	return DefWindowProc(hwnd,Msg,wParam,lParam);
 }
 
-void SaltedExplorer::OnMenuCommand(WPARAM wParam,LPARAM lParam)
-{
-	UINT	uMenuID;
-
-	uMenuID = GetMenuItemID((HMENU)lParam,(int)wParam);
-
-	if(uMenuID >= MENU_BOOKMARK_STARTID &&
-	uMenuID <= MENU_BOOKMARK_ENDID)
-	{
-		TCHAR szDirectory[MAX_PATH];
-
-		GetBookmarkMenuItemDirectory((HMENU)lParam,uMenuID,
-			szDirectory,SIZEOF_ARRAY(szDirectory));
-
-		BrowseFolder(szDirectory,SBSP_ABSOLUTE);
-	}
-}
-
 /*
  * WM_COMMAND handler for main window.
  */
 LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
-	/* Has a bookmark menu item been clicked? */
-	if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_BOOKMARK_STARTID &&
-	LOWORD(wParam) <= MENU_BOOKMARK_ENDID)
+	if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_FAVORITE_STARTID &&
+	LOWORD(wParam) <= MENU_FAVORITE_ENDID)
 	{
-		TCHAR	szDirectory[MAX_PATH];
-
-		GetBookmarkMenuItemDirectory(m_hBookmarksMenu,LOWORD(wParam),
-			szDirectory,SIZEOF_ARRAY(szDirectory));
-
-		ExpandAndBrowsePath(szDirectory);
+		/* TODO: [FAVORITESs] Open FAVORITES. */
 	}
 	else if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_HEADER_STARTID &&
 	LOWORD(wParam) <= MENU_HEADER_ENDID)
@@ -446,61 +420,21 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 		}
 	}
 
-	/* Was one of the items on the bookmarks toolbar clicked? */
-	if(LOWORD(wParam) >= TOOLBAR_BOOKMARK_START &&
-	LOWORD(wParam) <= (TOOLBAR_BOOKMARK_START +
-	(MENU_BOOKMARK_ENDID - MENU_BOOKMARK_STARTID - 1)))
+	/* Was one of the items on the FAVORITES toolbar clicked? */
+	if(LOWORD(wParam) >= TOOLBAR_FAVORITE_START &&
+	LOWORD(wParam) <= (TOOLBAR_FAVORITE_START +
+	(MENU_FAVORITE_ENDID - MENU_FAVORITE_STARTID - 1)))
 	{
-		Bookmark_t	Bookmark;
 		TBBUTTON	tbButton;
 		int			iIndex;
 
-		iIndex = (int)SendMessage(m_hBookmarksToolbar,TB_COMMANDTOINDEX,LOWORD(wParam),0);
+		iIndex = (int)SendMessage(m_hFavoritesToolbar,TB_COMMANDTOINDEX,LOWORD(wParam),0);
 
 		if(iIndex != -1)
 		{
-			SendMessage(m_hBookmarksToolbar,TB_GETBUTTON,iIndex,(LPARAM)&tbButton);
+			SendMessage(m_hFavoritesToolbar,TB_GETBUTTON,iIndex,(LPARAM)&tbButton);
 
-			m_Bookmark.RetrieveBookmark((void *)tbButton.dwData,&Bookmark);
-
-			/* If the toolbar item is a bookmark, simply navigate
-			to its directory. If it's a folder, open a menu with
-			its sub-items on. */
-			if(Bookmark.Type == BOOKMARK_TYPE_BOOKMARK)
-			{
-				ExpandAndBrowsePath(Bookmark.szLocation);
-			}
-			else
-			{
-				HMENU		hMenu;
-				Bookmark_t	ChildBookmark;
-				RECT		rc;
-				HRESULT		hr;
-
-				hMenu = CreatePopupMenu();
-
-				MENUINFO mi;
-				mi.cbSize	= sizeof(MENUINFO);
-				mi.fMask	= MIM_STYLE;
-				mi.dwStyle	= MNS_NOTIFYBYPOS;
-				SetMenuInfo(hMenu,&mi);
-
-				hr = m_Bookmark.GetChild(&Bookmark,&ChildBookmark);
-
-				if(SUCCEEDED(hr))
-				{
-					InsertBookmarksIntoMenuInternal(hMenu,&ChildBookmark,0,MENU_BOOKMARK_STARTID);
-				}
-				else
-				{
-					InsertBookmarksIntoMenuInternal(hMenu,NULL,0,MENU_BOOKMARK_STARTID);
-				}
-
-				SendMessage(m_hBookmarksToolbar,TB_GETITEMRECT,iIndex,(LPARAM)&rc);
-				MapWindowPoints(m_hBookmarksToolbar,NULL,(LPPOINT)&rc,2);
-
-				TrackPopupMenu(hMenu,TPM_LEFTALIGN,rc.left,rc.bottom,0,hwnd,NULL);
-			}
+			/* TODO: [FAVORITES] Handle message. */
 		}
 	}
 
@@ -700,6 +634,12 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			ResizeWindows();
 			break;
 
+		case IDM_DISPLAYWINDOW_VERTICAL:
+			m_DisplayWindowVertical = !m_DisplayWindowVertical;
+			ApplyDisplayWindowPosition();
+			ResizeWindows();
+			break;
+
 		case IDM_TOOLBARS_ADDRESSBAR:
 			m_bShowAddressBar = !m_bShowAddressBar;
 			ShowMainRebarBand(m_hAddressToolbar,m_bShowAddressBar);
@@ -714,16 +654,9 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			ResizeWindows();
 			break;
 
-		case IDM_TOOLBARS_MENUBAR:
-			m_bShowMenuBar = !m_bShowMenuBar;
-			ShowMainRebarBand(m_hMenuBar,m_bShowMenuBar);
-			AdjustFolderPanePosition();
-			ResizeWindows();
-			break;
-
-		case IDM_TOOLBARS_BOOKMARKSTOOLBAR:
-			m_bShowBookmarksToolbar = !m_bShowBookmarksToolbar;
-			ShowMainRebarBand(m_hBookmarksToolbar,m_bShowBookmarksToolbar);
+		case IDM_TOOLBARS_FAVORITESTOOLBAR:
+			m_bShowFAVORITESToolbar = !m_bShowFAVORITESToolbar;
+			ShowMainRebarBand(m_hFavoritesToolbar,m_bShowFAVORITESToolbar);
 			AdjustFolderPanePosition();
 			ResizeWindows();
 			break;
@@ -738,6 +671,13 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 		case IDM_TOOLBARS_APPLICATIONTOOLBAR:
 			m_bShowApplicationToolbar = !m_bShowApplicationToolbar;
 			ShowMainRebarBand(m_hApplicationToolbar,m_bShowApplicationToolbar);
+			AdjustFolderPanePosition();
+			ResizeWindows();
+			break;
+
+		case IDM_TOOLBARS_MENUBAR:
+			m_bShowMenuBar = !m_bShowMenuBar;
+			ShowMainRebarBand(m_hMenuBar,m_bShowMenuBar);
 			AdjustFolderPanePosition();
 			ResizeWindows();
 			break;
@@ -1331,34 +1271,34 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			GotoFolder(CSIDL_CONNECTIONS);
 			break;
 
-		case TOOLBAR_ADDBOOKMARK:
-		case IDM_BOOKMARKS_BOOKMARKTHISTAB:
+		case TOOLBAR_ADDFAVORITE:
+		case IDM_FAVORITES_FAVORITETHISTAB:
 			{
-				AddBookmarkInfo_t abi;
+				TCHAR szCurrentDirectory[MAX_PATH];
+				TCHAR szDisplayName[MAX_PATH];
+				m_pActiveShellBrowser->QueryCurrentDirectory(SIZEOF_ARRAY(szCurrentDirectory),szCurrentDirectory);
+				GetDisplayName(szCurrentDirectory,szDisplayName,SHGDN_INFOLDER);
+				Favorite bm(szDisplayName,szCurrentDirectory,EMPTY_STRING);
 
-				abi.pContainer		= (void *)this;
-				abi.pParentBookmark	= NULL;
-				abi.pidlDirectory	= m_pActiveShellBrowser->QueryCurrentDirectoryIdl();
-				abi.bExpandInitial	= FALSE;
-
-				DialogBoxParam(g_hLanguageModule,MAKEINTRESOURCE(IDD_ADD_BOOKMARK),
-					hwnd,BookmarkTabDlgProcStub,(LPARAM)&abi);
-
-				CoTaskMemFree(abi.pidlDirectory);
-
-				/* It's possible the dialog may have been cancelled
-				or closed, but that the bookmarks menu still needs
-				to be updated. This is the case when (for example),
-				a new bookmark folder is created, and the dialog
-				is cancelled. */
-				InsertBookmarksIntoMenu();
+				CAddFavoritesDialog AddFavoritesDialog(g_hLanguageModule,IDD_ADD_FAVORITES,hwnd,m_bfAllFavorites,&bm);
+				AddFavoritesDialog.ShowModalDialog();
 			}
 			break;
 
-		case TOOLBAR_ORGANIZEBOOKMARKS:
-		case IDM_BOOKMARKS_ORGANIZEBOOKMARKS:
-			DialogBoxParam(g_hLanguageModule,MAKEINTRESOURCE(IDD_ORGANIZE_BOOKMARKS),
-				m_hContainer,OrganizeBookmarksStub,(LPARAM)this);
+		case TOOLBAR_ORGANIZEFAVORITES:
+		case IDM_FAVORITES_MANAGEFAVORITES:
+			if(g_hwndManageFavorites == NULL)
+			{
+				CManageFavoritesDialog ManageFavoritesDialog(g_hLanguageModule,IDD_MANAGE_FAVORITES,hwnd,m_bfAllFavorites);
+				ManageFavoritesDialog.ShowModalDialog();
+
+				CManageFavoritesDialog *pManageFavoritesDialog = new CManageFavoritesDialog(g_hLanguageModule,IDD_MANAGE_FAVORITES,hwnd,m_bfAllFavorites);
+				g_hwndManageFavorites = pManageFavoritesDialog->ShowModelessDialog(this);
+			}
+			else
+			{
+				SetFocus(g_hwndManageFavorites);
+			}
 			break;
 
 		case TOOLBAR_SEARCH:
@@ -1393,21 +1333,21 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			}
 			break;
 
-		case IDM_TOOLS_OPTIONS:
-			if(g_hwndOptions == NULL)
+		case IDM_TOOLS_PREFERENCES:
+			if(g_hwndPreferences == NULL)
 			{
-				OnShowOptions();
+				OnShowPreferences();
 			}
 			else
 			{
-				SetFocus(g_hwndOptions);
+				SetFocus(g_hwndPreferences);
 			}
 			break;
 
 		case IDM_HELP_HELP:
 			{
 				TCHAR szHelpFile[MAX_PATH];
-				GetCurrentProcessImageName(szHelpFile,SIZEOF_ARRAY(szHelpFile));
+				GetProcessImageName(GetCurrentProcessId(),szHelpFile,SIZEOF_ARRAY(szHelpFile));
 				PathRemoveFileSpec(szHelpFile);
 				PathAppend(szHelpFile,NSaltedExplorer::HELP_FILE_NAME);
 
@@ -1438,6 +1378,11 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			{
 				CAboutDialog AboutDialog(g_hLanguageModule,IDD_ABOUT,hwnd);
 				AboutDialog.ShowModalDialog();
+			}
+			break;
+
+		case IDM_HELP_LEGAL:
+			{
 			}
 			break;
 
@@ -1524,29 +1469,24 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			break;
 
 		/* Messages from the context menu that
-		is used with the bookmarks toolbar. */
+		is used with the FAVORITES toolbar. */
+		/* TODO: [FAVORITES] Handle menu messages. */
 		case IDM_BT_OPEN:
-			BookmarkToolbarOpenItem(m_iSelectedRClick,FALSE);
 			break;
 
 		case IDM_BT_OPENINNEWTAB:
-			BookmarkToolbarOpenItem(m_iSelectedRClick,TRUE);
 			break;
 
 		case IDM_BT_DELETE:
-			BookmarkToolbarDeleteItem(m_iSelectedRClick);
 			break;
 
 		case IDM_BT_PROPERTIES:
-			BookmarkToolbarShowItemProperties(m_iSelectedRClick);
 			break;
 
-		case IDM_BT_NEWBOOKMARK:
-			BookmarkToolbarNewBookmark(m_iSelectedRClick);
+		case IDM_BT_NEWFAVORITE:
 			break;
 
 		case IDM_BT_NEWFOLDER:
-			BookmarkToolbarNewFolder(m_iSelectedRClick);
 			break;
 
 		case IDM_APP_OPEN:
@@ -1733,7 +1673,7 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 
 		case RBN_HEIGHTCHANGE:
 			/* The listview and treeview may
-			need to be moved to accomodate the new
+			need to be moved to accommodate  the new
 			rebar size. */
 			AdjustFolderPanePosition();
 			ResizeWindows();
@@ -1772,8 +1712,8 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 					hToolbar = m_hMainToolbar;
 					break;
 
-				case ID_BOOKMARKSTOOLBAR:
-					hToolbar = m_hBookmarksToolbar;
+				case ID_FAVORITESTOOLBAR:
+					hToolbar = m_hFavoritesToolbar;
 					break;
 
 				case ID_DRIVESTOOLBAR:
@@ -1788,6 +1728,7 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 
 				case ID_MENUBAR:
 					hToolbar = m_hMenuBar;
+					himlMenu = himlSmall;
 					break;
 				}
 
@@ -1885,64 +1826,9 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 									}
 									break;
 
-								case ID_MENUBAR:
+								case ID_FAVORITESTOOLBAR:
 									{
-										switch(tbButton.idCommand)
-										{
-
-										case TOOLBAR_VIEWS:
-											{
-											}
-											break;
-										}
-									}
-									break;
-
-								case ID_BOOKMARKSTOOLBAR:
-									{
-										Bookmark_t	Bookmark;
-										int			iIndex;
-
-										iIndex = (int)SendMessage(m_hBookmarksToolbar,TB_COMMANDTOINDEX,tbButton.idCommand,0);
-
-										if(iIndex != -1)
-										{
-											SendMessage(m_hBookmarksToolbar,TB_GETBUTTON,iIndex,(LPARAM)&tbButton);
-
-											m_Bookmark.RetrieveBookmark((void *)tbButton.dwData,&Bookmark);
-
-											if(Bookmark.Type == BOOKMARK_TYPE_FOLDER)
-											{
-												Bookmark_t	ChildBookmark;
-												HRESULT		hr;
-
-												hSubMenu = CreateMenu();
-												m_hBookmarksMenu = CreateMenu();
-
-												MENUINFO mi;
-												mi.cbSize	= sizeof(MENUINFO);
-												mi.fMask	= MIM_STYLE;
-												mi.dwStyle	= MNS_NOTIFYBYPOS;
-												SetMenuInfo(hSubMenu,&mi);
-
-												hr = m_Bookmark.GetChild(&Bookmark,&ChildBookmark);
-
-												if(SUCCEEDED(hr))
-												{
-													InsertBookmarksIntoMenuInternal(hSubMenu,&ChildBookmark,0,MENU_BOOKMARK_STARTID);
-													InsertBookmarksIntoMenuInternal(m_hBookmarksMenu,&ChildBookmark,0,MENU_BOOKMARK_STARTID);
-												}
-												else
-												{
-													InsertBookmarksIntoMenuInternal(hSubMenu,NULL,0,MENU_BOOKMARK_STARTID);
-													InsertBookmarksIntoMenuInternal(m_hBookmarksMenu,NULL,0,MENU_BOOKMARK_STARTID);
-												}
-
-												SetMenuOwnerDraw(hSubMenu);
-
-												fMask |= MIIM_SUBMENU;
-											}
-										}
+										/* TODO: [FAVORITES] Build menu. */
 									}
 									break;
 								}
@@ -1955,6 +1841,7 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 								InsertMenuItem(hMenu,iMenu,TRUE,&mii);
 
 								SetMenuItemOwnerDrawn(hMenu,iMenu);
+
 							}
 							iMenu++;
 						}

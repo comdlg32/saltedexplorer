@@ -2,11 +2,10 @@
  *
  * Project: ShellBrowser
  * File: BrowsingHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the browsing of directories.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

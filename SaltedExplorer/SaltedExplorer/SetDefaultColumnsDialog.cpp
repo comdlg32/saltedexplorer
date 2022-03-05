@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: SelectColumnsDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Select Columns' dialog.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

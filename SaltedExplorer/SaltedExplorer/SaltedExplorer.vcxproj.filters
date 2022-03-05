@@ -4,9 +4,6 @@
     <ClCompile Include="AboutDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AddBookmarkDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="AddressBarHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -17,15 +14,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ArrangeMenuHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BookmarkHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BookmarkPropertiesDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BookmarkToolbarDropHandler.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ChangeDisplayWindowDetailsDialog.cpp">
@@ -71,15 +59,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Misc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="NewBookmarkFolderDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OptionsDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="OrganizeBookmarksDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="RenameTabDialog.cpp">
@@ -145,19 +124,22 @@
     <ClCompile Include="HelpFileMissingDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoggingFrontend.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LoggingImplicitLink.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DrivesToolbarHandler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="SaltedExplorer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MenuBarHandler.cpp" />
+    <ClCompile Include="PreferencesDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DrivesToolbarHandler.cpp" />
+    <ClCompile Include="AddFavoritesDialog.cpp" />
+    <ClCompile Include="ManageFavoritesDialog.cpp" />
+    <ClCompile Include="NewFavoriteFolderDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FavoritesHandler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FavoritesHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iDropSource.h">
@@ -223,9 +205,6 @@
     <ClInclude Include="DialogHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LoggingFrontend.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Version.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -235,6 +214,11 @@
     <ClInclude Include="SaltedExplorer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MainToolbar.h" />
+    <ClInclude Include="AddFavoritesDialog.h" />
+    <ClInclude Include="ManageFavoritesDialog.h" />
+    <ClInclude Include="NewFavoriteFolderDialog.h" />
+    <ClInclude Include="FavoritesHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SaltedExplorer.rc">

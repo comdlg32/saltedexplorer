@@ -2,11 +2,10 @@
  *
  * Project: MyTreeView
  * File: DirectoryModificationHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles directory modifications for the CMyTreeView class.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

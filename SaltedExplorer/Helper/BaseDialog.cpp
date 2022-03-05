@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: BaseDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides a degree of abstraction off a standard dialog.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -98,6 +97,11 @@ INT_PTR CALLBACK CBaseDialog::BaseDialogProc(HWND hDlg,UINT uMsg,
 
 		case WM_CTLCOLORSTATIC:
 			return OnCtlColorStatic(reinterpret_cast<HWND>(lParam),
+				reinterpret_cast<HDC>(wParam));
+			break;
+
+		case WM_CTLCOLOREDIT:
+			return OnCtlColorEdit(reinterpret_cast<HWND>(lParam),
 				reinterpret_cast<HDC>(wParam));
 			break;
 
@@ -254,6 +258,11 @@ BOOL CBaseDialog::OnTimer(int iTimerID)
 }
 
 INT_PTR CBaseDialog::OnCtlColorStatic(HWND hwnd,HDC hdc)
+{
+	return 0;
+}
+
+INT_PTR CBaseDialog::OnCtlColorEdit(HWND hwnd,HDC hdc)
 {
 	return 0;
 }

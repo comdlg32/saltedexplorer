@@ -2,13 +2,12 @@
  *
  * Project: SaltedExplorer
  * File: SetFileAttributesDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides the ability to change the attributes
  * and creation/modification/access dates of a set
  * of files.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

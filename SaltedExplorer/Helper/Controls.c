@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: Controls.c
- * License: GPL - See COPYING in the top level directory
  *
  * Generic implementation of control creation.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

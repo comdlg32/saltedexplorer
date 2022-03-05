@@ -46,6 +46,8 @@ BOOL CAboutDialog::OnInitDialog()
 	TCHAR szBuild[64];
 	TCHAR szBuildDate[64];
 	TCHAR szBuildNumber[64];
+	TCHAR szYearNumber[64];
+	TCHAR szDebugMode[64];
 	TCHAR szTemp[64];
 
 	/* Indicate which architecture (32-bit or
@@ -65,13 +67,20 @@ BOOL CAboutDialog::OnInitDialog()
 	SetDlgItemText(m_hDlg,IDC_STATIC_VERSIONNUMBER,szVersion);
 
 	GetDlgItemText(m_hDlg,IDC_STATIC_BUILDDATE,szTemp,SIZEOF_ARRAY(szTemp));
-	StringCchPrintf(szBuildDate,SIZEOF_ARRAY(szBuildDate),szTemp,BUILD_DATE_STRING);
-
+	StringCchPrintf(szBuildDate,SIZEOF_ARRAY(szBuildDate),szTemp,BUILD_DATE);
 	SetDlgItemText(m_hDlg,IDC_STATIC_BUILDDATE,szBuildDate);
 
 	GetDlgItemText(m_hDlg,IDC_STATIC_BUILDNUMBER,szTemp,SIZEOF_ARRAY(szTemp));
-	StringCchPrintf(szBuildNumber,SIZEOF_ARRAY(szBuildNumber),szTemp,BUILD_NUMBER_A);
+	StringCchPrintf(szBuildNumber,SIZEOF_ARRAY(szBuildNumber),szTemp,BUILD_NUMBER);
 	SetDlgItemText(m_hDlg,IDC_STATIC_BUILDNUMBER,szBuildNumber);
+
+	GetDlgItemText(m_hDlg,IDC_STATIC_YEAR,szTemp,SIZEOF_ARRAY(szTemp));
+	StringCchPrintf(szYearNumber,SIZEOF_ARRAY(szYearNumber),szTemp,YEAR_NUMBER);
+	SetDlgItemText(m_hDlg,IDC_STATIC_YEAR,szYearNumber);
+
+	GetDlgItemText(m_hDlg,IDC_STATIC_DEBUG,szTemp,SIZEOF_ARRAY(szTemp));
+	StringCchPrintf(szDebugMode,SIZEOF_ARRAY(szDebugMode),szTemp,DEBUG_STRING);
+	SetDlgItemText(m_hDlg,IDC_STATIC_DEBUG,szDebugMode);
 
 	CenterWindow(GetParent(m_hDlg),m_hDlg);
 

@@ -2,13 +2,12 @@
  *
  * Project: ShellBrowser
  * File: DirectoryModificationHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles directory modification messages,
  * including adding, deleting and renaming
  * items.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

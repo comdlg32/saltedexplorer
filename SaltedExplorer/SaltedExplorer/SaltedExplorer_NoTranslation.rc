@@ -46,12 +46,14 @@ IDB_SHELL_GO_2000					BITMAP                  "res\\Shell Go 2000.bmp"
 IDB_SHELL_GO_2000_INA				BITMAP					"res\\Shell Go 2000 Inactive.bmp"
 IDB_SHELLIMAGES_2000				BITMAP                  "res\\Shell Images 2000.bmp"
 IDB_SHELLIMAGES_2000_INA			BITMAP					"res\\Shell Images 2000 Inactive.bmp"
+/* IDB_SHELLIMAGES_2000_DIS			BITMAP					"res\\Shell Images 2000 Disabled.bmp" */
 IDB_FILTERINGAPPLIED				BITMAP                  "res\\Filtering Applied.bmp"
 IDB_FOLDERLOCKED					BITMAP                  "res\\Folder Locked.bmp"
 IDB_ABOUT							BITMAP                  "res\\About Image.bmp"
 IDB_NOPREVIEWAVAILABLE				BITMAP                  "res\\No Preview Available.bmp"
 IDB_SHELLIMAGES_2000_LARGE			BITMAP					"res\\Shell Images 2000 Large.bmp"
 IDB_SHELLIMAGES_2000_LARGE_INA		BITMAP					"res\\Shell Images 2000 Large Inactive.bmp"
+/* IDB_SHELLIMAGES_2000_LARGE_DIS		BITMAP					"res\\Shell Images 2000 Large Disabled.bmp" */
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -69,9 +71,9 @@ BEGIN
     "7",            IDA_TAB7,               VIRTKEY, CONTROL, NOINVERT
     "8",            IDA_TAB8,               VIRTKEY, CONTROL, NOINVERT
     "9",            IDA_LASTTAB,            VIRTKEY, CONTROL, NOINVERT
-    "B",            IDM_BOOKMARKS_ORGANIZEBOOKMARKS, VIRTKEY, CONTROL, NOINVERT
+    "B",            IDM_FAVORITES_MANAGEFAVORITES, VIRTKEY, CONTROL, NOINVERT
     "C",            IDM_EDIT_COPYTOFOLDER,  VIRTKEY, SHIFT, CONTROL, NOINVERT
-    "D",            IDM_BOOKMARKS_BOOKMARKTHISTAB, VIRTKEY, CONTROL, NOINVERT
+    "D",            IDM_FAVORITES_FAVORITETHISTAB, VIRTKEY, CONTROL, NOINVERT
     "D",            IDA_ADDRESSBAR,         VIRTKEY, ALT, NOINVERT
     "D",            IDM_EDIT_WILDCARDDESELECT, VIRTKEY, SHIFT, CONTROL, NOINVERT
     "E",            IDA_TAB_DUPLICATETAB,   VIRTKEY, CONTROL, NOINVERT

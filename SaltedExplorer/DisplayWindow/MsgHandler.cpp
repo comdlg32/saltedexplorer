@@ -2,7 +2,7 @@
  *
  * Project: DisplayWindow
  * File: MsgHandler.cpp
- * License: GPL - See COPYING in the top level directory
+ *
  *
  * Handles GUI messages for the display window.
  *
@@ -70,7 +70,15 @@ void CDisplayWindow::DrawGradientFill(HDC hdc,RECT *rc,RECT *UpdateRect)
 	/* This draws a separator line across the top edge of the window,
 	so that it is visually separated from other windows. */
 	Gdiplus::Pen NewPen(BORDER_COLOUR,1);
-	graphics.DrawLine(&NewPen,0,0,rc->right,0);
+
+	if (m_bVertical)
+	{
+		graphics.DrawLine(&NewPen,0,0,0,rc->bottom);
+	}
+	else
+	{
+		graphics.DrawLine(&NewPen,0,0,rc->right,0);
+	}
 }
 
 void CDisplayWindow::PatchBackground(HDC hdc,RECT *rc,RECT *UpdateRect)
@@ -373,12 +381,13 @@ LONG CDisplayWindow::OnMouseMove(LPARAM lParam)
 		/* Notify the main window, so that it can redraw/reposition
 		its other windows. */
 		SendMessage(GetParent(m_hDisplayWindow),
-			WM_USER_DISPLAYWINDOWRESIZED,(WPARAM)(rc.bottom - CursorPos.y),0);
+			WM_USER_DISPLAYWINDOWRESIZED,
+			(WPARAM)MAKEWPARAM(rc.right - CursorPos.x, rc.bottom - CursorPos.y),0);
 	}
 
-	if(CursorPos.y <= (rc.top + 5))
+	if(m_bVertical && CursorPos.x <= (rc.left + 5) || !m_bVertical && CursorPos.y <= (rc.top + 5))
 	{
-		SetCursor(LoadCursor(NULL,IDC_SIZENS));
+		SetCursor(LoadCursor(NULL,m_bVertical ? IDC_SIZEWE : IDC_SIZENS));
 	}
 
 	/* If there is a thumbnail preview
@@ -412,9 +421,9 @@ void CDisplayWindow::OnLButtonDown(LPARAM lParam)
 
 	GetClientRect(m_hDisplayWindow,&rc);
 
-	if(CursorPos.y <= (rc.top + 5))
+	if(m_bVertical && CursorPos.x <= (rc.left + 5) || !m_bVertical && CursorPos.y <= (rc.top + 5))
 	{
-		SetCursor(LoadCursor(NULL,IDC_SIZENS));
+		SetCursor(LoadCursor(NULL, m_bVertical ? IDC_SIZEWE : IDC_SIZENS));
 		m_bSizing = TRUE;
 		SetFocus(m_hDisplayWindow);
 		SetCapture(m_hDisplayWindow);

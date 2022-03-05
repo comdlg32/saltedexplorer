@@ -2,7 +2,6 @@
  *
  * Project: SaltedExplorer
  * File: XMLSettings.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Loads and saves all settings associated with
  * SaltedExplorer from/to an XML configuration file.
@@ -13,7 +12,7 @@
  *     - No spaces
  *     - First character cannot be a number
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -34,6 +33,7 @@
 #include "SelectColumnsDialog.h"
 #include "SetDefaultColumnsDialog.h"
 #include "../Helper/XMLSettings.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 #import <msxml3.dll> raw_interfaces_only
@@ -60,12 +60,14 @@ will need to be changed correspondingly. */
 #define HASH_DISPLAYFONT			362757714
 #define HASH_DISPLAYSURROUNDCOLOR	1807564604
 #define HASH_DISPLAYTEXTCOLOR		4212809823
+#define HASH_DISPLAYWINDOWWIDTH		3332824435
 #define HASH_DISPLAYWINDOWHEIGHT	2017415020
+#define HASH_DISPLAYWINDOWVERTICAL	2262072301
 #define HASH_LANGUAGE				3526403497
 #define HASH_LASTSELECTEDTAB		1712438393
 #define HASH_NEXTTOCURRENT			743165450
 #define HASH_SHOWADDRESSBAR			3302864385
-#define HASH_SHOWBOOKMARKSTOOLBAR	1216493954
+#define HASH_SHOWFAVORITESTOOLBAR	1216493954
 #define HASH_SHOWDRIVESTOOLBAR		899091590
 #define HASH_SHOWDISPLAYWINDOW		351410676
 #define HASH_SHOWEXTENSIONS			3743594966
@@ -81,6 +83,7 @@ will need to be changed correspondingly. */
 #define HASH_SHOWMENUBAR			1853964589
 #define HASH_SORTASCENDINGGLOBAL	2605638058
 #define HASH_STARTUPMODE			1344265373
+#define HASH_WEBVIEWOPTIONS			1568845684
 #define HASH_TOOLBARSTATE			3436473849
 #define HASH_TREEVIEWDELAYENABLED	2186637066
 #define HASH_TREEVIEWWIDTH			4257779536
@@ -118,8 +121,11 @@ will need to be changed correspondingly. */
 #define HASH_TVAUTOEXPAND			1228854897
 #define HASH_OVERWRITEEXISTINGFILESCONFIRMATION	1625342835
 #define HASH_LARGETOOLBARICONS		10895007
+#define HASH_VISTACONTROLS			10896852
 #define HASH_PLAYNAVIGATIONSOUND	1987363412
 #define HASH_SHELL_THEME			3998265761
+#define HASH_TOOLBARTITLEBUTTONS	4055947555
+#define HASH_WEBVIEW				4066781454
 
 typedef struct
 {
@@ -293,8 +299,13 @@ MSXML2::IXMLDOMElement *pRoot)
 	pParentNode = NULL;
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	_itow_s(m_DisplayWindowWidth,szValue,SIZEOF_ARRAY(szValue),10);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("DisplayWindowWidth"),szValue);
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	_itow_s(m_DisplayWindowHeight,szValue,SIZEOF_ARRAY(szValue),10);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("DisplayWindowHeight"),szValue);
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("DisplayWindowVertical"),NXMLSettings::EncodeBoolValue(m_DisplayWindowVertical));
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("DoubleClickTabClose"),NXMLSettings::EncodeBoolValue(m_bDoubleClickTabClose));
@@ -321,6 +332,10 @@ MSXML2::IXMLDOMElement *pRoot)
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("LargeToolbarIcons"),NXMLSettings::EncodeBoolValue(m_bLargeToolbarIcons));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ToolbarTitleButtons"),NXMLSettings::EncodeBoolValue(m_bToolbarTitleButtons));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("WebView"),NXMLSettings::EncodeBoolValue(m_bWebView));
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	_itow_s(m_iLastSelectedTab,szValue,SIZEOF_ARRAY(szValue),10);
@@ -348,9 +363,11 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowAddressBar"),NXMLSettings::EncodeBoolValue(m_bShowAddressBar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowMenuBar"),NXMLSettings::EncodeBoolValue(m_bShowMenuBar));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowApplicationToolbar"),NXMLSettings::EncodeBoolValue(m_bShowApplicationToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
-	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowBookmarksToolbar"),NXMLSettings::EncodeBoolValue(m_bShowBookmarksToolbar));
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFAVORITESToolbar"),NXMLSettings::EncodeBoolValue(m_bShowFAVORITESToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowDrivesToolbar"),NXMLSettings::EncodeBoolValue(m_bShowDrivesToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
@@ -367,6 +384,8 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFriendlyDates"),NXMLSettings::EncodeBoolValue(m_bShowFriendlyDatesGlobal));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShellMode"),NXMLSettings::EncodeBoolValue(m_bShellMode));
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("VistaControls"),NXMLSettings::EncodeBoolValue(m_bVistaControls));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFullTitlePath"),NXMLSettings::EncodeBoolValue(m_bShowFullTitlePath));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
@@ -388,8 +407,6 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowToolbar"),NXMLSettings::EncodeBoolValue(m_bShowMainToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
-	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowMenuBar"),NXMLSettings::EncodeBoolValue(m_bShowMenuBar));
-	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowUserNameTitleBar"),NXMLSettings::EncodeBoolValue(m_bShowUserNameInTitleBar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("SizeDisplayFormat"),NXMLSettings::EncodeIntValue(m_SizeDisplayFormat));
@@ -399,6 +416,9 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	_itow_s(m_StartupMode,szValue,SIZEOF_ARRAY(szValue),10);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("StartupMode"),szValue);
+	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
+	_itow_s(m_WebViewOptions,szValue,SIZEOF_ARRAY(szValue),10);
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("WebViewOptions"),szValue);
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("SynchronizeTreeview"),NXMLSettings::EncodeBoolValue(m_bSynchronizeTreeview));
@@ -882,25 +902,22 @@ int SaltedExplorer::LoadColumnFromXML(MSXML2::IXMLDOMNode *pNode,std::list<Colum
 	return iColumnType;
 }
 
-int SaltedExplorer::LoadBookmarksFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
+int SaltedExplorer::LoadFavoritesFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
 {
 	MSXML2::IXMLDOMNodeList		*pNodes = NULL;
 	MSXML2::IXMLDOMNode			*pNode = NULL;
-	Bookmark_t					RootBookmark;
 	BSTR						bstr = NULL;
 	HRESULT						hr;
 
 	if(!pXMLDom)
 		goto clean;
 
-	bstr = SysAllocString(L"//Bookmark");
+	bstr = SysAllocString(L"//Favorite");
 	hr = pXMLDom->selectSingleNode(bstr,&pNode);
 
 	if(hr == S_OK)
 	{
-		m_Bookmark.GetRoot(&RootBookmark);
-
-		LoadBookmarksFromXMLInternal(pNode,RootBookmark.pHandle);
+		/* TODO: Load FAVORITES. */
 	}
 
 clean:
@@ -911,129 +928,21 @@ clean:
 	return 0;
 }
 
-/* Start at the first node. Read all of its attributes
-and then step down into any children, before traversing
-any sibling nodes (and stepping into their child items,
-etc). */
-void SaltedExplorer::LoadBookmarksFromXMLInternal(MSXML2::IXMLDOMNode *pNode,void *pParentFolder)
-{
-	MSXML2::IXMLDOMNamedNodeMap	*am = NULL;
-	MSXML2::IXMLDOMNode			*pAttributeNode = NULL;
-	MSXML2::IXMLDOMNode			*pChildNode = NULL;
-	MSXML2::IXMLDOMNode			*pNextSibling = NULL;
-	Bookmark_t					NewBookmark = {0};
-	BSTR						bstrName;
-	BSTR						bstrValue;
-	HRESULT						hr;
-	long						nAttributeNodes;
-	long						i = 0;
-
-	hr = pNode->get_attributes(&am);
-
-	if(FAILED(hr))
-		return;
-
-	/* Retrieve the total number of attributes
-	attached to this node. */
-	am->get_length(&nAttributeNodes);
-
-	for(i = 0;i < nAttributeNodes;i++)
-	{
-		am->get_item(i, &pAttributeNode);
-
-		/* Element name. */
-		pAttributeNode->get_nodeName(&bstrName);
-
-		/* Each bookmark item will have a name, description
-		and type. If the item is a bookmark (rather than a
-		folder), it will also have a location attribute. */
-
-		/* Element value. */
-		pAttributeNode->get_text(&bstrValue);
-
-		if(lstrcmpi(bstrName,L"Name") == 0)
-			StringCchCopy(NewBookmark.szItemName,SIZEOF_ARRAY(NewBookmark.szItemName),bstrValue);
-		else if(lstrcmpi(bstrName,L"Description") == 0)
-			StringCchCopy(NewBookmark.szItemDescription,SIZEOF_ARRAY(NewBookmark.szItemDescription),bstrValue);
-		else if(lstrcmpi(bstrName,L"Location") == 0)
-			StringCchCopy(NewBookmark.szLocation,SIZEOF_ARRAY(NewBookmark.szLocation),bstrValue);
-		else if(lstrcmpi(bstrName,L"Type") == 0)
-			NewBookmark.Type = _wtoi(bstrValue);
-		else if(lstrcmpi(bstrName,L"ShowOnBookmarksToolbar") == 0)
-			NewBookmark.bShowOnToolbar = NXMLSettings::DecodeBoolValue(bstrValue);
-	}
-
-	/* If this item is a bookmark folder, recursively retrieve
-	it's sub-items. */
-	if(NewBookmark.Type == BOOKMARK_TYPE_FOLDER)
-	{
-		m_Bookmark.CreateNewBookmark(pParentFolder,&NewBookmark);
-
-		hr = pNode->get_firstChild(&pChildNode);
-
-		if(hr == S_OK)
-		{
-			hr = pChildNode->get_nextSibling(&pChildNode);
-
-			if(hr == S_OK)
-			{
-				hr = pChildNode->get_firstChild(&pChildNode);
-
-				if(hr == S_OK)
-				{
-					hr = pChildNode->get_nextSibling(&pChildNode);
-
-					if(hr == S_OK)
-					{
-						LoadBookmarksFromXMLInternal(pChildNode,NewBookmark.pHandle);
-					}
-				}
-			}
-		}
-	}
-	else
-	{
-		m_Bookmark.CreateNewBookmark(pParentFolder,&NewBookmark);
-	}
-
-	hr = pNode->get_nextSibling(&pNextSibling);
-
-	if(hr == S_OK)
-	{
-		hr = pNextSibling->get_nextSibling(&pNextSibling);
-
-		if(hr == S_OK)
-		{
-			LoadBookmarksFromXMLInternal(pNextSibling,pParentFolder);
-		}
-	}
-}
-
-void SaltedExplorer::SaveBookmarksToXML(MSXML2::IXMLDOMDocument *pXMLDom,
+void SaltedExplorer::SaveFavoritesToXML(MSXML2::IXMLDOMDocument *pXMLDom,
 MSXML2::IXMLDOMElement *pRoot)
 {
 	MSXML2::IXMLDOMElement		*pe = NULL;
-	Bookmark_t					RootBookmark;
-	Bookmark_t					FirstChild;
 	BSTR						bstr_wsnt = SysAllocString(L"\n\t");
 	BSTR						bstr;
-	HRESULT						hr;
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsnt,pRoot);
 
-	bstr = SysAllocString(L"Bookmarks");
+	bstr = SysAllocString(L"FAVORITES");
 	pXMLDom->createElement(bstr,&pe);
 	SysFreeString(bstr);
 	bstr = NULL;
 
-	m_Bookmark.GetRoot(&RootBookmark);
-
-	hr = m_Bookmark.GetChild(&RootBookmark,&FirstChild);
-
-	if(SUCCEEDED(hr))
-	{
-		SaveBookmarksToXMLInternal(pXMLDom,pe,&FirstChild);
-	}
+	/* TODO: Save FAVORITES. */
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsnt,pe);
 
@@ -1042,110 +951,6 @@ MSXML2::IXMLDOMElement *pRoot)
 	pe = NULL;
 
 	SysFreeString(bstr_wsnt);
-}
-
-void SaltedExplorer::SaveBookmarksToXMLInternal(MSXML2::IXMLDOMDocument *pXMLDom,
-MSXML2::IXMLDOMElement *pe,Bookmark_t *pBookmark)
-{
-	MSXML2::IXMLDOMElement		*pParentNode = NULL;
-	Bookmark_t					FirstChild;
-	Bookmark_t					SiblingBookmark;
-	BSTR						bstr_wsntt = SysAllocString(L"\n\t\t");
-	BSTR						bstr_indent;
-	WCHAR						wszIndent[128];
-	HRESULT						hr;
-	static int					iIndent = 2;
-	int							i = 0;
-
-	StringCchPrintf(wszIndent,SIZEOF_ARRAY(wszIndent),L"\n");
-
-	for(i = 0;i < iIndent;i++)
-		StringCchCat(wszIndent,SIZEOF_ARRAY(wszIndent),L"\t");
-
-	bstr_indent = SysAllocString(wszIndent);
-
-	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_indent,pe);
-
-	SysFreeString(bstr_indent);
-	bstr_indent = NULL;
-
-	NXMLSettings::CreateElementNode(pXMLDom,&pParentNode,pe,_T("Bookmark"),pBookmark->szItemName);
-	NXMLSettings::AddAttributeToNode(pXMLDom,pParentNode,_T("Description"),pBookmark->szItemDescription);
-	NXMLSettings::AddAttributeToNode(pXMLDom,pParentNode,_T("Type"),NXMLSettings::EncodeIntValue(pBookmark->Type));
-	NXMLSettings::AddAttributeToNode(pXMLDom,pParentNode,_T("ShowOnBookmarksToolbar"),NXMLSettings::EncodeBoolValue(pBookmark->bShowOnToolbar));
-
-	if(pBookmark->Type == BOOKMARK_TYPE_BOOKMARK)
-	{
-		NXMLSettings::AddAttributeToNode(pXMLDom,pParentNode,_T("Location"),pBookmark->szLocation);
-	}
-	
-	if(pBookmark->Type == BOOKMARK_TYPE_FOLDER)
-	{
-		hr = m_Bookmark.GetChild(pBookmark,&FirstChild);
-
-		if(SUCCEEDED(hr))
-		{
-			MSXML2::IXMLDOMElement *pe2 = NULL;
-			BSTR					bstr;
-
-			iIndent++;
-
-			StringCchPrintf(wszIndent,SIZEOF_ARRAY(wszIndent),L"\n");
-
-			for(i = 0;i < iIndent;i++)
-				StringCchCat(wszIndent,SIZEOF_ARRAY(wszIndent),L"\t");
-
-			bstr_indent = SysAllocString(wszIndent);
-
-			NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_indent,pParentNode);
-
-			bstr = SysAllocString(L"Bookmarks");
-			pXMLDom->createElement(bstr,&pe2);
-			SysFreeString(bstr);
-			bstr = NULL;
-
-			iIndent++;
-
-			SaveBookmarksToXMLInternal(pXMLDom,pe2,&FirstChild);
-
-			iIndent--;
-
-			NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_indent,pe2);
-
-			SysFreeString(bstr_indent);
-			bstr_indent = NULL;
-
-			NXMLSettings::AppendChildToParent(pe2,pParentNode);
-			pe2->Release();
-			pe2 = NULL;
-
-			iIndent--;
-
-			StringCchPrintf(wszIndent,SIZEOF_ARRAY(wszIndent),L"\n");
-
-			for(i = 0;i < iIndent;i++)
-				StringCchCat(wszIndent,SIZEOF_ARRAY(wszIndent),L"\t");
-
-			bstr_indent = SysAllocString(wszIndent);
-
-			NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_indent,pParentNode);
-
-			SysFreeString(bstr_indent);
-			bstr_indent = NULL;
-		}
-	}
-
-	hr = m_Bookmark.GetNextBookmarkSibling(pBookmark,&SiblingBookmark);
-
-	if(SUCCEEDED(hr))
-	{
-		SaveBookmarksToXMLInternal(pXMLDom,pe,&SiblingBookmark);
-	}
-
-	pParentNode->Release();
-	pParentNode = NULL;
-
-	SysFreeString(bstr_wsntt);
 }
 
 int SaltedExplorer::LoadDefaultColumnsFromXML(MSXML2::IXMLDOMDocument *pXMLDom)
@@ -2045,8 +1850,16 @@ WCHAR *wszName,WCHAR *wszValue)
 		m_DisplayWindowTextColor = NXMLSettings::ReadXMLColorData(pNode);
 		break;
 
+	case HASH_DISPLAYWINDOWWIDTH:
+		m_DisplayWindowWidth = NXMLSettings::DecodeIntValue(wszValue);
+		break;
+
 	case HASH_DISPLAYWINDOWHEIGHT:
 		m_DisplayWindowHeight = NXMLSettings::DecodeIntValue(wszValue);
+		break;
+
+	case HASH_DISPLAYWINDOWVERTICAL:
+		m_DisplayWindowVertical = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
 	case HASH_DOUBLECLICKTABCLOSE:
@@ -2090,6 +1903,14 @@ WCHAR *wszName,WCHAR *wszValue)
 		m_bLargeToolbarIcons = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
+	case HASH_VISTACONTROLS:
+		m_bVistaControls = NXMLSettings::DecodeBoolValue(wszValue);
+		break;
+
+	case HASH_TOOLBARTITLEBUTTONS:
+		m_bToolbarTitleButtons = NXMLSettings::DecodeBoolValue(wszValue);
+		break;
+
 	case HASH_LASTSELECTEDTAB:
 		m_iLastSelectedTab = NXMLSettings::DecodeIntValue(wszValue);
 		break;
@@ -2130,8 +1951,8 @@ WCHAR *wszName,WCHAR *wszValue)
 		m_bShowApplicationToolbar = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
-	case HASH_SHOWBOOKMARKSTOOLBAR:
-		m_bShowBookmarksToolbar = NXMLSettings::DecodeBoolValue(wszValue);
+	case HASH_SHOWFAVORITESTOOLBAR:
+		m_bShowFAVORITESToolbar = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
 	case HASH_SHOWDRIVESTOOLBAR:
@@ -2222,6 +2043,10 @@ WCHAR *wszName,WCHAR *wszValue)
 		m_StartupMode = NXMLSettings::DecodeIntValue(wszValue);
 		break;
 
+	case HASH_WEBVIEWOPTIONS:
+		m_WebViewOptions = NXMLSettings::DecodeIntValue(wszValue);
+		break;
+
 	case HASH_SYNCHRONIZETREEVIEW:
 		m_bSynchronizeTreeview = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
@@ -2297,10 +2122,10 @@ WCHAR *wszName,WCHAR *wszValue)
 					tb.iItemID = TOOLBAR_PROPERTIES;
 				else if(lstrcmpi(bstrValue,L"Refresh") == 0)
 					tb.iItemID = TOOLBAR_REFRESH;
-				else if(lstrcmpi(bstrValue,L"Bookmark the current tab") == 0)
-					tb.iItemID = TOOLBAR_ADDBOOKMARK;
-				else if(lstrcmpi(bstrValue,L"Organize Bookmarks") == 0)
-					tb.iItemID = TOOLBAR_ORGANIZEBOOKMARKS;
+				else if(lstrcmpi(bstrValue,L"Favorite the current tab") == 0)
+					tb.iItemID = TOOLBAR_ADDFAVORITE;
+				else if(lstrcmpi(bstrValue,L"Organize FAVORITES") == 0)
+					tb.iItemID = TOOLBAR_ORGANIZEFAVORITES;
 				else if(lstrcmpi(bstrValue,L"Create a new tab") == 0)
 					tb.iItemID = TOOLBAR_NEWTAB;
 				else if(lstrcmpi(bstrValue,L"Show Command Prompt") == 0)
@@ -2524,7 +2349,7 @@ void SaltedExplorer::CLoadSaveXML::InitializeLoadEnvironment(void)
 	if(!m_pXMLDom)
 		goto clean;
 
-	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
+	GetProcessImageName(GetCurrentProcessId(),szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
 	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
@@ -2644,9 +2469,9 @@ void SaltedExplorer::CLoadSaveXML::LoadGenericSettings(void)
 	m_pContainer->LoadGenericSettingsFromXML(m_pXMLDom);
 }
 
-void SaltedExplorer::CLoadSaveXML::LoadBookmarks(void)
+void SaltedExplorer::CLoadSaveXML::LoadFavorites(void)
 {
-	m_pContainer->LoadBookmarksFromXML(m_pXMLDom);
+	m_pContainer->LoadFavoritesFromXML(m_pXMLDom);
 }
 
 int SaltedExplorer::CLoadSaveXML::LoadPreviousTabs(void)
@@ -2684,9 +2509,9 @@ void SaltedExplorer::CLoadSaveXML::SaveGenericSettings(void)
 	m_pContainer->SaveGenericSettingsToXML(m_pXMLDom,m_pRoot);
 }
 
-void SaltedExplorer::CLoadSaveXML::SaveBookmarks(void)
+void SaltedExplorer::CLoadSaveXML::SaveFavorites(void)
 {
-	m_pContainer->SaveBookmarksToXML(m_pXMLDom,m_pRoot);
+	m_pContainer->SaveFavoritesToXML(m_pXMLDom,m_pRoot);
 }
 
 void SaltedExplorer::CLoadSaveXML::SaveTabs(void)
@@ -2742,7 +2567,7 @@ BOOL LoadWindowPositionFromXML(WINDOWPLACEMENT *pwndpl)
 	if(!pXMLDom)
 		goto clean;
 
-	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
+	GetProcessImageName(GetCurrentProcessId(),szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
 	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 
@@ -2837,7 +2662,7 @@ BOOL LoadAllowMultipleInstancesFromXML(void)
 	if(!pXMLDom)
 		goto clean;
 
-	GetCurrentProcessImageName(szConfigFile,SIZEOF_ARRAY(szConfigFile));
+	GetProcessImageName(GetCurrentProcessId(),szConfigFile,SIZEOF_ARRAY(szConfigFile));
 	PathRemoveFileSpec(szConfigFile);
 	PathAppend(szConfigFile,NSaltedExplorer::XML_FILENAME);
 

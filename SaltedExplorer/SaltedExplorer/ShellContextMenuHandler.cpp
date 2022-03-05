@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: ShellContextMenuHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles shell context menus (such as file
  * context menus, and the new menu).
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -1,8 +1,7 @@
 /******************************************************************
  *
  * Project: SaltedExplorer
- * File: OptionsDialog.cpp
- * License: GPL - See COPYING in the top level directory
+ * File: PreferencesDialog.cpp
  *
  * Handles the 'Options' dialog and all associated messages.
  *
@@ -12,7 +11,7 @@
  *    has been initialised (i.e. any dialog that has
  *    had the focus set to itself).
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -23,15 +22,17 @@
 #include "../Helper/ShellHelper.h"
 #include "../Helper/SetDefaultFileManager.h"
 #include "../Helper/ListViewHelper.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 
-#define NUM_DIALOG_OPTIONS_PAGES	6
+#define NUM_DIALOG_PREFERENCES_PAGES	7
 
 INT_PTR CALLBACK	FilesFoldersProcStub(HWND,UINT,WPARAM,LPARAM);
 INT_PTR CALLBACK	ThemesProcStub(HWND,UINT,WPARAM,LPARAM);
 INT_PTR CALLBACK	WindowProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	GeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
+INT_PTR CALLBACK	OldGeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	DefaultSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	TabSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 
@@ -55,15 +56,15 @@ static const FileSize_t g_FileSizes[] =
 
 BOOL bRefreshAllTabs;
 
-static HWND g_hOptionsPropertyDialog	= NULL;
+static HWND g_hPreferencesPropertyDialog	= NULL;
 
 HICON g_hNewTabDirIcon;
 TCHAR g_szNewTabDirectory[MAX_PATH];
 
-void SaltedExplorer::OnShowOptions(void)
+void SaltedExplorer::OnShowPreferences(void)
 {
-	PROPSHEETPAGE	psp[NUM_DIALOG_OPTIONS_PAGES];
-	HPROPSHEETPAGE	hpsp[NUM_DIALOG_OPTIONS_PAGES];
+	PROPSHEETPAGE	psp[NUM_DIALOG_PREFERENCES_PAGES];
+	HPROPSHEETPAGE	hpsp[NUM_DIALOG_PREFERENCES_PAGES];
 	PROPSHEETHEADER	psh;
 	HIMAGELIST		himl;
 	HBITMAP			hBitmap;
@@ -79,13 +80,23 @@ void SaltedExplorer::OnShowOptions(void)
 
 	g_hNewTabDirIcon = ImageList_GetIcon(himl,SHELLIMAGES_NEWTAB,ILD_NORMAL);
 
-	/* General options page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_GENERAL);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_GENERAL);
 	psp[nSheet].lParam		= (LPARAM)this;
-	psp[nSheet].pfnDlgProc	= GeneralSettingsProcStub;
+	psp[nSheet].pfnDlgProc	= OldGeneralSettingsProcStub;
+
+	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
+	nSheet++;
+
+	/* General Preferences page. */
+	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
+	psp[nSheet].dwFlags		= PSP_DEFAULT;
+	psp[nSheet].hInstance	= g_hLanguageModule;
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_OLDGENERAL);
+	psp[nSheet].lParam		= (LPARAM)this;
+	psp[nSheet].pfnDlgProc	= OldGeneralSettingsProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
@@ -93,51 +104,51 @@ void SaltedExplorer::OnShowOptions(void)
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_THEMES);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_THEMES);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= ThemesProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
 
-	/* Files and Folders options page. */
+	/* Files and Folders Preferences page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_FILESFOLDERS);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_FILESFOLDERS);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= FilesFoldersProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
 
-	/* Window options page. */
+	/* Window Preferences page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_WINDOW);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_WINDOW);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= WindowProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
 
-	/* Tab settings options page. */
+	/* Tab settings Preferences page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_TABS);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_TABS);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= TabSettingsProcStub;
 
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
 
-	/* Default settings options page. */
+	/* Default settings Preferences page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_OPTIONS_DEFAULT);
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_DEFAULT);
 	psp[nSheet].lParam		= (LPARAM)this;
 	psp[nSheet].pfnDlgProc	= DefaultSettingsProcStub;
 
@@ -145,7 +156,7 @@ void SaltedExplorer::OnShowOptions(void)
 	nSheet++;
 
 	/* Load the main dialog title. */
-	LoadString(g_hLanguageModule,IDS_OPTIONSDIALOG_TITLE,
+	LoadString(g_hLanguageModule,IDS_PREFERENCESDIALOG_TITLE,
 		szTitle,SIZEOF_ARRAY(szTitle));
 
 	psh.dwSize		= sizeof(PROPSHEETHEADER);
@@ -166,7 +177,7 @@ void SaltedExplorer::OnShowOptions(void)
 
 	/* Create the property dialog itself, which
 	will hold each of the above property pages. */
-	g_hwndOptions = (HWND)PropertySheet(&psh);
+	g_hwndPreferences = (HWND)PropertySheet(&psh);
 }
 
 int CALLBACK PropSheetProcStub(HWND hDlg,UINT msg,LPARAM lParam)
@@ -174,7 +185,7 @@ int CALLBACK PropSheetProcStub(HWND hDlg,UINT msg,LPARAM lParam)
 	switch(msg)
 	{
 		case PSCB_INITIALIZED:
-			g_hOptionsPropertyDialog = hDlg;
+			g_hPreferencesPropertyDialog = hDlg;
 			break;
 	}
 
@@ -206,6 +217,104 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 	{
 		case WM_INITDIALOG:
 			{
+				int nIDButton;
+
+				switch(m_WebViewOptions)
+				{
+				case OPTION_WEBVIEW:
+					nIDButton = IDC_PREFERENCES_WEBVIEW;
+					break;
+
+				case OPTION_NOWEBVIEW:
+					nIDButton = IDC_PREFERENCES_NOWEBVIEW;
+					break;
+
+				default:
+					nIDButton = IDC_PREFERENCES_WEBVIEW;
+					m_WebViewOptions = OPTION_WEBVIEW;
+					break;
+				}
+				CheckDlgButton(hDlg,nIDButton,BST_CHECKED);
+
+			}
+			break;
+
+		case WM_COMMAND:
+			if(HIWORD(wParam) != 0)
+			{
+				switch(HIWORD(wParam))
+				{
+				case EN_CHANGE:
+				case CBN_SELCHANGE:
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
+					break;
+				}
+			}
+			else
+			{
+				switch(LOWORD(wParam))
+				{
+				case IDC_PREFERENCES_WEBVIEW:
+					break;
+				case IDC_PREFERENCES_NOWEBVIEW:
+					break;
+				}
+			}
+			break;
+
+
+		case WM_NOTIFY:
+			{
+				NMHDR	*nmhdr = NULL;
+				nmhdr = (NMHDR *)lParam;
+
+				switch(nmhdr->code)
+				{
+				case PSN_APPLY:
+					{
+						if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_WEBVIEW) == BST_CHECKED)
+							m_WebViewOptions = OPTION_WEBVIEW;
+						else if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_NOWEBVIEW) == BST_CHECKED)
+							m_WebViewOptions = OPTION_NOWEBVIEW;
+					}
+					break;
+				}
+			}
+			break;
+
+		case WM_CLOSE:
+			EndDialog(hDlg,0);
+			break;
+	}
+
+	return 0;
+}
+
+INT_PTR CALLBACK OldGeneralSettingsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+{
+	static SaltedExplorer *pContainer;
+
+	switch(uMsg)
+	{
+		case WM_INITDIALOG:
+			{
+				PROPSHEETPAGE *ppsp;
+
+				ppsp = (PROPSHEETPAGE *)lParam;
+				pContainer = (SaltedExplorer *)ppsp->lParam;
+			}
+			break;
+	}
+
+	return pContainer->OldGeneralSettingsProc(hDlg,uMsg,wParam,lParam);
+}
+
+INT_PTR CALLBACK SaltedExplorer::OldGeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_INITDIALOG:
+			{
 				HWND hButton;
 				HWND hEdit;
 				int nIDButton;
@@ -232,7 +341,7 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 				folders' option. */
 				if(m_dwMajorVersion == WINDOWS_XP_MAJORVERSION)
 				{
-					EnableWindow(GetDlgItem(hDlg,IDC_OPTION_REPLACEEXPLORER_ALL),FALSE);
+					EnableWindow(GetDlgItem(hDlg,IDC_PREFERENCES_REPLACEEXPLORER_ALL),FALSE);
 
 					if(m_ReplaceExplorerMode == NDefaultFileManager::REPLACEEXPLORER_ALL)
 					{
@@ -243,28 +352,28 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 				switch(m_ReplaceExplorerMode)
 				{
 				case NDefaultFileManager::REPLACEEXPLORER_NONE:
-					nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+					nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 					break;
 
 				case NDefaultFileManager::REPLACEEXPLORER_FILESYSTEM:
-					nIDButton = IDC_OPTION_REPLACEEXPLORER_FILESYSTEM;
+					nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_FILESYSTEM;
 					break;
 
 				case NDefaultFileManager::REPLACEEXPLORER_ALL:
-					nIDButton = IDC_OPTION_REPLACEEXPLORER_ALL;
+					nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_ALL;
 					break;
 
 				default:
-					nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+					nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 					break;
 				}
 				CheckDlgButton(hDlg,nIDButton,BST_CHECKED);
 
 				if(m_bSavePreferencesToXMLFile)
-					CheckDlgButton(hDlg,IDC_OPTION_XML,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_XML,BST_CHECKED);
 
 				if(m_bShellMode)
-					CheckDlgButton(hDlg,IDC_OPTION_SHELL_MODE,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_SHELL_MODE,BST_CHECKED);
 
 				hButton = GetDlgItem(hDlg,IDC_DEFAULT_NEWTABDIR_BUTTON);
 				SendMessage(hButton,BM_SETIMAGE,IMAGE_ICON,(LPARAM)g_hNewTabDirIcon);
@@ -274,7 +383,7 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 
 				AddLanguages(hDlg);
 
-				CenterWindow(m_hContainer,g_hOptionsPropertyDialog);
+				CenterWindow(m_hContainer,g_hPreferencesPropertyDialog);
 			}
 			break;
 
@@ -285,7 +394,7 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 				{
 				case EN_CHANGE:
 				case CBN_SELCHANGE:
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 				}
 			}
@@ -296,23 +405,23 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 				case IDC_STARTUP_PREVIOUSTABS:
 				case IDC_STARTUP_DEFAULTFOLDER:
 					if(IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED)
-						PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+						PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
-				case IDC_OPTION_REPLACEEXPLORER_NONE:
-				case IDC_OPTION_REPLACEEXPLORER_FILESYSTEM:
-				case IDC_OPTION_REPLACEEXPLORER_ALL:
-				case IDC_OPTION_XML:
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+				case IDC_PREFERENCES_REPLACEEXPLORER_NONE:
+				case IDC_PREFERENCES_REPLACEEXPLORER_FILESYSTEM:
+				case IDC_PREFERENCES_REPLACEEXPLORER_ALL:
+				case IDC_PREFERENCES_XML:
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
-				case IDC_OPTION_SHELL_MODE:
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+				case IDC_PREFERENCES_SHELL_MODE:
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
 				case IDC_DEFAULT_NEWTABDIR_BUTTON:
 					OnDefaultSettingsNewTabDir(hDlg);
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 				}
 			}
@@ -341,11 +450,11 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 						else if(IsDlgButtonChecked(hDlg,IDC_STARTUP_DEFAULTFOLDER) == BST_CHECKED)
 							m_StartupMode = STARTUP_DEFAULTFOLDER;
 
-						if(IsDlgButtonChecked(hDlg,IDC_OPTION_REPLACEEXPLORER_NONE) == BST_CHECKED)
+						if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_REPLACEEXPLORER_NONE) == BST_CHECKED)
 							ReplaceExplorerMode = NDefaultFileManager::REPLACEEXPLORER_NONE;
-						else if(IsDlgButtonChecked(hDlg,IDC_OPTION_REPLACEEXPLORER_FILESYSTEM) == BST_CHECKED)
+						else if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_REPLACEEXPLORER_FILESYSTEM) == BST_CHECKED)
 							ReplaceExplorerMode = NDefaultFileManager::REPLACEEXPLORER_FILESYSTEM;
-						else if(IsDlgButtonChecked(hDlg,IDC_OPTION_REPLACEEXPLORER_ALL) == BST_CHECKED)
+						else if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_REPLACEEXPLORER_ALL) == BST_CHECKED)
 							ReplaceExplorerMode = NDefaultFileManager::REPLACEEXPLORER_ALL;
 
 						if(m_ReplaceExplorerMode != ReplaceExplorerMode)
@@ -404,19 +513,19 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 								switch(ReplaceExplorerMode)
 								{
 								case NDefaultFileManager::REPLACEEXPLORER_NONE:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 									break;
 
 								case NDefaultFileManager::REPLACEEXPLORER_FILESYSTEM:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_FILESYSTEM;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_FILESYSTEM;
 									break;
 
 								case NDefaultFileManager::REPLACEEXPLORER_ALL:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_ALL;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_ALL;
 									break;
 
 								default:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 									break;
 								}
 								CheckDlgButton(hDlg,nIDButton,BST_UNCHECKED);
@@ -426,29 +535,29 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 								switch(m_ReplaceExplorerMode)
 								{
 								case NDefaultFileManager::REPLACEEXPLORER_NONE:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 									break;
 
 								case NDefaultFileManager::REPLACEEXPLORER_FILESYSTEM:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_FILESYSTEM;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_FILESYSTEM;
 									break;
 
 								case NDefaultFileManager::REPLACEEXPLORER_ALL:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_ALL;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_ALL;
 									break;
 
 								default:
-									nIDButton = IDC_OPTION_REPLACEEXPLORER_NONE;
+									nIDButton = IDC_PREFERENCES_REPLACEEXPLORER_NONE;
 									break;
 								}
 								CheckDlgButton(hDlg,nIDButton,BST_CHECKED);
 							}
 						}
 
-						m_bSavePreferencesToXMLFile = (IsDlgButtonChecked(hDlg,IDC_OPTION_XML)
+						m_bSavePreferencesToXMLFile = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_XML)
 							== BST_CHECKED);
 
-						m_bShellMode = (IsDlgButtonChecked(hDlg,IDC_OPTION_SHELL_MODE)
+						m_bShellMode = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_SHELL_MODE)
 							== BST_CHECKED);
 
 						hEdit = GetDlgItem(hDlg,IDC_DEFAULT_NEWTABDIR_EDIT);
@@ -467,7 +576,7 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 							StringCchCopy(m_DefaultTabDirectory,SIZEOF_ARRAY(m_DefaultTabDirectory),
 							szNewTabDir);
 
-						iSel = (int)SendMessage(GetDlgItem(hDlg,IDC_OPTIONS_LANGUAGE),CB_GETCURSEL,0,0);
+						iSel = (int)SendMessage(GetDlgItem(hDlg,IDC_PREFERENCES_LANGUAGE),CB_GETCURSEL,0,0);
 
 						m_Language = GetLanguageIDFromIndex(hDlg,iSel);
 
@@ -516,9 +625,20 @@ INT_PTR CALLBACK SaltedExplorer::ThemesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 		case WM_INITDIALOG:
 			{
 				AddShellThemes(hDlg);
+
+				if(m_bVistaControls)
+					CheckDlgButton(hDlg,IDC_PREFERENCES_VISTACONTROLS,BST_CHECKED);
 			}
 			break;
 
+	case WM_COMMAND:
+		switch(LOWORD(wParam))
+		{
+		case IDC_PREFERENCES_VISTACONTROLS:
+			PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
+		break;
+		}
+		break;
 
 		case WM_NOTIFY:
 			{
@@ -530,7 +650,17 @@ INT_PTR CALLBACK SaltedExplorer::ThemesProc(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 				case PSN_APPLY:
 					{
 						int iSel;
-						iSel = (int)SendMessage(GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES),CB_GETCURSEL,0,0);
+
+						BOOL bVistaControls = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_VISTACONTROLS)
+							== BST_CHECKED);
+
+						if(m_bVistaControls != bVistaControls)
+						{
+							m_bVistaControls = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_VISTACONTROLS)
+								== BST_CHECKED);
+						}
+
+						iSel = (int)SendMessage(GetDlgItem(hDlg,IDC_PREFERENCES_SHELLTHEMES),CB_GETCURSEL,0,0);
 						m_ShellTheme = GetShellThemeIDFromIndex(hDlg,iSel);
 						SaveAllSettings();
 					}
@@ -586,14 +716,14 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 				if(m_bOneClickActivate)
 					CheckDlgButton(hDlg,IDC_SETTINGS_CHECK_SINGLECLICK,BST_CHECKED);
 				
-				SetDlgItemInt(hDlg,IDC_OPTIONS_HOVER_TIME,m_OneClickActivateHoverTime,FALSE);
-				EnableWindow(GetDlgItem(hDlg,IDC_OPTIONS_HOVER_TIME),m_bOneClickActivate);
+				SetDlgItemInt(hDlg,IDC_PREFERENCES_HOVER_TIME,m_OneClickActivateHoverTime,FALSE);
+				EnableWindow(GetDlgItem(hDlg,IDC_PREFERENCES_HOVER_TIME),m_bOneClickActivate);
 				EnableWindow(GetDlgItem(hDlg,IDC_LABEL_HOVER_TIME),m_bOneClickActivate);
 
 				if(m_bOverwriteExistingFilesConfirmation)
 					CheckDlgButton(hDlg,IDC_SETTINGS_CHECK_EXISTINGFILESCONFIRMATION,BST_CHECKED);
 				if(m_bPlayNavigationSound)
-					CheckDlgButton(hDlg,IDC_OPTIONS_PLAYNAVIGATIONSOUND,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_PLAYNAVIGATIONSOUND,BST_CHECKED);
 				if(m_bShowFolderSizes)
 					CheckDlgButton(hDlg,IDC_SETTINGS_CHECK_FOLDERSIZES,BST_CHECKED);
 				if(m_bDisableFolderSizesNetworkRemovable)
@@ -605,12 +735,12 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 				if(m_bShowFriendlyDatesGlobal)
 					CheckDlgButton(hDlg,IDC_SETTINGS_CHECK_FRIENDLYDATES,BST_CHECKED);
 				if(m_bShowInfoTips)
-					CheckDlgButton(hDlg,IDC_OPTIONS_CHECK_SHOWINFOTIPS,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_CHECK_SHOWINFOTIPS,BST_CHECKED);
 
 				if(m_InfoTipType == INFOTIP_SYSTEM)
-					CheckDlgButton(hDlg,IDC_OPTIONS_RADIO_SYSTEMINFOTIPS,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_RADIO_SYSTEMINFOTIPS,BST_CHECKED);
 				else
-					CheckDlgButton(hDlg,IDC_OPTIONS_RADIO_CUSTOMINFOTIPS,BST_CHECKED);
+					CheckDlgButton(hDlg,IDC_PREFERENCES_RADIO_CUSTOMINFOTIPS,BST_CHECKED);
 
 				hCBSize = GetDlgItem(hDlg,IDC_COMBO_FILESIZES);
 
@@ -636,7 +766,7 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 				switch(HIWORD(wParam))
 				{
 				case CBN_SELCHANGE:
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 				}
 			}
@@ -649,39 +779,39 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 				case IDC_SETTINGS_CHECK_LINK:
 				case IDC_SETTINGS_CHECK_INSERTSORTED:
 				case IDC_SETTINGS_CHECK_EXISTINGFILESCONFIRMATION:
-				case IDC_OPTIONS_PLAYNAVIGATIONSOUND:
+				case IDC_PREFERENCES_PLAYNAVIGATIONSOUND:
 				case IDC_SETTINGS_CHECK_FOLDERSIZESNETWORKREMOVABLE:
 				case IDC_SETTINGS_CHECK_ZIPFILES:
 				case IDC_SETTINGS_CHECK_FRIENDLYDATES:
-				case IDC_OPTIONS_HOVER_TIME:
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+				case IDC_PREFERENCES_HOVER_TIME:
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
 				case IDC_SETTINGS_CHECK_FORCESIZE:
 					EnableWindow(GetDlgItem(hDlg,IDC_COMBO_FILESIZES),IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED);
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
-				case IDC_OPTIONS_RADIO_SYSTEMINFOTIPS:
-				case IDC_OPTIONS_RADIO_CUSTOMINFOTIPS:
+				case IDC_PREFERENCES_RADIO_SYSTEMINFOTIPS:
+				case IDC_PREFERENCES_RADIO_CUSTOMINFOTIPS:
 					if(IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED)
-						PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+						PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
-				case IDC_OPTIONS_CHECK_SHOWINFOTIPS:
+				case IDC_PREFERENCES_CHECK_SHOWINFOTIPS:
 					SetInfoTipWindowStates(hDlg);
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
 				case IDC_SETTINGS_CHECK_FOLDERSIZES:
 					SetFolderSizeWindowState(hDlg);
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 
 				case IDC_SETTINGS_CHECK_SINGLECLICK:
-					EnableWindow(GetDlgItem(hDlg,IDC_OPTIONS_HOVER_TIME),IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED);
+					EnableWindow(GetDlgItem(hDlg,IDC_PREFERENCES_HOVER_TIME),IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED);
 					EnableWindow(GetDlgItem(hDlg,IDC_LABEL_HOVER_TIME),IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED);
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 				}
 			}
@@ -717,12 +847,12 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 						m_bOneClickActivate = (IsDlgButtonChecked(hDlg,IDC_SETTINGS_CHECK_SINGLECLICK)
 							== BST_CHECKED);
 
-						m_OneClickActivateHoverTime = GetDlgItemInt(hDlg,IDC_OPTIONS_HOVER_TIME,NULL,FALSE);
+						m_OneClickActivateHoverTime = GetDlgItemInt(hDlg,IDC_PREFERENCES_HOVER_TIME,NULL,FALSE);
 
 						m_bOverwriteExistingFilesConfirmation = (IsDlgButtonChecked(hDlg,IDC_SETTINGS_CHECK_EXISTINGFILESCONFIRMATION)
 							== BST_CHECKED);
 
-						m_bPlayNavigationSound = (IsDlgButtonChecked(hDlg,IDC_OPTIONS_PLAYNAVIGATIONSOUND)
+						m_bPlayNavigationSound = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_PLAYNAVIGATIONSOUND)
 							== BST_CHECKED);
 
 						m_bShowFolderSizes = (IsDlgButtonChecked(hDlg,IDC_SETTINGS_CHECK_FOLDERSIZES)
@@ -740,10 +870,10 @@ INT_PTR CALLBACK SaltedExplorer::FilesFoldersProc(HWND hDlg,UINT uMsg,WPARAM wPa
 						m_bShowFriendlyDatesGlobal = (IsDlgButtonChecked(hDlg,IDC_SETTINGS_CHECK_FRIENDLYDATES)
 							== BST_CHECKED);
 
-						m_bShowInfoTips = (IsDlgButtonChecked(hDlg,IDC_OPTIONS_CHECK_SHOWINFOTIPS)
+						m_bShowInfoTips = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_CHECK_SHOWINFOTIPS)
 							== BST_CHECKED);
 
-						if(IsDlgButtonChecked(hDlg,IDC_OPTIONS_RADIO_SYSTEMINFOTIPS) == BST_CHECKED)
+						if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_RADIO_SYSTEMINFOTIPS) == BST_CHECKED)
 							m_InfoTipType = INFOTIP_SYSTEM;
 						else
 							m_InfoTipType = INFOTIP_CUSTOM;
@@ -819,57 +949,59 @@ INT_PTR CALLBACK SaltedExplorer::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 	case WM_INITDIALOG:
 		{
 			if(m_bAllowMultipleInstances)
-				CheckDlgButton(hDlg,IDC_OPTION_MULTIPLEINSTANCES,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_MULTIPLEINSTANCES,BST_CHECKED);
 			if(m_bLargeToolbarIcons)
-				CheckDlgButton(hDlg,IDC_OPTION_LARGETOOLBARICONS,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_LARGETOOLBARICONS,BST_CHECKED);
+			if(m_bToolbarTitleButtons)
+				CheckDlgButton(hDlg,IDC_PREFERENCES_TOOLBARTITLEBUTTONS,BST_CHECKED);
 			if(m_bAlwaysShowTabBar)
-				CheckDlgButton(hDlg,IDC_OPTION_ALWAYSSHOWTABBAR,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_ALWAYSSHOWTABBAR,BST_CHECKED);
 			if(m_bShowTabBarAtBottom)
-				CheckDlgButton(hDlg,IDC_OPTION_SHOWTABBARATBOTTOM,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_SHOWTABBARATBOTTOM,BST_CHECKED);
 			if(m_bShowFilePreviews)
-				CheckDlgButton(hDlg,IDC_OPTION_FILEPREVIEWS,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_FILEPREVIEWS,BST_CHECKED);
 			if(m_bShowFullTitlePath)
 				CheckDlgButton(hDlg,IDC_SETTINGS_CHECK_TITLEPATH,BST_CHECKED);
 			if(m_bShowUserNameInTitleBar)
-				CheckDlgButton(hDlg,IDC_OPTION_USERNAMEINTITLEBAR,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_USERNAMEINTITLEBAR,BST_CHECKED);
 			if(m_bShowPrivilegeLevelInTitleBar)
-				CheckDlgButton(hDlg,IDC_OPTION_PRIVILEGELEVELINTITLEBAR,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_PRIVILEGELEVELINTITLEBAR,BST_CHECKED);
 			if(m_bSynchronizeTreeview)
-				CheckDlgButton(hDlg,IDC_OPTION_SYNCTREEVIEW,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_SYNCTREEVIEW,BST_CHECKED);
 			if(m_bTVAutoExpandSelected)
-				CheckDlgButton(hDlg,IDC_OPTION_TREEVIEWSELECTIONEXPAND,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_TREEVIEWSELECTIONEXPAND,BST_CHECKED);
 			if(!m_bTreeViewDelayEnabled)
-				CheckDlgButton(hDlg,IDC_OPTION_TREEVIEWDELAY,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_TREEVIEWDELAY,BST_CHECKED);
 			if(m_bExtendTabControl)
-				CheckDlgButton(hDlg,IDC_OPTION_EXTENDTABCONTROL,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_EXTENDTABCONTROL,BST_CHECKED);
 			if(m_bShowGridlinesGlobal)
-				CheckDlgButton(hDlg,IDC_OPTION_GRIDLINES,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_GRIDLINES,BST_CHECKED);
 			if(m_bCheckBoxSelection)
-				CheckDlgButton(hDlg,IDC_OPTION_CHECKBOXSELECTION,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_CHECKBOXSELECTION,BST_CHECKED);
 			if(m_bUseFullRowSelect)
-				CheckDlgButton(hDlg,IDC_OPTION_FULLROWSELECT,BST_CHECKED);
+				CheckDlgButton(hDlg,IDC_PREFERENCES_FULLROWSELECT,BST_CHECKED);
 		}
 		break;
 
 	case WM_COMMAND:
 		switch(LOWORD(wParam))
 		{
-		case IDC_OPTION_MULTIPLEINSTANCES:
-		case IDC_OPTION_LARGETOOLBARICONS:
-		case IDC_OPTION_ALWAYSSHOWTABBAR:
-		case IDC_OPTION_SHOWTABBARATBOTTOM:
-		case IDC_OPTION_FILEPREVIEWS:
+		case IDC_PREFERENCES_MULTIPLEINSTANCES:
+		case IDC_PREFERENCES_LARGETOOLBARICONS:
+		case IDC_PREFERENCES_ALWAYSSHOWTABBAR:
+		case IDC_PREFERENCES_SHOWTABBARATBOTTOM:
+		case IDC_PREFERENCES_FILEPREVIEWS:
 		case IDC_SETTINGS_CHECK_TITLEPATH:
-		case IDC_OPTION_USERNAMEINTITLEBAR:
-		case IDC_OPTION_PRIVILEGELEVELINTITLEBAR:
-		case IDC_OPTION_SYNCTREEVIEW:
-		case IDC_OPTION_TREEVIEWSELECTIONEXPAND:
-		case IDC_OPTION_TREEVIEWDELAY:
-		case IDC_OPTION_EXTENDTABCONTROL:
-		case IDC_OPTION_GRIDLINES:
-		case IDC_OPTION_CHECKBOXSELECTION:
-		case IDC_OPTION_FULLROWSELECT:
-			PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+		case IDC_PREFERENCES_USERNAMEINTITLEBAR:
+		case IDC_PREFERENCES_PRIVILEGELEVELINTITLEBAR:
+		case IDC_PREFERENCES_SYNCTREEVIEW:
+		case IDC_PREFERENCES_TREEVIEWSELECTIONEXPAND:
+		case IDC_PREFERENCES_TREEVIEWDELAY:
+		case IDC_PREFERENCES_EXTENDTABCONTROL:
+		case IDC_PREFERENCES_GRIDLINES:
+		case IDC_PREFERENCES_CHECKBOXSELECTION:
+		case IDC_PREFERENCES_FULLROWSELECT:
+			PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 			break;
 		}
 		break;
@@ -885,43 +1017,43 @@ INT_PTR CALLBACK SaltedExplorer::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 				{
 					BOOL bCheckBoxSelection;
 
-					m_bAllowMultipleInstances = (IsDlgButtonChecked(hDlg,IDC_OPTION_MULTIPLEINSTANCES)
+					m_bAllowMultipleInstances = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_MULTIPLEINSTANCES)
 						== BST_CHECKED);
 
-					m_bAlwaysShowTabBar = (IsDlgButtonChecked(hDlg,IDC_OPTION_ALWAYSSHOWTABBAR)
+					m_bAlwaysShowTabBar = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_ALWAYSSHOWTABBAR)
 						== BST_CHECKED);
 
-					m_bShowTabBarAtBottom = (IsDlgButtonChecked(hDlg,IDC_OPTION_SHOWTABBARATBOTTOM)
+					m_bShowTabBarAtBottom = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_SHOWTABBARATBOTTOM)
 						== BST_CHECKED);
 
-					m_bShowFilePreviews = (IsDlgButtonChecked(hDlg,IDC_OPTION_FILEPREVIEWS)
+					m_bShowFilePreviews = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_FILEPREVIEWS)
 						== BST_CHECKED);
 
 					m_bShowFullTitlePath = (IsDlgButtonChecked(hDlg,IDC_SETTINGS_CHECK_TITLEPATH)
 						== BST_CHECKED);
 
-					m_bShowUserNameInTitleBar = (IsDlgButtonChecked(hDlg,IDC_OPTION_USERNAMEINTITLEBAR)
+					m_bShowUserNameInTitleBar = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_USERNAMEINTITLEBAR)
 						== BST_CHECKED);
 
-					m_bShowPrivilegeLevelInTitleBar = (IsDlgButtonChecked(hDlg,IDC_OPTION_PRIVILEGELEVELINTITLEBAR)
+					m_bShowPrivilegeLevelInTitleBar = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_PRIVILEGELEVELINTITLEBAR)
 						== BST_CHECKED);
 
-					m_bSynchronizeTreeview = (IsDlgButtonChecked(hDlg,IDC_OPTION_SYNCTREEVIEW)
+					m_bSynchronizeTreeview = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_SYNCTREEVIEW)
 						== BST_CHECKED);
 
-					m_bTVAutoExpandSelected = (IsDlgButtonChecked(hDlg,IDC_OPTION_TREEVIEWSELECTIONEXPAND)
+					m_bTVAutoExpandSelected = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_TREEVIEWSELECTIONEXPAND)
 						== BST_CHECKED);
 
-					m_bTreeViewDelayEnabled = !(IsDlgButtonChecked(hDlg,IDC_OPTION_TREEVIEWDELAY)
+					m_bTreeViewDelayEnabled = !(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_TREEVIEWDELAY)
 						== BST_CHECKED);
 
-					m_bExtendTabControl = (IsDlgButtonChecked(hDlg,IDC_OPTION_EXTENDTABCONTROL)
+					m_bExtendTabControl = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_EXTENDTABCONTROL)
 						== BST_CHECKED);
 
-					m_bShowGridlinesGlobal = (IsDlgButtonChecked(hDlg,IDC_OPTION_GRIDLINES)
+					m_bShowGridlinesGlobal = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_GRIDLINES)
 						== BST_CHECKED);
 
-					bCheckBoxSelection = (IsDlgButtonChecked(hDlg,IDC_OPTION_CHECKBOXSELECTION)
+					bCheckBoxSelection = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_CHECKBOXSELECTION)
 						== BST_CHECKED);
 
 					if(m_bCheckBoxSelection != bCheckBoxSelection)
@@ -953,19 +1085,30 @@ INT_PTR CALLBACK SaltedExplorer::WindowProc(HWND hDlg,UINT uMsg,WPARAM wParam,LP
 								dwExtendedStyle);
 						}
 
-						m_bCheckBoxSelection = (IsDlgButtonChecked(hDlg,IDC_OPTION_CHECKBOXSELECTION)
+						m_bCheckBoxSelection = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_CHECKBOXSELECTION)
 							== BST_CHECKED);
 					}
 
-					m_bUseFullRowSelect = (IsDlgButtonChecked(hDlg,IDC_OPTION_FULLROWSELECT)
+					m_bUseFullRowSelect = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_FULLROWSELECT)
 						== BST_CHECKED);
 
-					BOOL bLargeToolbarIcons = (IsDlgButtonChecked(hDlg,IDC_OPTION_LARGETOOLBARICONS)
+					BOOL bLargeToolbarIcons = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_LARGETOOLBARICONS)
 						== BST_CHECKED);
 
 					if(m_bLargeToolbarIcons != bLargeToolbarIcons)
 					{
-						m_bLargeToolbarIcons = (IsDlgButtonChecked(hDlg,IDC_OPTION_LARGETOOLBARICONS)
+						m_bLargeToolbarIcons = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_LARGETOOLBARICONS)
+							== BST_CHECKED);
+
+						AdjustMainToolbarSize();
+					}
+
+					BOOL bToolbarTitleButtons = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_TOOLBARTITLEBUTTONS)
+						== BST_CHECKED);
+
+					if(m_bToolbarTitleButtons != bToolbarTitleButtons)
+					{
+						m_bToolbarTitleButtons = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_TOOLBARTITLEBUTTONS)
 							== BST_CHECKED);
 
 						AdjustMainToolbarSize();
@@ -1091,7 +1234,7 @@ INT_PTR CALLBACK SaltedExplorer::TabSettingsProc(HWND hDlg,UINT uMsg,WPARAM wPar
 			case IDC_SETTINGS_CHECK_ALWAYSNEWTAB:
 			case IDC_TABS_DOUBLECLICKCLOSE:
 			case IDC_TABS_CLOSEMAINWINDOW:
-				PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+				PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 				break;
 			}
 			break;
@@ -1230,14 +1373,14 @@ INT_PTR CALLBACK SaltedExplorer::DefaultSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 			case IDC_DEFAULT_LIST:
 			case IDC_DEFAULT_DETAILS:
 				if(IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED)
-					PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+					PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 				break;
 
 			case IDC_SHOWHIDDENGLOBAL:
 			case IDC_AUTOARRANGEGLOBAL:
 			case IDC_SORTASCENDINGGLOBAL:
 			case IDC_SHOWINGROUPSGLOBAL:
-				PropSheet_Changed(g_hOptionsPropertyDialog,hDlg);
+				PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 				break;
 
 			case IDC_BUTTON_DEFAULTCOLUMNS:
@@ -1403,7 +1546,7 @@ void SaltedExplorer::AddShellThemes(HWND hDlg)
 	HWND			hShellThemesComboBox;
 	int				iSel = 0;
 
-	hShellThemesComboBox = GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES);
+	hShellThemesComboBox = GetDlgItem(hDlg,IDC_PREFERENCES_SHELLTHEMES);
 	SendMessage(hShellThemesComboBox,CB_ADDSTRING,0,(LPARAM)_T("2000"));
 	SendMessage(hShellThemesComboBox,CB_SETITEMDATA,0,9);
 	SendMessage(hShellThemesComboBox,CB_SETCURSEL,iSel,0);
@@ -1420,7 +1563,7 @@ void SaltedExplorer::AddLanguages(HWND hDlg)
 	int				iIndex = 1;
 	int				iSel = 0;
 
-	hLanguageComboBox = GetDlgItem(hDlg,IDC_OPTIONS_LANGUAGE);
+	hLanguageComboBox = GetDlgItem(hDlg,IDC_PREFERENCES_LANGUAGE);
 
 
 	/* English will always be added to the combox, and will
@@ -1428,7 +1571,7 @@ void SaltedExplorer::AddLanguages(HWND hDlg)
 	SendMessage(hLanguageComboBox,CB_ADDSTRING,0,(LPARAM)_T("English"));
 	SendMessage(hLanguageComboBox,CB_SETITEMDATA,0,9);
 
-	GetCurrentProcessImageName(szImageDirectory,SIZEOF_ARRAY(szImageDirectory));
+	GetProcessImageName(GetCurrentProcessId(),szImageDirectory,SIZEOF_ARRAY(szImageDirectory));
 	PathRemoveFileSpec(szImageDirectory);
 	StringCchCopy(szNamePattern,SIZEOF_ARRAY(szNamePattern),szImageDirectory);
 	PathAppend(szNamePattern,_T("SaltedExplorer??.dll"));
@@ -1528,7 +1671,7 @@ int SaltedExplorer::GetShellThemeIDFromIndex(HWND hDlg,int iIndex)
 	HWND	hComboBox;
 	int		iShellTheme;
 
-	hComboBox = GetDlgItem(hDlg,IDC_OPTIONS_SHELLTHEMES);
+	hComboBox = GetDlgItem(hDlg,IDC_PREFERENCES_SHELLTHEMES);
 
 	iShellTheme = (int)SendMessage(hComboBox,CB_GETITEMDATA,iIndex,0);
 
@@ -1540,7 +1683,7 @@ int SaltedExplorer::GetLanguageIDFromIndex(HWND hDlg,int iIndex)
 	HWND	hComboBox;
 	int		iLanguage;
 
-	hComboBox = GetDlgItem(hDlg,IDC_OPTIONS_LANGUAGE);
+	hComboBox = GetDlgItem(hDlg,IDC_PREFERENCES_LANGUAGE);
 
 	iLanguage = (int)SendMessage(hComboBox,CB_GETITEMDATA,iIndex,0);
 
@@ -1553,10 +1696,10 @@ void SaltedExplorer::SetInfoTipWindowStates(HWND hDlg)
 	HWND	hCheckCustomInfoTips;
 	BOOL	bEnable;
 
-	hCheckSystemInfoTips = GetDlgItem(hDlg,IDC_OPTIONS_RADIO_SYSTEMINFOTIPS);
-	hCheckCustomInfoTips = GetDlgItem(hDlg,IDC_OPTIONS_RADIO_CUSTOMINFOTIPS);
+	hCheckSystemInfoTips = GetDlgItem(hDlg,IDC_PREFERENCES_RADIO_SYSTEMINFOTIPS);
+	hCheckCustomInfoTips = GetDlgItem(hDlg,IDC_PREFERENCES_RADIO_CUSTOMINFOTIPS);
 
-	bEnable = (IsDlgButtonChecked(hDlg,IDC_OPTIONS_CHECK_SHOWINFOTIPS)
+	bEnable = (IsDlgButtonChecked(hDlg,IDC_PREFERENCES_CHECK_SHOWINFOTIPS)
 		== BST_CHECKED);
 
 	EnableWindow(hCheckSystemInfoTips,bEnable);

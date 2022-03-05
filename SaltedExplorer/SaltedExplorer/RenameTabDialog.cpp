@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: RenameTabDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Rename Tab' dialog.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

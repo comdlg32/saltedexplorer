@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: MergeFiles.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides support for merging files.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

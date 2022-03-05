@@ -11,11 +11,11 @@
 #include "../MyTreeView/MyTreeView.h"
 #include "../Helper/iDataObject.h"
 #include "../Helper/FileOperations.h"
-#include "../Helper/Bookmark.h"
 #include "../Helper/CustomMenu.h"
 #include "../DisplayWindow/DisplayWindow.h"
 #include "../HolderWindow/HolderWindow.h"
 #include "MainResource.h"
+
 
 /* Used to share global data across the
 classes within the SaltedExplorer project. */
@@ -29,8 +29,6 @@ namespace NSaltedExplorer
 	/* The name of the XML file that preferences are
 	saved to/loaded from. */
 	const TCHAR XML_FILENAME[]		= _T("config.xml");
-
-	const TCHAR LOG_FILENAME[]		= _T("SaltedExplorer.log");
 
 	/* Command line arguments supplied to the program
 	for each jump list task. */
@@ -90,7 +88,9 @@ SelectAndEdit() method of INewClient. */
 
 /* Display window defaults. */
 #define MINIMUM_DISPLAYWINDOW_HEIGHT	70
+#define MINIMUM_DISPLAYWINDOW_WIDTH		70
 #define DEFAULT_DISPLAYWINDOW_HEIGHT	90
+#define	DEFAULT_DISPLAYWINDOW_WIDTH		300
 
 #define DEFAULT_DISPLAYWINDOW_CENTRE_COLOR		Gdiplus::Color(255,255,255)
 #define DEFAULT_DISPLAYWINDOW_SURROUND_COLOR	Gdiplus::Color(255,255,255)
@@ -101,15 +101,15 @@ SelectAndEdit() method of INewClient. */
 
 /* The number of toolbars that appear in the
 main rebar. */
-#define NUM_MAIN_TOOLBARS	5
+#define NUM_MAIN_TOOLBARS	6
 
-/* Main toolbar id's. */
-#define	ID_MAINTOOLBAR			0
-#define	ID_ADDRESSTOOLBAR		1
-#define	ID_BOOKMARKSTOOLBAR		2
-#define	ID_DRIVESTOOLBAR		3
-#define	ID_APPLICATIONSTOOLBAR	4
-#define ID_MENUBAR				5
+/* Toolbar id's. */
+#define ID_MENUBAR				0
+#define	ID_MAINTOOLBAR			1
+#define	ID_ADDRESSTOOLBAR		2
+#define	ID_FAVORITESTOOLBAR		3
+#define	ID_DRIVESTOOLBAR		4
+#define	ID_APPLICATIONSTOOLBAR	5
 
 /* Rebar menu id's. */
 #define ID_REBAR_MENU_BACK_START	2000
@@ -162,7 +162,7 @@ appears on the tab control. */
 #define TAB_TOOLBAR_WIDTH			20
 #define TAB_TOOLBAR_HEIGHT			20
 
-#define DEFAULT_COLUMN_WIDTH	150
+#define DEFAULT_COLUMN_WIDTH		150
 
 /* These definitions are needed to target
 Windows 7 specific features, while remaining
@@ -204,11 +204,24 @@ typedef HRESULT (STDAPICALLTYPE *DwmInvalidateIconicBitmapsProc)(HWND hwnd);
 #define TOOLBAR_SEARCH				(TOOLBAR_ID_START + 14)
 #define TOOLBAR_PROPERTIES			(TOOLBAR_ID_START + 15)
 #define TOOLBAR_REFRESH				(TOOLBAR_ID_START + 17)
-#define TOOLBAR_ADDBOOKMARK			(TOOLBAR_ID_START + 18)
+#define TOOLBAR_ADDFAVORITE			(TOOLBAR_ID_START + 18)
 #define TOOLBAR_NEWTAB				(TOOLBAR_ID_START + 19)
 #define TOOLBAR_SHOWCOMMANDPROMPT	(TOOLBAR_ID_START + 20)
-#define TOOLBAR_ORGANIZEBOOKMARKS	(TOOLBAR_ID_START + 21)
+#define TOOLBAR_ORGANIZEFAVORITES	(TOOLBAR_ID_START + 21)
 #define TOOLBAR_DELETEPERMANENTLY	(TOOLBAR_ID_START + 22)
+
+/* Menu Bar lmao */
+#define MENUBAR_START			    51000
+#define MENUBAR_FILE				(MENUBAR_START + 1)
+#define MENUBAR_EDIT				(MENUBAR_START + 2)
+#define MENUBAR_SELC				(MENUBAR_START + 3)
+#define MENUBAR_VIEW				(MENUBAR_START + 4)
+#define MENUBAR_ACTI				(MENUBAR_START + 5)
+#define MENUBAR_GO					(MENUBAR_START + 6)
+#define MENUBAR_FAVO				(MENUBAR_START + 7)
+#define MENUBAR_TOOLS				(MENUBAR_START + 8)
+#define MENUBAR_HELP				(MENUBAR_START + 9)
+#define MENUBAR_END					(MENUBAR_START + 10)
 
 /* This represents the TOTAL set off buttons that may be
 placed on the toolbar. */
@@ -217,13 +230,14 @@ const int ToolbarButtonSet[] =
 TOOLBAR_COPYTO,TOOLBAR_MOVETO,TOOLBAR_NEWFOLDER,TOOLBAR_COPY,
 TOOLBAR_CUT,TOOLBAR_PASTE,TOOLBAR_DELETE,TOOLBAR_VIEWS,
 TOOLBAR_SEARCH,TOOLBAR_PROPERTIES,TOOLBAR_REFRESH,
-TOOLBAR_ADDBOOKMARK,TOOLBAR_NEWTAB,TOOLBAR_SHOWCOMMANDPROMPT,
-TOOLBAR_ORGANIZEBOOKMARKS,TOOLBAR_DELETEPERMANENTLY};
+TOOLBAR_ADDFAVORITE,TOOLBAR_NEWTAB,TOOLBAR_SHOWCOMMANDPROMPT,
+TOOLBAR_ORGANIZEFAVORITES,TOOLBAR_DELETEPERMANENTLY};
 
-#define TOOLBAR_BOOKMARK_START			46000
+#define TOOLBAR_FAVORITE_START			46000
 #define TOOLBAR_DRIVES_ID_START			47000
 #define TOOLBAR_ADDRESSBAR_GO			48000
 #define TOOLBAR_APPLICATIONS_ID_START	49000
+#define TOOLBAR_MENUBAR_ID_START		50000
 
 /* These define the order of the images
 within the shell bitmap resource. The
@@ -300,11 +314,11 @@ struct ColorRule_t
 	COLORREF		rgbColour;
 };
 
-/* Used with the bookmark propeties dialog. */
-struct BookmarkPropertiesInfo_t
+/* Used with the Favorite propeties dialog. */
+struct FavoritePropertiesInfo_t
 {
 	void	*pContainer;
-	void	*pBookmarkHandle;
+	void	*pFavoriteHandle;
 };
 
 /* This structure is stored with
@@ -313,16 +327,6 @@ struct ListViewInfo_t
 {
 	void	*pContainer;
 	int		iObjectIndex;
-};
-
-/* This information is used by
-the 'Add Bookmark' dialog. */
-struct AddBookmarkInfo_t
-{
-	void			*pContainer;
-	void			*pParentBookmark;
-	LPITEMIDLIST	pidlDirectory;
-	BOOL			bExpandInitial;
 };
 
 struct ApplicationButton_t
@@ -588,7 +592,8 @@ extern BOOL g_bForceLanguageLoad;
 extern TCHAR g_szLang[32];
 
 extern HWND g_hwndSearch;
-extern HWND g_hwndOptions;
+extern HWND g_hwndPreferences;
+extern HWND g_hwndManageFavorites;
 
 /* Save/load interface. This allows multiple
 methods of saving/loading data, as long as it
@@ -599,7 +604,7 @@ public:
 
 	/* Loading functions. */
 	virtual void	LoadGenericSettings(void);
-	virtual void	LoadBookmarks();
+	virtual void	LoadFavorites();
 	virtual int		LoadPreviousTabs(void);
 	virtual void	LoadDefaultColumns(void);
 	virtual void	LoadApplicationToolbar(void);
@@ -609,7 +614,7 @@ public:
 
 	/* Saving functions. */
 	virtual void	SaveGenericSettings(void);
-	virtual void	SaveBookmarks();
+	virtual void	SaveFavorites();
 	virtual void	SaveTabs(void);
 	virtual void	SaveDefaultColumns(void);
 	virtual void	SaveApplicationToolbar(void);
@@ -626,7 +631,7 @@ BOOL LoadAllowMultipleInstancesFromXML(void);
 
 LRESULT CALLBACK TreeViewHolderProcStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK RebarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
-LRESULT CALLBACK BookmarksToolbarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
+LRESULT CALLBACK FavoritesToolbarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK DrivesToolbarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK EditSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK TabBackingProcStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
@@ -637,11 +642,6 @@ INT_PTR CALLBACK DWChangeDetailsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARA
 INT_PTR CALLBACK DWLinePropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 /* Dialog handler stubs. */
-INT_PTR CALLBACK	BookmarkTabDlgProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-INT_PTR CALLBACK	NewBookmarkFolderProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-INT_PTR CALLBACK	OrganizeBookmarksStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-INT_PTR CALLBACK	BookmarkPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
-INT_PTR CALLBACK	BookmarkFolderPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK	ChangeDisplayColoursStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 
 /* Window message handler stubs. */

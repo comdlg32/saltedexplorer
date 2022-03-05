@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: DisplayColoursDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the 'Change Display Colors' dialog and associated messages.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

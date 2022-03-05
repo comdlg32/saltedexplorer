@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: TabDropHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Manages drag and drop for the tabs.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -2,7 +2,6 @@
  *
  * Project: Helper
  * File: ContextMenuManager.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * This class is designed to show an existing menu, with
  * has been modified to also show menu items inserted
@@ -11,7 +10,7 @@
  * References:
  * http://windowsxp.mvps.org/context_folders.htm
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

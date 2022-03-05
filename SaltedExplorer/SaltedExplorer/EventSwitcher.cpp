@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: EvenSwitcher.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Switches events based on the currently selected window
  * (principally the listview and treeview).
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

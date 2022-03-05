@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: TreeViewHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles messages asscoiated with the main
  * treeview control.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

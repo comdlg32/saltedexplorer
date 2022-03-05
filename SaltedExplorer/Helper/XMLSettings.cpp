@@ -2,12 +2,11 @@
  *
  * Project: Helper
  * File: XMLSettings.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * XML helper functions. Intended to be used when
  * reading from/writing to an XML file.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

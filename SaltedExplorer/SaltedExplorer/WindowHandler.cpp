@@ -20,7 +20,7 @@ DWORD GoToolbarStyles		=	WS_CHILD |WS_VISIBLE |WS_CLIPSIBLINGS |WS_CLIPCHILDREN 
 								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
 								TBSTYLE_FLAT | CCS_NODIVIDER| CCS_NORESIZE;
 
-DWORD BookmarkToolbarStyles	=	WS_CHILD |WS_VISIBLE |WS_CLIPSIBLINGS |WS_CLIPCHILDREN |
+DWORD FavoriteToolbarStyles	=	WS_CHILD |WS_VISIBLE |WS_CLIPSIBLINGS |WS_CLIPCHILDREN |
 								TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_TRANSPARENT |
 								TBSTYLE_FLAT | CCS_NODIVIDER| CCS_NORESIZE;
 
@@ -39,8 +39,6 @@ DWORD RebarStyles			=	WS_CHILD|WS_VISIBLE|WS_CLIPCHILDREN|WS_CLIPSIBLINGS|
 								WS_BORDER|CCS_NODIVIDER|CCS_TOP|CCS_NOPARENTALIGN|
 								RBS_BANDBORDERS|RBS_VARHEIGHT;
 
-
-
 void SaltedExplorer::CreateFolderControls(void)
 {
 	TCHAR szTemp[32];
@@ -54,7 +52,10 @@ void SaltedExplorer::CreateFolderControls(void)
 
 	m_hTreeView = CreateTreeView(m_hHolder,TreeViewStyles);
 
-	/* SetWindowTheme(m_hTreeView,L"Explorer",NULL); */
+	if(m_bVistaControls)
+	{
+		SetWindowTheme(m_hTreeView,L"Explorer",NULL);
+	}
 
 	SetWindowLongPtr(m_hTreeView,GWL_EXSTYLE,WS_EX_CLIENTEDGE);
 	m_pMyTreeView = new CMyTreeView(m_hTreeView,m_hContainer,m_pDirMon,m_hTreeViewIconThread);
@@ -129,19 +130,19 @@ void SaltedExplorer::CreateMainControls(void)
 			m_ToolbarInformation[i].hwndChild = m_hAddressToolbar;
 			break;
 
-		case ID_BOOKMARKSTOOLBAR:
-			CreateBookmarksToolbar();
-			ToolbarSize = (DWORD)SendMessage(m_hBookmarksToolbar,TB_GETBUTTONSIZE,0,0);
+		case ID_FAVORITESTOOLBAR:
+			CreateFAVORITESToolbar();
+			ToolbarSize = (DWORD)SendMessage(m_hFavoritesToolbar,TB_GETBUTTONSIZE,0,0);
 			m_ToolbarInformation[i].cyMinChild = HIWORD(ToolbarSize);
 			m_ToolbarInformation[i].cyMaxChild = HIWORD(ToolbarSize);
 			m_ToolbarInformation[i].cyChild = HIWORD(ToolbarSize);
-			SendMessage(m_hBookmarksToolbar,TB_GETMAXSIZE,0,(LPARAM)&sz);
+			SendMessage(m_hFavoritesToolbar,TB_GETMAXSIZE,0,(LPARAM)&sz);
 
 			if(m_ToolbarInformation[i].cx == 0)
 				m_ToolbarInformation[i].cx = sz.cx;
 
 			m_ToolbarInformation[i].cxIdeal = sz.cx;
-			m_ToolbarInformation[i].hwndChild = m_hBookmarksToolbar;
+			m_ToolbarInformation[i].hwndChild = m_hFavoritesToolbar;
 			break;
 
 		case ID_DRIVESTOOLBAR:
@@ -182,32 +183,44 @@ void SaltedExplorer::CreateMainControls(void)
 
 void SaltedExplorer::CreateMenuBar(void)
 {
-	TBBUTTON tbButton[1];
+	const int numButtons     = 9;
+
+	const DWORD buttonStyles = BTNS_DROPDOWN | BTNS_SHOWTEXT | BTNS_AUTOSIZE;
 
 	m_hMenuBar = CreateToolbar(m_hMainRebar,MenuBarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_DROPDOWN|
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 
-	tbButton[0].iBitmap		= I_IMAGENONE;
-	tbButton[0].idCommand	= 0;
-	tbButton[0].fsState		= TBSTATE_ENABLED;
-	tbButton[0].fsStyle		= TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE;
-	tbButton[0].dwData		= 0;
-	tbButton[0].iString		= (INT_PTR)L"Test";
+    LONG_PTR iMenuItems = SendMessage(m_hMenuBar, TB_ADDSTRING, 
+                           (WPARAM)GetModuleHandle(NULL), (LPARAM)IDR_SUBMENU_START);
+	
+	TBBUTTON tbButtons[numButtons] = 
+    {
+        { I_IMAGENONE, MENUBAR_FILE, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems },
+        { I_IMAGENONE, MENUBAR_EDIT, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 1 },
+        { I_IMAGENONE, MENUBAR_SELC, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 2 },
+		{ I_IMAGENONE, MENUBAR_VIEW, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 3 },
+		{ I_IMAGENONE, MENUBAR_ACTI, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 4 },
+		{ I_IMAGENONE, MENUBAR_GO, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 5 },
+		{ I_IMAGENONE, MENUBAR_FAVO, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 6 },
+		{ I_IMAGENONE, MENUBAR_TOOLS, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 7 },
+		{ I_IMAGENONE, MENUBAR_HELP, TBSTATE_ENABLED, buttonStyles, {0}, 0, iMenuItems + 8 }
+    };
 
-	SendMessage(m_hMenuBar, TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0);
-    SendMessage(m_hMenuBar,TB_ADDBUTTONS,(WPARAM)1,(LPARAM)&tbButton);
+	SendMessage(m_hMenuBar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
+	SendMessage(m_hMenuBar,TB_ADDBUTTONS,(WPARAM)numButtons,(LPARAM)&tbButtons);
 
-	SendMessage(m_hMenuBar, TB_AUTOSIZE, 0, 0); 
 }
 void SaltedExplorer::CreateMainToolbar(void)
 {
+
 	m_hMainToolbar = CreateToolbar(m_hMainRebar,MainToolbarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_EX_DRAWDDARROWS|
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 
 	HIMAGELIST *phiml = NULL;
-	HIMAGELIST *phiml2 = NULL;
+	HIMAGELIST *phiml1 = NULL;
+	/* HIMAGELIST *phiml2 = NULL; */
 	int cx;
 	int cy;
 
@@ -216,22 +229,25 @@ void SaltedExplorer::CreateMainToolbar(void)
 		cx = TOOLBAR_IMAGE_SIZE_LARGE_X;
 		cy = TOOLBAR_IMAGE_SIZE_LARGE_Y;
 		phiml = &m_himlToolbarLarge;
-		phiml2 = &m_himlToolbarLargeInact;
+		phiml1 = &m_himlToolbarLargeInact;
+		/* phiml2 = &m_himlToolbarLargeDisabled; */
 	}
 	else
 	{
 		cx = TOOLBAR_IMAGE_SIZE_SMALL_X;
 		cy = TOOLBAR_IMAGE_SIZE_SMALL_Y;
 		phiml = &m_himlToolbarSmall;
-		phiml2 = &m_himlToolbarSmallInact;
+		phiml1 = &m_himlToolbarSmallInact;
+		/* phiml2 = &m_himlToolbarSmallDisabled; */
 	}
 
 	SendMessage(m_hMainToolbar,TB_SETBITMAPSIZE,0,MAKELONG(cx,cy));	
 	SendMessage(m_hMainToolbar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
 
 	/* Add the custom buttons to the toolbars image list. */
-	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml2);
 	SendMessage(m_hMainToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)*phiml);
+	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml1);
+	/* SendMessage(m_hMainToolbar,TB_SETDISABLEDIMAGELIST,0,(LPARAM)*phiml2); */
 
 	AddStringsToMainToolbar();
 	InsertToolbarButtons();
@@ -254,7 +270,7 @@ void SaltedExplorer::CreateMainToolbar(void)
 void SaltedExplorer::CreateAddressToolbar(void)
 {
 	HIMAGELIST	himl;
-	HIMAGELIST	himl2;
+	HIMAGELIST	himl1;
 	HBITMAP		hb;
 	TBBUTTON	tbButton[2];
 	TCHAR		szGoText[32];
@@ -271,12 +287,12 @@ void SaltedExplorer::CreateAddressToolbar(void)
 	ImageList_Add(himl,hb,NULL);
 	DeleteObject(hb);
 
-	himl2 = ImageList_Create(18,16,ILC_COLOR32|ILC_MASK,0,1);
+	himl1 = ImageList_Create(18,16,ILC_COLOR32|ILC_MASK,0,1);
 	hb = LoadBitmap(GetModuleHandle(0),MAKEINTRESOURCE(IDB_SHELL_GO_2000_INA));
-	ImageList_Add(himl2,hb,NULL);
+	ImageList_Add(himl1,hb,NULL);
 
 	/* Add the custom buttons to the toolbars image list. */
-	SendMessage(m_hAddressToolbar,TB_SETIMAGELIST,0,(LPARAM)himl2);
+	SendMessage(m_hAddressToolbar,TB_SETIMAGELIST,0,(LPARAM)himl1);
 	SendMessage(m_hAddressToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)himl);
 
 	tbButton[iCurrent].iBitmap		= 0;
@@ -321,27 +337,23 @@ void SaltedExplorer::CreateAddressBar(void)
 	SHAutoComplete(hEdit,SHACF_FILESYSTEM|SHACF_AUTOSUGGEST_FORCE_ON);
 }
 
-void SaltedExplorer::CreateBookmarksToolbar(void)
+void SaltedExplorer::CreateFAVORITESToolbar(void)
 {
-	m_hBookmarksToolbar = CreateToolbar(m_hMainRebar,BookmarkToolbarStyles,
+	m_hFavoritesToolbar = CreateToolbar(m_hMainRebar,FavoriteToolbarStyles,
 		TBSTYLE_EX_MIXEDBUTTONS|TBSTYLE_EX_DRAWDDARROWS|
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 
-	SetWindowSubclass(m_hBookmarksToolbar,BookmarksToolbarSubclassStub,0,(DWORD_PTR)this);
+	SetWindowSubclass(m_hFavoritesToolbar,FavoritesToolbarSubclassStub,0,(DWORD_PTR)this);
 
-	SendMessage(m_hBookmarksToolbar,TB_SETBITMAPSIZE,0,MAKELONG(16,16));
-	SendMessage(m_hBookmarksToolbar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
+	SendMessage(m_hFavoritesToolbar,TB_SETBITMAPSIZE,0,MAKELONG(16,16));
+	SendMessage(m_hFavoritesToolbar,TB_BUTTONSTRUCTSIZE,(WPARAM)sizeof(TBBUTTON),0);
 
-	CBookmarkToolbarDrop *pbtd = NULL;
-
-	pbtd = new CBookmarkToolbarDrop(this);
-
-	RegisterDragDrop(m_hBookmarksToolbar,pbtd);
+	/* TODO: [FAVORITESs] Register toolbar for drag and drop. */
 }
 
 void SaltedExplorer::CreateDrivesToolbar(void)
 {
-	m_hDrivesToolbar = CreateToolbar(m_hMainRebar,BookmarkToolbarStyles,
+	m_hDrivesToolbar = CreateToolbar(m_hMainRebar,FavoriteToolbarStyles,
 		TBSTYLE_EX_DOUBLEBUFFER|TBSTYLE_EX_HIDECLIPPEDBUTTONS);
 
 	SetWindowSubclass(m_hDrivesToolbar,DrivesToolbarSubclassStub,0,(DWORD_PTR)this);
@@ -464,20 +476,9 @@ LRESULT CALLBACK SaltedExplorer::RebarSubclass(HWND hwnd,UINT msg,WPARAM wParam,
 						pnmm = (LPNMMOUSE)lParam;
 						pnmh = &pnmm->hdr;
 
-						if(pnmh->hwndFrom == m_hBookmarksToolbar)
+						if(pnmh->hwndFrom == m_hFavoritesToolbar)
 						{
-							if(pnmm->dwItemSpec != -1)
-							{
-								int iItem;
-
-								iItem = (int)SendMessage(m_hBookmarksToolbar,TB_COMMANDTOINDEX,pnmm->dwItemSpec,0);
-
-								OnBookmarksToolbarRClick(iItem);
-							}
-							else
-							{
-								OnMainToolbarRClick();
-							}
+							/* TODO: [Favorites] Show favorites menu. */
 						}
 						else if(pnmh->hwndFrom == m_hDrivesToolbar)
 						{
@@ -598,6 +599,7 @@ void SaltedExplorer::SetListViewInitialPosition(HWND hListView)
 	int				MainWindowHeight;
 	int				IndentBottom = 0;
 	int				IndentTop = 0;
+	int				IndentRight = 0;
 	int				IndentLeft = 0;
 	int				iIndentRebar = 0;
 
@@ -620,7 +622,14 @@ void SaltedExplorer::SetListViewInitialPosition(HWND hListView)
 
 	if(m_bShowDisplayWindow)
 	{
-		IndentBottom += m_DisplayWindowHeight;
+		if (m_DisplayWindowVertical)
+		{
+			IndentRight += m_DisplayWindowWidth;
+		}
+		else
+		{
+			IndentBottom += m_DisplayWindowHeight;
+		}
 	}
 
 	if(m_bShowFolders)
@@ -909,30 +918,15 @@ void SaltedExplorer::OnTBGetInfoTip(LPARAM lParam)
 			}
 		}
 	}
-	else if(ptbgit->iItem >= TOOLBAR_BOOKMARK_START)
+	else if(ptbgit->iItem >= TOOLBAR_FAVORITE_START)
 	{
-		Bookmark_t	Bookmark;
-		TBBUTTON	tbButton;
 		int			iIndex;
 
-		iIndex = (int)SendMessage(m_hBookmarksToolbar,TB_COMMANDTOINDEX,ptbgit->iItem,0);
+		iIndex = (int)SendMessage(m_hFavoritesToolbar,TB_COMMANDTOINDEX,ptbgit->iItem,0);
 
 		if(iIndex != -1)
 		{
-			SendMessage(m_hBookmarksToolbar,TB_GETBUTTON,iIndex,(LPARAM)&tbButton);
-
-			m_Bookmark.RetrieveBookmark((void *)tbButton.dwData,&Bookmark);
-
-			/* If this item is a bookmark, show its name
-			and location. If it's a folder, don't show
-			anything. */
-			if(Bookmark.Type == BOOKMARK_TYPE_BOOKMARK)
-			{
-				StringCchPrintf(szInfoTip,SIZEOF_ARRAY(szInfoTip),_T("%s\n%s"),
-					Bookmark.szItemName,Bookmark.szLocation);
-
-				StringCchCopy(ptbgit->pszText,ptbgit->cchTextMax,szInfoTip);
-			}
+			/* TODO: [Favorites] Show info tip. */
 		}
 	}
 }
@@ -1049,7 +1043,8 @@ void SaltedExplorer::OnAddressBarBeginDrag(void)
 void SaltedExplorer::AdjustMainToolbarSize(void)
 {
 	HIMAGELIST *phiml = NULL;
-	HIMAGELIST *phiml2 = NULL;
+	HIMAGELIST *phiml1 = NULL;
+	/* HIMAGELIST *phiml2 = NULL; */
 	int cx;
 	int cy;
 
@@ -1058,19 +1053,22 @@ void SaltedExplorer::AdjustMainToolbarSize(void)
 		cx = TOOLBAR_IMAGE_SIZE_LARGE_X;
 		cy = TOOLBAR_IMAGE_SIZE_LARGE_Y;
 		phiml = &m_himlToolbarLarge;
-		phiml2 = &m_himlToolbarLargeInact;
+		phiml1 = &m_himlToolbarLargeInact;
+		/* phiml2 = &m_himlToolbarLargeDisabled; */
 	}
 	else
 	{
 		cx = TOOLBAR_IMAGE_SIZE_SMALL_X;
 		cy = TOOLBAR_IMAGE_SIZE_SMALL_Y;
 		phiml = &m_himlToolbarSmall;
-		phiml2 = &m_himlToolbarSmallInact;
+		phiml1 = &m_himlToolbarSmallInact;
+		/* phiml2 = &m_himlToolbarSmallDisabled; */
 	}
 
 	/* Switch the image list. */
-	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml2);
 	SendMessage(m_hMainToolbar,TB_SETHOTIMAGELIST,0,(LPARAM)*phiml);
+	SendMessage(m_hMainToolbar,TB_SETIMAGELIST,0,(LPARAM)*phiml1);
+	/* SendMessage(m_hMainToolbar,TB_SETDISABLEDIMAGELIST,0,(LPARAM)*phiml2); */
 	SendMessage(m_hMainToolbar,TB_SETBUTTONSIZE,0,MAKELPARAM(cx,cy));
 	SendMessage(m_hMainToolbar,TB_AUTOSIZE,0,0);
 

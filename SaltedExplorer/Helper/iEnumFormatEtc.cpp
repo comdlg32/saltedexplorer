@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: iEnumFormatEtc.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides an implementation of iEnumFormatEtc.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

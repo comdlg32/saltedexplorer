@@ -2,12 +2,11 @@
  *
  * Project: ShellBrowser
  * File: SortManager.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the sorting of items
  * within the listview.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

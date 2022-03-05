@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: ReferenceCount.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Basic reference counting class.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

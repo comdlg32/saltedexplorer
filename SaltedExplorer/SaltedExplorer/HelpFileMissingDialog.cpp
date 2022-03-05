@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: HelpFileMissingDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Manages the dialog shown when the help file is not found.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

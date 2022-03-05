@@ -2,13 +2,12 @@
  *
  * Project: Helper
  * File: DialogSettings.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Saves/loads settings for a dialog. Window position
  * is saved automatically (if required); all other
  * settings must be explicitly specified.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

@@ -43,6 +43,7 @@ void			SetFORMATETC(FORMATETC *pftc,CLIPFORMAT cfFormat,DVTARGETDEVICE *ptd,DWOR
 HRESULT			AddJumpListTasks(std::list<JumpListTaskInformation> TaskList);
 BOOL			LoadContextMenuHandlers(IN const TCHAR *szRegKey,OUT std::list<ContextMenuHandler_t> *pContextMenuHandlers);
 BOOL			LoadIUnknownFromCLSID(IN TCHAR *szCLSID,OUT ContextMenuHandler_t *pContextMenuHandler);
+BOOL			LoadShellExtensionHandlers(bool bCopy, LPCITEMIDLIST pidlDirectory, IDataObject *pDataObject);
 BOOL			CopyTextToClipboard(const std::wstring &str);
 
 #endif

@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: WildcardSelectDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Allows items to be selected/deselected based
  * on a wildcard filter.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

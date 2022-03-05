@@ -2,13 +2,12 @@
  *
  * Project: ShellBrowser
  * File: HandleThumbnails.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles thumbnails view, including
  * preparing the listview and drawing
  * image thumbnails.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

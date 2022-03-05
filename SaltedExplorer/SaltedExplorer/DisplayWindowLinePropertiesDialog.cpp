@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: DisplayWindowLinePropertiesDialog.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles all messages associated with the 'Display Window Line
  * Properties' dialog box.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

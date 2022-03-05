@@ -2,12 +2,11 @@
  *
  * Project: ShellBrowser
  * File: iDropTarget.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles the dropping of items onto
  * the main listview.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

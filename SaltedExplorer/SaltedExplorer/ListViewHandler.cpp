@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: ListViewHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles messages asscoiated with the main
  * listview controls.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

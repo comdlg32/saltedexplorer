@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: DriveInfo.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides a set of drive information functions.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

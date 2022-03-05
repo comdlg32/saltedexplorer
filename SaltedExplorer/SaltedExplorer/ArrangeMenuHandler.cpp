@@ -2,11 +2,10 @@
  *
  * Project: SaltedExplorer
  * File: ArrangeMenuHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Handles arrange menu items.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -18,7 +17,6 @@
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
 #include "../Helper/Macros.h"
-#include "../Helper/Bookmark.h"
 #include "MainResource.h"
 
 

@@ -70,6 +70,11 @@
 #include <assert.h>
 #include <iostream>
 #include <sstream>
+#include <muiload.h>
+#include <algorithm>
+#include <memory>
 
-/* Pantheios header files. */
-#include <C:\Pantheios\include\pantheios\pantheios.hpp>
+#ifdef _WIN32_WINNT_WIN8
+#define IAsyncOperation IDataObjectAsyncCapability
+#define IID_IAsyncOperation IID_IDataObjectAsyncCapability
+#endif

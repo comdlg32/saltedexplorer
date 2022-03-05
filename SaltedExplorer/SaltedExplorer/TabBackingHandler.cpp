@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: TabBackingHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Manages the 'tab backing' panel, which sits
  * behind the tab control.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

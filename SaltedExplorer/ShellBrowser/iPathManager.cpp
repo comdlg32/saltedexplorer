@@ -2,14 +2,13 @@
  *
  * Project: ShellBrowser
  * File: iPathManager.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Remembers path history, and
  * includes the ability to browse
  * back/forward through a set
  * of paths.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

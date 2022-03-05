@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: HandleWindowState.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Keeps track of the state of the main window
  * and its child windows.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -19,9 +18,9 @@
 #include "../Helper/FileOperations.h"
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
-#include "../Helper/Bookmark.h"
 #include "../Helper/ShellHelper.h"
 #include "MainResource.h"
+#include "../Helper/ProcessHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -94,10 +93,11 @@ void SaltedExplorer::SetProgramMenuItemStates(HMENU hProgramMenu)
 	lCheckMenuItem(hProgramMenu,IDM_VIEW_STATUSBAR,m_bShowStatusBar);
 	lCheckMenuItem(hProgramMenu,IDM_VIEW_FOLDERS,m_bShowFolders);
 	lCheckMenuItem(hProgramMenu,IDM_VIEW_DISPLAYWINDOW,m_bShowDisplayWindow);
+	lCheckMenuItem(hProgramMenu,IDM_DISPLAYWINDOW_VERTICAL,m_DisplayWindowVertical);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_ADDRESSBAR,m_bShowAddressBar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MAINTOOLBAR,m_bShowMainToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MENUBAR,m_bShowMenuBar);
-	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_BOOKMARKSTOOLBAR,m_bShowBookmarksToolbar);
+	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFAVORITESToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_DRIVES,m_bShowDrivesToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_APPLICATIONTOOLBAR,m_bShowApplicationToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_LOCKTOOLBARS,m_bLockToolbars);

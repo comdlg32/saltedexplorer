@@ -2,12 +2,11 @@
  *
  * Project: SaltedExplorer
  * File: TabHandler.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Provides tab management as well as the
  * handling of messages associated with the tabs.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -19,7 +18,6 @@
 #include "../Helper/FileOperations.h"
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
-#include "../Helper/Bookmark.h"
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/Macros.h"

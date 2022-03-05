@@ -2,11 +2,10 @@
  *
  * Project: Helper
  * File: ListViewHelper.cpp
- * License: GPL - See COPYING in the top level directory
  *
  * Listview helper functionality.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/
