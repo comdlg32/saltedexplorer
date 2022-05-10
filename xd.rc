@@ -980,6 +980,25 @@ BEGIN
     END
 END
 
+IDR_MANAGEBOOKMARKS_ORGANIZE_MENU MENU
+BEGIN
+    POPUP "Popup"
+    BEGIN
+        MENUITEM "New Bookmark...",             ID_POPUP_NEWBOOKMARK40471
+        MENUITEM "New Folder...",               ID_POPUP_NEWFOLD
+        MENUITEM "New Separator",               ID_POPUP_NEWSEPARATOR
+        MENUITEM SEPARATOR
+        MENUITEM "Cut",                         ID_POPUP_CUT40474
+        MENUITEM "Copy",                        ID_POPUP_COPY40475
+        MENUITEM "Paste",                       ID_POPUP_PASTE40476
+        MENUITEM "Undo",                        ID_POPUP_UNDO
+        MENUITEM "Redo",                        ID_POPUP_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Select All",                  ID_POPUP_SELECTALL
+        MENUITEM SEPARATOR
+        MENUITEM "Delete",                      ID_POPUP_DELETE40480
+    END
+END
 
 /////////////////////////////////////////////////////////////////////////////
 //
