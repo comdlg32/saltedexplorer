@@ -8,9 +8,6 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
-
-#include "Version.h"
-
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
@@ -1004,44 +1001,6 @@ BEGIN
 END
 
 
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
-
-VS_VERSION_INFO VERSIONINFO
- FILEVERSION MAJOR_VERSION,MINOR_VERSION,MICRO_VERSION,BUILD_VERSION
- PRODUCTVERSION MAJOR_VERSION,MINOR_VERSION,MICRO_VERSION,BUILD_VERSION
- FILEFLAGSMASK 0x17L
-#ifdef _DEBUG
- FILEFLAGS 0x3L
-#else
- FILEFLAGS 0x2L
-#endif
- FILEOS 0x4L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "0c0904b0"
-        BEGIN
-            VALUE "FileDescription", "Explorer++"
-            VALUE "FileVersion", VERSION_STRING
-            VALUE "InternalName", "Explorer++"
-            VALUE "LegalCopyright", "(C) 2005-2011 David Erceg"
-            VALUE "OriginalFilename", "Explorer++.exe"
-            VALUE "ProductName", "Explorer++"
-            VALUE "ProductVersion", VERSION_STRING
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0xc09, 1200
-    END
-END
-
-
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1055,8 +1014,7 @@ END
 
 2 TEXTINCLUDE 
 BEGIN
-    "#include ""afxres.h""\r\r\n"
-    "#include ""Version.h""\r\0"
+    "#include ""afxres.h""\0"
 END
 
 3 TEXTINCLUDE 
@@ -1733,6 +1691,15 @@ BEGIN
     IDS_MANAGE_BOOKMARKS_TOOLBAR_VIEWS "Views"
     IDS_MANAGE_BOOKMARKS_TOOLBAR_ORGANIZE "Organize"
     IDS_MANAGE_BOOKMARKS_TOOLBAR_IMPORTEXPORT "Import and Export"
+    IDS_APPLICATIONBUTTON_NEW "New Application Button..."
+    IDS_GENERAL_DISPLAYWINDOW_IMAGEWIDTH "Width: %u pixels"
+    IDS_GENERAL_DISPLAYWINDOW_IMAGEHEIGHT "Height: %u pixels"
+    IDS_GENERAL_DISPLAYWINDOW_BITDEPTHUNKNOWN "Bit depth: Unknown"
+    IDS_GENERAL_DISPLAYWINDOW_BITDEPTH "Bit depth: %u"
+    IDS_GENERAL_DISPLAYWINDOW_HORIZONTALRESOLUTION 
+                            "Horizontal resolution: %.0f dpi"
+    IDS_GENERAL_DISPLAYWINDOW_VERTICALRESOLUTION 
+                            "Vertical resolution: %.0f dpi"
 END
 
 #endif    // English (Australia) resources
