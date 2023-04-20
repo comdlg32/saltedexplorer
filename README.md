@@ -1,5 +1,4 @@
-SaltedExplorer
---------------
+# SaltedExplorer
 Compiling instructions are in "Documentation\Compiling SaltedExplorer.docx"
 
 SaltedExplorer is an alternative to Windows Explorer, with themes support and more.
@@ -8,8 +7,7 @@ SaltedExplorer is an alternative to Windows Explorer, with themes support and mo
 www.saltedexplorer.ml
 
 
-Credits
---------------
+## Credits
 @AEAEAEAE4343 - Helped us with a lot of stuff, and has written the new menu bar code.
 @WindowsXPPro3 - Did most stuff
 @toiletflusher - Did some minor changes
