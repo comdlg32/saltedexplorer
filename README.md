@@ -12,16 +12,16 @@ www.saltedexplorer.ml
 @WindowsXPPro3 - Did most stuff
 @toiletflusher - Did some minor changes
 
-## Note
+## Note from Genki / WindowsXPPro3
 
 This project is really old, and as the head developer of this project,
-i have suspended all development of it temporarily.
+i have halted development of it as of now.
 
 I do not have the motivation to continue working on it anymore,
-as i no longer see the need for this because i no longer am a fanboy for classic theme.
+as i no longer see the need for this because i no longer like classic theme.
 
 This project was created for the WinClassic community back then, it was supposed to be fun.
-But it was not, the source code reeks of stink that i wanted to reset the codebase and start offExplorer++ 1.4.x base builds.
+But it was not, the source code reeks of stink that i wanted to reset the codebase and start off Explorer++ 1.4.x base builds.
 Another reason of this project's termination is that the WinClassic community is a rotten place, its why me,
 and toiletflusher have left the WinClassic discord server due to conflicts going on, and we do not want to go back.
 
