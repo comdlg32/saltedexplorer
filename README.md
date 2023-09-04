@@ -8,8 +8,8 @@ www.saltedexplorer.ml
 
 
 ## Credits
-@AEAEAEAE4343 - Helped us with a lot of stuff, and has written the new menu bar code.
-@WindowsXPPro3 - Did most stuff
+@AEAEAEAE4343 - Helped us with a lot of stuff, and has written the new menu bar code.  
+@WindowsXPPro3 - Did most stuff  
 @toiletflusher - Did some minor changes
 
 ## Note from Genki / WindowsXPPro3
@@ -23,7 +23,9 @@ as i no longer see the need for this because i no longer like classic theme.
 This project was created for the WinClassic community back then, it was supposed to be fun.
 But it was not, the source code reeks of stink that i wanted to reset the codebase and start off Explorer++ 1.4.x base builds.
 Another reason of this project's termination is that the WinClassic community is a rotten place, its why me,
-and toiletflusher have left the WinClassic discord server due to conflicts going on, and we do not want to go back.
+and toiletflusher have left the WinClassic discord server due to conflicts going on, and we do not want to go back.  
+
+Note from toiletflusher: I still check WinClassic sometimes but I am no longer in ClassicServ.  
 
 Now, as this project is cancelled as of now, i have no need to worry about it.
 SE 0.8.0 source code may be published, but beware that its a mess, and its not able to be compiled due to issues.
