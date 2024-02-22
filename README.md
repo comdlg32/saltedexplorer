@@ -3,7 +3,7 @@ Compiling instructions are in "Documentation\Compiling SaltedExplorer.docx"
 
 SaltedExplorer is an alternative to Windows Explorer, with themes support and much more.
 
-2022 Toiletflusher, XP Pro and Leet
+2022 Toiletflusher, Genki and Leet
 www.saltedexplorer.ml (dead link)
 
 
