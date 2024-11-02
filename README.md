@@ -1,3 +1,6 @@
+# Unstable 0.8.0 branch
+*https://github.com/comdlg32/saltedexplorer/tree/0.8.0 (doesn't compile)*
+
 # SaltedExplorer
 Compiling instructions are in "Documentation\Compiling SaltedExplorer.docx"
 
@@ -5,8 +8,6 @@ SaltedExplorer is an alternative to Windows Explorer, with themes support and mu
 
 2022 Toiletflusher, Genki and Leet
 www.saltedexplorer.ml (dead link)
-
-## Unstable 0.8.0 branch: https://github.com/comdlg32/saltedexplorer/tree/0.8.0 (doesn't compile)
 
 ## Credits
 @AEAEAEAE4343 - Helped us with a lot of stuff, and has written the new menu bar code.  
