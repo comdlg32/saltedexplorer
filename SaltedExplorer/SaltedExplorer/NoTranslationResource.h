@@ -7,6 +7,7 @@
 #define IDB_FILTERINGAPPLIED            104
 #define IDI_MAIN                        105
 #define IDI_DISPLAYWINDOW               106
+#define IDB_FOLDEREMPTY                 149
 #define IDR_MAINACCELERATORS            152
 #define IDB_SHELL_GO_2000               194
 #define IDB_SHELL_GO_2000_INA			195

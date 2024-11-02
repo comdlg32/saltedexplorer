@@ -33,6 +33,7 @@ HWND g_hwndPreferences;
 HWND g_hwndManageFavorites;
 
 HINSTANCE g_hLanguageModule;
+HMENU m_hMenu;
 TCHAR g_szLang[32];
 BOOL g_bForceLanguageLoad = FALSE;
 
@@ -59,9 +60,9 @@ BOOL ProcessCommandLine(TCHAR *pCommandLine)
 
 	/* The first token will just be the executable name,
 	and can be ignored. */
-	pszCommandLine = GetToken(pCommandLine,szPath,0);
+	pszCommandLine = GetToken(pCommandLine,szPath);
 
-	while((pszCommandLine = GetToken(pszCommandLine,szPath,0)) != NULL)
+	while((pszCommandLine = GetToken(pszCommandLine,szPath)) != NULL)
 	{
 		/* Check to see if the user has requested the help page. */
 		if(StrCmp(szPath,_T("/?")) == 0)
@@ -74,7 +75,7 @@ BOOL ProcessCommandLine(TCHAR *pCommandLine)
 
 		if(lstrcmp(szPath,_T("-l")) == 0)
 		{
-			pszCommandLine = GetToken(pszCommandLine,szPath,0);
+			pszCommandLine = GetToken(pszCommandLine,szPath);
 
 			if(pszCommandLine != NULL)
 			{
@@ -605,6 +606,7 @@ LPSTR lpCmdLine,int nCmdShow)
 		otherwise various accelerator keys (such as tab)
 		would be taken even when the dialog has focus. */
 		if(!IsDialogMessage(g_hwndSearch,&msg) &&
+			!IsDialogMessage(g_hwndManageFavorites,&msg) &&
 			!PropSheet_IsDialogMessage(g_hwndPreferences,&msg))
 		{
 			if(!TranslateAccelerator(hwnd,hAccl,&msg))

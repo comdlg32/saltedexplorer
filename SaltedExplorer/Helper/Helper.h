@@ -221,7 +221,7 @@ TCHAR			*PrintCommaLargeNum(LARGE_INTEGER lPrint);
 BOOL			CheckWildcardMatch(const TCHAR *szWildcard,const TCHAR *szString,BOOL bCaseSensitive);
 BOOL			CheckWildcardMatchInternal(const TCHAR *szWildcard,const TCHAR *szString,BOOL bCaseSensitive);
 void			ReplaceCharacters(TCHAR *str,char ch,char replacement);
-TCHAR			*GetToken(TCHAR *ptr,TCHAR *Buffer,TCHAR *BufferLength);
+TCHAR			*GetToken(TCHAR *ptr, TCHAR *Buffer);
 HRESULT			DecodeFriendlyPath(TCHAR *szFriendlyPath,TCHAR *szParsingPath);
 void			AddGripperStyle(UINT *fStyle,BOOL bAddGripper);
 void			AddWindowStyle(HWND hwnd,UINT fStyle,BOOL bAdd);

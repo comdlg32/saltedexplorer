@@ -22,6 +22,7 @@
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/ProcessHelper.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 #include "MainResource.h"
 #include "../DisplayWindow/DisplayWindow.h"
@@ -196,28 +197,9 @@ void SaltedExplorer::ValidateLoadedSettings(void)
 
 void SaltedExplorer::ValidateToolbarSettings(void)
 {
-	std::list<ToolbarButton_t>::iterator	itr;
-	BOOL							bCorrupted = FALSE;
-	int								*ButtonMap;
-	int								nButtons;
-	int								i = 0;
+	BOOL bCorrupted = FALSE;
 
-	nButtons = sizeof(ToolbarButtonSet) / sizeof(ToolbarButtonSet[0]);
-
-	ButtonMap = (int *)malloc(sizeof(int) * nButtons);
-
-	for(i = 0;i < nButtons;i++)
-	{
-		ButtonMap[i] = 0;
-	}
-
-	/* Two things to check:
-	- Firstly, that all items id's are within range,
-	- and secondly, that no item is duplicated (except for
-	separators).
-	An empty set of items (i.e. no buttons on the toolbar) is
-	allowed. */
-	for(itr = m_tbInitial.begin();itr != m_tbInitial.end();itr++)
+	for(auto itr = m_tbInitial.begin();itr != m_tbInitial.end();itr++)
 	{
 		if(itr->iItemID < TOOLBAR_ID_START)
 		{
@@ -226,22 +208,10 @@ void SaltedExplorer::ValidateToolbarSettings(void)
 		}
 	}
 
-	if(!bCorrupted)
-	{
-		for(i = 0;i < nButtons;i++)
-		{
-			if(ButtonMap[i] > 1)
-			{
-				bCorrupted = TRUE;
-				break;
-			}
-		}
-	}
-
 	if(bCorrupted)
+	{
 		SetInitialToolbarButtons();
-
-	free(ButtonMap);
+	}
 }
 
 void SaltedExplorer::ValidateColumns(void)
@@ -368,7 +338,7 @@ void SaltedExplorer::ApplyToolbarSettings(void)
 			break;
 
 		case ID_FAVORITESTOOLBAR:
-			bVisible = m_bShowFAVORITESToolbar;
+			bVisible = m_bShowFavoritesToolbar;
 			break;
 
 		case ID_DRIVESTOOLBAR:

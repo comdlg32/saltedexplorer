@@ -26,6 +26,7 @@
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/ProcessHelper.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -66,302 +67,273 @@ LRESULT CALLBACK WndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 
 LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
 {
-	if(Msg == m_uTaskbarButtonCreatedMessage)
+	switch(Msg)
 	{
-		HMODULE hUser32;
-		ChangeWindowMessageFilterProc ChangeWindowMessageFilter;
+	case WM_CREATE:
+		OnWindowCreate();
+		break;
 
-		if((m_dwMajorVersion == WINDOWS_VISTA_SEVEN_MAJORVERSION &&
-			m_dwMinorVersion == 0) ||
-			m_dwMajorVersion < WINDOWS_VISTA_SEVEN_MAJORVERSION)
-		{
-			return 0;
-		}
-
-		if(!m_bShowTaskbarThumbnails)
-		{
-			return 0;
-		}
-
-		hUser32 = LoadLibrary(_T("user32.dll"));
-
-		if(hUser32 != NULL)
-		{
-			/* If directly targeting Windows 7, this can be switched
-			to static, rather than dynamic linking. */
-			ChangeWindowMessageFilter = (ChangeWindowMessageFilterProc)GetProcAddress(hUser32,"ChangeWindowsMessageFilter");
-
-			if(ChangeWindowMessageFilter != NULL)
-			{
-				ChangeWindowMessageFilter(WM_DWMSENDICONICTHUMBNAIL,MSGFLT_ADD);
-				ChangeWindowMessageFilter(WM_DWMSENDICONICLIVEPREVIEWBITMAP,MSGFLT_ADD);
-			}
-
-			FreeLibrary(hUser32);
-		}
-
-		if(m_pTaskbarList3 != NULL)
-		{
-			m_pTaskbarList3->Release();
-		}
-
-		CoCreateInstance(CLSID_TaskbarList,NULL,CLSCTX_INPROC_SERVER,
-			IID_ITaskbarList4,(LPVOID *)&m_pTaskbarList3);
-
-		m_pTaskbarList3->HrInit();
-
-		m_bTaskbarInitialised = TRUE;
-
-		/* Add each of the jump list tasks. */
-		SetupJumplistTasks();
-
-		std::list<TabProxyInfo_t>::iterator itr;
-		LPITEMIDLIST pidlDirectory = NULL;
-		BOOL bActive;
-
-		/* Register each of the tabs. */
-		for(itr = m_TabProxyList.begin();itr != m_TabProxyList.end();itr++)
-		{
-			bActive = (itr->iTabId == m_iObjectIndex);
-
-			RegisterTab(itr->hProxy,EMPTY_STRING,bActive);
-			HandleTabText(itr->iTabId);
-			SetTabIcon(itr->iTabId);
-
-			CoTaskMemFree(pidlDirectory);
-		}
-
+	case WM_SETFOCUS:
+		OnSetFocus();
 		return 0;
-	}
-	else
-	{
-		switch(Msg)
+		break;
+
+	case CBN_KEYDOWN:
+		OnComboBoxKeyDown(wParam);
+		break;
+
+	case WM_INITMENU:
+		m_pCustomMenu->OnInitMenu(wParam);
+		SetProgramMenuItemStates((HMENU)wParam);
+		break;
+
+	case WM_MENUSELECT:
+		StatusBarMenuSelect(wParam,lParam);
+		break;
+
+	case WM_MEASUREITEM:
+		return OnMeasureItem(reinterpret_cast<MEASUREITEMSTRUCT *>(lParam));
+		break;
+
+	case WM_DRAWITEM:
+		return OnDrawItem(reinterpret_cast<DRAWITEMSTRUCT *>(lParam));
+		break;
+
+	case WM_DEVICECHANGE:
+		OnDeviceChange(wParam,lParam);
+		break;
+
+	case WM_USER_UPDATEWINDOWS:
+		UpdateWindowStates();
+		break;
+
+	case WM_USER_FILESADDED:
+		/* Runs in the context of the main thread. Either
+		occurs after the specified tab index has been
+		freed (in which case nothing happens), or before. */
+		if(CheckTabIdStatus((int)wParam))
+			m_pShellBrowser[wParam]->DirectoryAltered();
+		break;
+
+	case WM_USER_RELEASEBROWSER:
+		m_pShellBrowser[(int)wParam]->Release();
+		m_pShellBrowser[(int)wParam] = NULL;
+		m_pFolderView[(int)wParam]->Release();
+		m_pFolderView[(int)wParam] = NULL;
+		break;
+
+	case WM_USER_TREEVIEW_GAINEDFOCUS:
+		m_hLastActiveWindow = m_hTreeView;
+		break;
+
+	case WM_USER_TABMCLICK:
 		{
-		case WM_CREATE:
-			OnWindowCreate();
-			break;
-
-		case WM_SETFOCUS:
-			OnSetFocus();
-			return 0;
-			break;
-
-		case CBN_KEYDOWN:
-			OnComboBoxKeyDown(wParam);
-			break;
-
-		case WM_INITMENU:
-			m_pCustomMenu->OnInitMenu(wParam);
-			SetProgramMenuItemStates((HMENU)wParam);
-			break;
-
-		case WM_MENUSELECT:
-			StatusBarMenuSelect(wParam,lParam);
-			break;
-
-		case WM_MEASUREITEM:
-			return OnMeasureItem(wParam,lParam);
-			break;
-
-		case WM_DRAWITEM:
-			return OnDrawItem(wParam,lParam);
-			break;
-
-		case WM_DEVICECHANGE:
-			OnDeviceChange(wParam,lParam);
-			break;
-
-		case WM_USER_UPDATEWINDOWS:
-			UpdateWindowStates();
-			break;
-
-		case WM_USER_FILESADDED:
-			/* Runs in the context of the main thread. Either
-			occurs after the specified tab index has been
-			freed (in which case nothing happens), or before. */
-			if(CheckTabIdStatus((int)wParam))
-				m_pShellBrowser[wParam]->DirectoryAltered();
-			break;
-
-		case WM_USER_RELEASEBROWSER:
-			m_pShellBrowser[(int)wParam]->Release();
-			m_pShellBrowser[(int)wParam] = NULL;
-			m_pFolderView[(int)wParam]->Release();
-			m_pFolderView[(int)wParam] = NULL;
-			break;
-
-		case WM_USER_TREEVIEW_GAINEDFOCUS:
-			m_hLastActiveWindow = m_hTreeView;
-			break;
-
-		case WM_USER_TABMCLICK:
-			OnTabMClick(wParam,lParam);
-			break;
-
-		case WM_USER_DISPLAYWINDOWRESIZED:
-			OnDisplayWindowResized(wParam);
-			break;
-
-		case WM_USER_STARTEDBROWSING:
-			OnStartedBrowsing((int)wParam,(TCHAR *)lParam);
-			break;
-
-		case WM_USER_NEWITEMINSERTED:
-			OnShellNewItemCreated(lParam);
-			break;
-
-		case WM_USER_FOLDEREMPTY:
-			{
-				if((BOOL)lParam == TRUE)
-					NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],NULL);
-			}
-			break;
-
-		case WM_USER_FILTERINGAPPLIED:
-			{
-				if((BOOL)lParam == TRUE)
-					NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],IDB_FILTERINGAPPLIED);
-				else
-					NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],NULL);
-			}
-			break;
-
-		case WM_USER_GETCOLUMNNAMEINDEX:
-			return LookupColumnNameStringIndex((int)wParam);
-			break;
-
-		case WM_USER_DIRECTORYMODIFIED:
-			OnDirectoryModified((int)wParam);
-			break;
-
-		case WM_USER_ASSOCCHANGED:
-			OnAssocChanged();
-			break;
-
-		case WM_USER_HOLDERRESIZED:
-			{
-				RECT	rc;
-
-				m_TreeViewWidth = (int)lParam + TREEVIEW_DRAG_OFFSET;
-
-				GetClientRect(m_hContainer,&rc);
-
-				SendMessage(m_hContainer,WM_SIZE,SIZE_RESTORED,(LPARAM)MAKELPARAM(rc.right,rc.bottom));
-			}
-			break;
-
-		case WM_APP_FOLDERSIZECOMPLETED:
-			{
-				DWFolderSizeCompletion_t *pDWFolderSizeCompletion = NULL;
-				TCHAR szFolderSize[32];
-				TCHAR szSizeString[64];
-				TCHAR szTotalSize[64];
-				BOOL bValid = FALSE;
-
-				pDWFolderSizeCompletion = (DWFolderSizeCompletion_t *)wParam;
-
-				std::list<DWFolderSize_t>::iterator itr;
-
-				/* First, make sure we should still display the
-				results (we won't if the listview selection has
-				changed, or this folder size was calculated for
-				a tab other than the current one). */
-				for(itr = m_DWFolderSizes.begin();itr != m_DWFolderSizes.end();itr++)
-				{
-					if(itr->uId == pDWFolderSizeCompletion->uId)
-					{
-						if(itr->iTabId == m_iObjectIndex)
-						{
-							bValid = itr->bValid;
-						}
-
-						m_DWFolderSizes.erase(itr);
-
-						break;
-					}
-				}
-
-				if(bValid)
-				{
-					FormatSizeString(pDWFolderSizeCompletion->liFolderSize,szFolderSize,
-						SIZEOF_ARRAY(szFolderSize),m_bForceSize,m_SizeDisplayFormat);
-
-					LoadString(g_hLanguageModule,IDS_GENERAL_TOTALSIZE,
-						szTotalSize,SIZEOF_ARRAY(szTotalSize));
-
-					StringCchPrintf(szSizeString,SIZEOF_ARRAY(szSizeString),
-						_T("%s: %s"),szTotalSize,szFolderSize);
-
-					/* TODO: The line index should be stored in some other (variable) way. */
-					DisplayWindow_SetLine(m_hDisplayWindow,FOLDER_SIZE_LINE_INDEX,szSizeString);
-				}
-
-				free(pDWFolderSizeCompletion);
-			}
-			break;
-
-		case WM_COPYDATA:
-			{
-				COPYDATASTRUCT *pcds = NULL;
-				HRESULT hr;
-
-				pcds = (COPYDATASTRUCT *)lParam;
-
-				if(pcds->lpData != NULL)
-				{
-					BrowseFolder((TCHAR *)pcds->lpData,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
-				}
-				else
-				{
-					hr = BrowseFolder(m_DefaultTabDirectory,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
-
-					if(FAILED(hr))
-						BrowseFolder(m_DefaultTabDirectoryStatic,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
-				}
-			}
-			break;
-
-		case WM_NDW_RCLICK:
-			OnNdwRClick(wParam,lParam);
-			break;
-
-		case WM_NDW_ICONRCLICK:
-			OnNdwIconRClick(wParam,lParam);
-			break;
-
-		case WM_CHANGECBCHAIN:
-			OnChangeCBChain(wParam,lParam);
-			break;
-
-		case WM_DRAWCLIPBOARD:
-			OnDrawClipboard();
-			break;
-
-		case WM_APPCOMMAND:
-			OnAppCommand(wParam,lParam);
-			break;
-
-		case WM_COMMAND:
-			return CommandHandler(hwnd,Msg,wParam,lParam);
-			break;
-
-		case WM_NOTIFY:
-			return NotifyHandler(hwnd,Msg,wParam,lParam);
-			break;
-
-		case WM_SIZE:
-			return OnSize(LOWORD(lParam),HIWORD(lParam));
-			break;
-
-		case WM_CLOSE:
-			return OnClose();
-			break;
-
-		case WM_DESTROY:
-			return OnDestroy();
-			break;
-
+			POINT pt;
+			POINTSTOPOINT(pt, MAKEPOINTS(lParam));
+			OnTabMClick(&pt);
 		}
+		break;
+
+	case WM_USER_DISPLAYWINDOWRESIZED:
+		OnDisplayWindowResized(wParam);
+		break;
+
+	case WM_USER_STARTEDBROWSING:
+		OnStartedBrowsing((int)wParam,(TCHAR *)lParam);
+		break;
+
+	case WM_USER_NEWITEMINSERTED:
+		OnShellNewItemCreated(lParam);
+		break;
+
+	case WM_USER_FOLDEREMPTY:
+		{
+			if((BOOL)lParam == TRUE)
+				NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],IDB_FOLDEREMPTY);
+			else
+				NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],NULL);
+		}
+		break;
+
+	case WM_USER_FILTERINGAPPLIED:
+		{
+			if((BOOL)lParam == TRUE)
+				NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],IDB_FILTERINGAPPLIED);
+			else
+				NListView::ListView_SetBackgroundImage(m_hListView[(int)wParam],NULL);
+		}
+		break;
+
+	case WM_USER_GETCOLUMNNAMEINDEX:
+		return LookupColumnNameStringIndex((int)wParam);
+		break;
+
+	case WM_USER_DIRECTORYMODIFIED:
+		OnDirectoryModified((int)wParam);
+		break;
+
+	case WM_USER_ASSOCCHANGED:
+		OnAssocChanged();
+		break;
+
+	case WM_USER_HOLDERRESIZED:
+		{
+			RECT	rc;
+
+			m_TreeViewWidth = (int)lParam + TREEVIEW_DRAG_OFFSET;
+
+			GetClientRect(m_hContainer,&rc);
+
+			SendMessage(m_hContainer,WM_SIZE,SIZE_RESTORED,(LPARAM)MAKELPARAM(rc.right,rc.bottom));
+		}
+		break;
+
+	case WM_APP_FOLDERSIZECOMPLETED:
+		{
+			DWFolderSizeCompletion_t *pDWFolderSizeCompletion = NULL;
+			TCHAR szFolderSize[32];
+			TCHAR szSizeString[64];
+			TCHAR szTotalSize[64];
+			BOOL bValid = FALSE;
+
+			pDWFolderSizeCompletion = (DWFolderSizeCompletion_t *)wParam;
+
+			std::list<DWFolderSize_t>::iterator itr;
+
+			/* First, make sure we should still display the
+			results (we won't if the listview selection has
+			changed, or this folder size was calculated for
+			a tab other than the current one). */
+			for(itr = m_DWFolderSizes.begin();itr != m_DWFolderSizes.end();itr++)
+			{
+				if(itr->uId == pDWFolderSizeCompletion->uId)
+				{
+					if(itr->iTabId == m_iObjectIndex)
+					{
+						bValid = itr->bValid;
+					}
+
+					m_DWFolderSizes.erase(itr);
+
+					break;
+				}
+			}
+
+			if(bValid)
+			{
+				FormatSizeString(pDWFolderSizeCompletion->liFolderSize,szFolderSize,
+					SIZEOF_ARRAY(szFolderSize),m_bForceSize,m_SizeDisplayFormat);
+
+				LoadString(g_hLanguageModule,IDS_GENERAL_TOTALSIZE,
+					szTotalSize,SIZEOF_ARRAY(szTotalSize));
+
+				StringCchPrintf(szSizeString,SIZEOF_ARRAY(szSizeString),
+					_T("%s: %s"),szTotalSize,szFolderSize);
+
+				/* TODO: The line index should be stored in some other (variable) way. */
+				DisplayWindow_SetLine(m_hDisplayWindow,FOLDER_SIZE_LINE_INDEX,szSizeString);
+			}
+
+			free(pDWFolderSizeCompletion);
+		}
+		break;
+
+	case WM_COPYDATA:
+		{
+			COPYDATASTRUCT *pcds = reinterpret_cast<COPYDATASTRUCT *>(lParam);
+
+			if(pcds->cbData < sizeof(NSaltedExplorer::IPNotificationType_t))
+			{
+				return FALSE;
+			}
+
+			NSaltedExplorer::IPNotificationType_t *ipnt = reinterpret_cast<NSaltedExplorer::IPNotificationType_t *>(pcds->lpData);
+
+			switch(*ipnt)
+			{
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_NEW_TAB:
+				/* TODO: */
+				break;
+
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_ADDED:
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_ADDED:
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_MODIFIED:
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_MODIFIED:
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_REMOVED:
+			case NSaltedExplorer::IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_REMOVED:
+				{
+					m_pipbo->OnNotificationReceived(*ipnt,pcds->lpData);
+				}
+				break;
+
+			default:
+				return FALSE;
+				break;
+			}
+
+			/* TODO: */
+			/*if(pcds->lpData != NULL)
+			{
+			BrowseFolder((TCHAR *)pcds->lpData,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
+			}
+			else
+			{
+			HRESULT hr = BrowseFolder(m_DefaultTabDirectory,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
+			if(FAILED(hr))
+			BrowseFolder(m_DefaultTabDirectoryStatic,SBSP_ABSOLUTE,TRUE,TRUE,FALSE);
+			}*/
+
+			return TRUE;
+		}
+		break;
+
+	case WM_NDW_RCLICK:
+		{
+			POINT pt;
+			POINTSTOPOINT(pt, MAKEPOINTS(lParam));
+			OnNdwRClick(&pt);
+		}
+		break;
+
+	case WM_NDW_ICONRCLICK:
+		{
+			POINT pt;
+			POINTSTOPOINT(pt, MAKEPOINTS(lParam));
+			OnNdwIconRClick(&pt);
+		}
+		break;
+
+	case WM_CHANGECBCHAIN:
+		OnChangeCBChain(wParam,lParam);
+		break;
+
+	case WM_DRAWCLIPBOARD:
+		OnDrawClipboard();
+		break;
+
+	case WM_APPCOMMAND:
+		OnAppCommand(GET_APPCOMMAND_LPARAM(lParam));
+		break;
+
+	case WM_COMMAND:
+		return CommandHandler(hwnd,wParam);
+		break;
+
+	case WM_NOTIFY:
+		return NotifyHandler(lParam);
+		break;
+
+	case WM_SIZE:
+		return OnSize(LOWORD(lParam),HIWORD(lParam));
+		break;
+
+	case WM_CLOSE:
+		return OnClose();
+		break;
+
+	case WM_DESTROY:
+		return OnDestroy();
+		break;
 	}
 
 	return DefWindowProc(hwnd,Msg,wParam,lParam);
@@ -370,12 +342,12 @@ LRESULT CALLBACK SaltedExplorer::WindowProcedure(HWND hwnd,UINT Msg,WPARAM wPara
 /*
  * WM_COMMAND handler for main window.
  */
-LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,WPARAM wParam)
 {
 	if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_FAVORITE_STARTID &&
 	LOWORD(wParam) <= MENU_FAVORITE_ENDID)
 	{
-		/* TODO: [FAVORITESs] Open FAVORITES. */
+		/* TODO: [Favorites] Open Favorites. */
 	}
 	else if(!HIWORD(wParam) && LOWORD(wParam) >= MENU_HEADER_STARTID &&
 	LOWORD(wParam) <= MENU_HEADER_ENDID)
@@ -655,8 +627,8 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 			break;
 
 		case IDM_TOOLBARS_FAVORITESTOOLBAR:
-			m_bShowFAVORITESToolbar = !m_bShowFAVORITESToolbar;
-			ShowMainRebarBand(m_hFavoritesToolbar,m_bShowFAVORITESToolbar);
+			m_bShowFavoritesToolbar = !m_bShowFavoritesToolbar;
+			ShowMainRebarBand(m_hFavoritesToolbar,m_bShowFavoritesToolbar);
 			AdjustFolderPanePosition();
 			ResizeWindows();
 			break;
@@ -1278,9 +1250,9 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 				TCHAR szDisplayName[MAX_PATH];
 				m_pActiveShellBrowser->QueryCurrentDirectory(SIZEOF_ARRAY(szCurrentDirectory),szCurrentDirectory);
 				GetDisplayName(szCurrentDirectory,szDisplayName,SHGDN_INFOLDER);
-				Favorite bm(szDisplayName,szCurrentDirectory,EMPTY_STRING);
+				CFavorite Favorite(szDisplayName,szCurrentDirectory,EMPTY_STRING);
 
-				CAddFavoritesDialog AddFavoritesDialog(g_hLanguageModule,IDD_ADD_FAVORITES,hwnd,m_bfAllFavorites,&bm);
+				CAddFavoritesDialog AddFavoritesDialog(g_hLanguageModule,IDD_ADD_FAVORITES,hwnd,*m_bfAllFavorites,Favorite);
 				AddFavoritesDialog.ShowModalDialog();
 			}
 			break;
@@ -1289,7 +1261,7 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 		case IDM_FAVORITES_MANAGEFAVORITES:
 			if(g_hwndManageFavorites == NULL)
 			{
-				CManageFavoritesDialog ManageFavoritesDialog(g_hLanguageModule,IDD_MANAGE_FAVORITES,hwnd,m_bfAllFavorites);
+				CManageFavoritesDialog ManageFavoritesDialog(g_hLanguageModule,IDD_MANAGE_FAVORITES,hwnd,*m_bfAllFavorites);
 				ManageFavoritesDialog.ShowModalDialog();
 
 				CManageFavoritesDialog *pManageFavoritesDialog = new CManageFavoritesDialog(g_hLanguageModule,IDD_MANAGE_FAVORITES,hwnd,m_bfAllFavorites);
@@ -1531,10 +1503,9 @@ LRESULT CALLBACK SaltedExplorer::CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam
 /*
  * WM_NOTIFY handler for the main window.
  */
-LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam)
+LRESULT CALLBACK SaltedExplorer::NotifyHandler(LPARAM lParam)
 {
-	NMHDR *nmhdr;
-	nmhdr = (NMHDR *)lParam;
+	NMHDR *nmhdr = reinterpret_cast<NMHDR *>(lParam);
 
 	switch(nmhdr->code)
 	{
@@ -1639,11 +1610,11 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 			break;
 
 		case TBN_QUERYINSERT:
-			return OnTBQueryInsert(lParam);
+			return OnTBQueryInsert();
 			break;
 
 		case TBN_QUERYDELETE:
-			return OnTBQueryDelete(lParam);
+			return OnTBQueryDelete();
 			break;
 
 		case TBN_GETBUTTONINFO:
@@ -1651,7 +1622,7 @@ LRESULT CALLBACK SaltedExplorer::NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,
 			break;
 
 		case TBN_RESTORE:
-			return OnTBRestore(lParam);
+			return OnTBRestore();
 			break;
 
 		case TBN_GETINFOTIP:

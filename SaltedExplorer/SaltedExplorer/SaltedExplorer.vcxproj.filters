@@ -140,6 +140,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="FavoritesHelper.cpp" />
+    <ClCompile Include="MenuToolbar.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="iDropSource.h">
@@ -219,6 +220,8 @@
     <ClInclude Include="ManageFavoritesDialog.h" />
     <ClInclude Include="NewFavoriteFolderDialog.h" />
     <ClInclude Include="FavoritesHelper.h" />
+    <ClInclude Include="MenuToolbar.h" />
+    <ClInclude Include="Config.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="SaltedExplorer.rc">

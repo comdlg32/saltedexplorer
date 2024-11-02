@@ -115,7 +115,7 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowAddressBar"),m_bShowAddressBar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowMenuBar"),m_bShowMenuBar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowToolbar"),m_bShowMainToolbar);
-		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFAVORITESToolbar"),m_bShowFAVORITESToolbar);
+		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFavoritesToolbar"),m_bShowFavoritesToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowDrivesToolbar"),m_bShowDrivesToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowApplicationToolbar"),m_bShowApplicationToolbar);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ShowFullTitlePath"),m_bShowFullTitlePath);
@@ -157,7 +157,6 @@ LONG SaltedExplorer::SaveSettings(void)
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("OverwriteExistingFilesConfirmation"),m_bOverwriteExistingFilesConfirmation);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("LargeToolbarIcons"),m_bLargeToolbarIcons);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("ToolbarTitleButtons"),m_bToolbarTitleButtons);
-		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("WebView"),m_bWebView);
 		NRegistrySettings::SaveDwordToRegistry(hSettingsKey,_T("PlayNavigationSound"),m_bPlayNavigationSound);
 
 		NRegistrySettings::SaveStringToRegistry(hSettingsKey,_T("NewTabDirectory"),m_DefaultTabDirectory);
@@ -219,7 +218,7 @@ LONG SaltedExplorer::SaveSettings(void)
 	return ReturnValue;
 }
 
-LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
+LONG SaltedExplorer::LoadSettings()
 {
 	HKEY			hSettingsKey;
 	LONG			ReturnValue;
@@ -242,7 +241,7 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowAddressBar"),(LPDWORD)&m_bShowAddressBar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowToolbar"),(LPDWORD)&m_bShowMainToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowMenuBar"),(LPDWORD)&m_bShowMenuBar);
-		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFAVORITESToolbar"),(LPDWORD)&m_bShowFAVORITESToolbar);
+		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFavoritesToolbar"),(LPDWORD)&m_bShowFavoritesToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowDrivesToolbar"),(LPDWORD)&m_bShowDrivesToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowApplicationToolbar"),(LPDWORD)&m_bShowApplicationToolbar);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ShowFullTitlePath"),(LPDWORD)&m_bShowFullTitlePath);
@@ -287,7 +286,6 @@ LONG SaltedExplorer::LoadSettings(LPCTSTR KeyPath)
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("OverwriteExistingFilesConfirmation"),(LPDWORD)&m_bOverwriteExistingFilesConfirmation);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("LargeToolbarIcons"),(LPDWORD)&m_bLargeToolbarIcons);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("ToolbarTitleButtons"),(LPDWORD)&m_bToolbarTitleButtons);
-		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("WebView"),(LPDWORD)&m_bWebView);
 		NRegistrySettings::ReadDwordFromRegistry(hSettingsKey,_T("PlayNavigationSound"),(LPDWORD)&m_bPlayNavigationSound);
 
 		NRegistrySettings::ReadStringFromRegistry(hSettingsKey,_T("NewTabDirectory"),m_DefaultTabDirectory,SIZEOF_ARRAY(m_DefaultTabDirectory));
@@ -1356,7 +1354,7 @@ void SaltedExplorer::LoadDisplayColorsStateFromRegistry(HKEY hParentKey)
 
 void SaltedExplorer::CLoadSaveRegistry::LoadGenericSettings(void)
 {
-	m_pContainer->LoadSettings(REG_MAIN_KEY);
+	m_pContainer->LoadSettings();
 }
 
 void SaltedExplorer::CLoadSaveRegistry::LoadFavorites(void)

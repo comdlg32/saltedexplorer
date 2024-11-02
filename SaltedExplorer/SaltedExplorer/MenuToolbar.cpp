@@ -1,0 +1,5 @@
+#include "stdafx.h"
+#include "MenuToolbar.h"
+#include "MainResource.h"
+#include "../Helper/Controls.h"
+#include "../Helper/Macros.h"

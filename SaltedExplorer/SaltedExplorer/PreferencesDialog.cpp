@@ -23,6 +23,7 @@
 #include "../Helper/SetDefaultFileManager.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/ProcessHelper.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 
 
@@ -80,17 +81,7 @@ void SaltedExplorer::OnShowPreferences(void)
 
 	g_hNewTabDirIcon = ImageList_GetIcon(himl,SHELLIMAGES_NEWTAB,ILD_NORMAL);
 
-	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
-	psp[nSheet].dwFlags		= PSP_DEFAULT;
-	psp[nSheet].hInstance	= g_hLanguageModule;
-	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_GENERAL);
-	psp[nSheet].lParam		= (LPARAM)this;
-	psp[nSheet].pfnDlgProc	= OldGeneralSettingsProcStub;
-
-	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
-	nSheet++;
-
-	/* General Preferences page. */
+	/* Old General Preferences page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
@@ -101,6 +92,18 @@ void SaltedExplorer::OnShowPreferences(void)
 	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
 	nSheet++;
 
+	/* General Preferences page. */
+	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
+	psp[nSheet].dwFlags		= PSP_DEFAULT;
+	psp[nSheet].hInstance	= g_hLanguageModule;
+	psp[nSheet].pszTemplate	= MAKEINTRESOURCE(IDD_PREFERENCES_GENERAL);
+	psp[nSheet].lParam		= (LPARAM)this;
+	psp[nSheet].pfnDlgProc	= GeneralSettingsProcStub;
+
+	hpsp[nSheet] = CreatePropertySheetPage(&psp[nSheet]);
+	nSheet++;
+
+	/* Themes Preferences Page. */
 	psp[nSheet].dwSize		= sizeof(PROPSHEETPAGE);
 	psp[nSheet].dwFlags		= PSP_DEFAULT;
 	psp[nSheet].hInstance	= g_hLanguageModule;
@@ -221,21 +224,22 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 
 				switch(m_WebViewOptions)
 				{
-				case OPTION_WEBVIEW:
-					nIDButton = IDC_PREFERENCES_WEBVIEW;
-					break;
+					case OPTION_WEBVIEW:
+						nIDButton = IDC_PREFERENCES_WEBVIEW;
+						break;
 
-				case OPTION_NOWEBVIEW:
-					nIDButton = IDC_PREFERENCES_NOWEBVIEW;
-					break;
+					case OPTION_NOWEBVIEW:
+						nIDButton = IDC_PREFERENCES_NOWEBVIEW;
+						break;
 
-				default:
-					nIDButton = IDC_PREFERENCES_WEBVIEW;
-					m_WebViewOptions = OPTION_WEBVIEW;
-					break;
+					default:
+						nIDButton = IDC_PREFERENCES_WEBVIEW;
+						m_WebViewOptions = OPTION_WEBVIEW;
+						break;
 				}
 				CheckDlgButton(hDlg,nIDButton,BST_CHECKED);
 
+				CenterWindow(m_hContainer,g_hPreferencesPropertyDialog);
 			}
 			break;
 
@@ -255,8 +259,9 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 				switch(LOWORD(wParam))
 				{
 				case IDC_PREFERENCES_WEBVIEW:
-					break;
 				case IDC_PREFERENCES_NOWEBVIEW:
+					if(IsDlgButtonChecked(hDlg,LOWORD(wParam)) == BST_CHECKED)
+						PropSheet_Changed(g_hPreferencesPropertyDialog,hDlg);
 					break;
 				}
 			}
@@ -276,6 +281,8 @@ INT_PTR CALLBACK SaltedExplorer::GeneralSettingsProc(HWND hDlg,UINT uMsg,WPARAM 
 							m_WebViewOptions = OPTION_WEBVIEW;
 						else if(IsDlgButtonChecked(hDlg,IDC_PREFERENCES_NOWEBVIEW) == BST_CHECKED)
 							m_WebViewOptions = OPTION_NOWEBVIEW;
+
+						SaveAllSettings();
 					}
 					break;
 				}

@@ -48,9 +48,6 @@ ULONG __stdcall SaltedExplorer::Release(void)
 	return m_iRefCount;
 }
 
-/*
- * Constructor for the main SaltedExplorer class.
- */
 SaltedExplorer::SaltedExplorer(HWND hwnd)
 {
 	m_iRefCount = 1;
@@ -185,11 +182,11 @@ SaltedExplorer::SaltedExplorer(HWND hwnd)
 	}
 }
 
-/*
- * Deconstructor for the main SaltedExplorer class.
- */
 SaltedExplorer::~SaltedExplorer()
 {
+	/* Favorites teardown. */
+	delete m_pipbin;
+
 	m_pDirMon->Release();
 
 	if(m_hDwmapi != NULL)
@@ -303,7 +300,6 @@ void SaltedExplorer::SetDefaultValues(void)
 	m_bCloseMainWindowOnTabClose	= TRUE;
 	m_bLargeToolbarIcons			= FALSE;
 	m_bToolbarTitleButtons			= FALSE;
-	m_bWebView						= FALSE;
 	m_bShowTaskbarThumbnails		= TRUE;
 	m_bPlayNavigationSound			= TRUE;
 
@@ -319,7 +315,7 @@ void SaltedExplorer::SetDefaultValues(void)
 	m_bShowMenuBar					= TRUE;
 	m_bShowAddressBar				= TRUE;
 	m_bShowMainToolbar				= TRUE;
-	m_bShowFAVORITESToolbar			= FALSE;
+	m_bShowFavoritesToolbar			= FALSE;
 	m_bShowDisplayWindow			= FALSE;
 	m_bShowDrivesToolbar			= FALSE;
 	m_bShowApplicationToolbar		= FALSE;

@@ -33,9 +33,35 @@ namespace NSaltedExplorer
 	/* Command line arguments supplied to the program
 	for each jump list task. */
 	const TCHAR JUMPLIST_TASK_NEWTAB_ARGUMENT[]	= _T("-open_new_tab");
+
+	/* When sending data across Explorer++ processes via
+	WM_COPYDATA, the type (as specified by this enumeration)
+	must ALWAYS be specified first. */
+	enum IPNotificationType_t
+	{
+		IP_NOTIFICATION_TYPE_NEW_TAB = 1,
+
+		/* Favorite notifications. */
+		IP_NOTIFICATION_TYPE_FAVORITE_ADDED = 2,
+		IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_ADDED = 3,
+		IP_NOTIFICATION_TYPE_FAVORITE_MODIFIED = 4,
+		IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_MODIFIED = 5,
+		IP_NOTIFICATION_TYPE_FAVORITE_REMOVED = 6,
+		IP_NOTIFICATION_TYPE_FAVORITE_FOLDER_REMOVED = 7
+	};
+
+	struct IPFavoriteNotification_t
+	{
+		/* Use a series of different structures. This field
+		must ALWAYS appear first in each of the structures.
+		Decode by switching on the type and casting to the
+		appropriate structure. */
+		IPNotificationType_t Type;
+	};
 }
 
 extern HINSTANCE g_hLanguageModule;
+extern HMENU m_hMenu;
 
 /* Used when setting SaltedExplorer as the default
 file manager. */
@@ -210,7 +236,7 @@ typedef HRESULT (STDAPICALLTYPE *DwmInvalidateIconicBitmapsProc)(HWND hwnd);
 #define TOOLBAR_ORGANIZEFAVORITES	(TOOLBAR_ID_START + 21)
 #define TOOLBAR_DELETEPERMANENTLY	(TOOLBAR_ID_START + 22)
 
-/* Menu Bar lmao */
+/* Menu Bar */
 #define MENUBAR_START			    51000
 #define MENUBAR_FILE				(MENUBAR_START + 1)
 #define MENUBAR_EDIT				(MENUBAR_START + 2)
@@ -635,7 +661,6 @@ LRESULT CALLBACK FavoritesToolbarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,
 LRESULT CALLBACK DrivesToolbarSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK EditSubclassStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
 LRESULT CALLBACK TabBackingProcStub(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam,UINT_PTR uIdSubclass,DWORD_PTR dwRefData);
-LRESULT CALLBACK TabProxyWndProcStub(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK ApplicationButtonPropertiesProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK ApplicationToolbarNewButtonProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 INT_PTR CALLBACK DWChangeDetailsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);

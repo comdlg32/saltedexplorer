@@ -62,12 +62,9 @@ CCustomMenu::~CCustomMenu(void)
 
 }
 
-BOOL CCustomMenu::OnMeasureItem(WPARAM wParam,LPARAM lParam)
+BOOL CCustomMenu::OnMeasureItem(MEASUREITEMSTRUCT *pMeasureItem)
 {
-	MEASUREITEMSTRUCT	*pMeasureItem = NULL;
 	MENUITEMINFO		mii;
-
-	pMeasureItem = (MEASUREITEMSTRUCT *)lParam;
 
 	/* Only process if this notification is actually for a menu. */
 	if(pMeasureItem->CtlType == ODT_MENU)
@@ -143,9 +140,8 @@ BOOL CCustomMenu::OnMeasureItem(WPARAM wParam,LPARAM lParam)
 	return TRUE;
 }
 
-BOOL CCustomMenu::OnDrawItem(WPARAM wParam,LPARAM lParam)
+BOOL CCustomMenu::OnDrawItem(DRAWITEMSTRUCT *pDrawItem)
 {
-	DRAWITEMSTRUCT	*pDrawItem = NULL;
 	HBRUSH			hBrush;
 	MENUITEMINFO	mi;
 	TCHAR			szMenuString[64];
@@ -157,8 +153,6 @@ BOOL CCustomMenu::OnDrawItem(WPARAM wParam,LPARAM lParam)
 	TCHAR			*ptr = NULL;
 	DWORD			dwPrefixState;
 	int				i = 0;
-
-	pDrawItem = (DRAWITEMSTRUCT *)lParam;
 
 	/* Is this item actually a menu? */
 	if(pDrawItem->CtlType == ODT_MENU)

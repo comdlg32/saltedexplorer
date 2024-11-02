@@ -1684,7 +1684,7 @@ void ShowLastError(void)
 	MessageBox(NULL,(LPTSTR)ErrorMessage,EMPTY_STRING,MB_OK|MB_ICONQUESTION);
 }
 
-TCHAR *GetToken(TCHAR *ptr,TCHAR *Buffer,TCHAR *BufferLength)
+TCHAR *GetToken(TCHAR *ptr, TCHAR *Buffer)
 {
 	TCHAR *p;
 	int i = 0;

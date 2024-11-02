@@ -17,8 +17,8 @@
 #include "../Helper/ShellHelper.h"
 #include "../Helper/ListViewHelper.h"
 #include "../Helper/ProcessHelper.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
-
 
 /* Visibility states should NOT be included here. The visibility of
 an item will be set dynamically based on any loaded settings. */
@@ -90,8 +90,7 @@ void SaltedExplorer::OnWindowCreate(void)
 {
 	ILoadSave *pLoadSave = NULL;
 
-	m_bTaskbarInitialised = FALSE;
-	m_uTaskbarButtonCreatedMessage = RegisterWindowMessage(_T("TaskbarButtonCreated"));
+	InitializeTaskbarThumbnails();
 
 	LoadAllSettings(&pLoadSave);
 	ApplyToolbarSettings();
@@ -113,7 +112,7 @@ void SaltedExplorer::OnWindowCreate(void)
 	/* These need to occur after the language module
 	has been initialized, but before the tabs are
 	restored. */
-	SetMenu(m_hContainer,LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_MAINMENU)));
+	m_hMenu = LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_MAINMENU));
 	m_hArrangeSubMenu				= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_ARRANGEMENU)),0);
 	m_hArrangeSubMenuRClick			= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_ARRANGEMENU)),0);
 	m_hGroupBySubMenu				= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_GROUPBY_MENU)),0);
@@ -121,7 +120,6 @@ void SaltedExplorer::OnWindowCreate(void)
 	m_hFavoritesMenu				= GetSubMenu(GetMenu(m_hContainer),6);
 	m_hTabRightClickMenu			= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_TAB_RCLICK)),0);
 	m_hToolbarRightClickMenu		= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_TOOLBAR_MENU)),0);
-	m_hDisplayWindowRightClickMenu  = GetSubMenu(LoadMenu(g_hLanguageModule, MAKEINTRESOURCE(IDR_DISPLAYWINDOW_RCLICK)), 0);
 	m_hApplicationRightClickMenu	= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_APPLICATIONTOOLBAR_MENU)),0);
 	m_hViewsMenu					= GetSubMenu(LoadMenu(g_hLanguageModule,MAKEINTRESOURCE(IDR_VIEWS_MENU)),0);
 
@@ -226,7 +224,7 @@ void SaltedExplorer::OnWindowCreate(void)
 	/* Mark the main menus as owner drawn. */
 	InitializeMenus();
 
-	InitializeFAVORITES();
+	InitializeFavorites();
 	InitializeArrangeMenuItems();
 
 	/* Place the main window in the clipboard chain. This
@@ -887,7 +885,7 @@ void SaltedExplorer::OnMainToolbarRClick(void)
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_MENUBAR,m_bShowMenuBar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_ADDRESSBAR,m_bShowAddressBar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_MAINTOOLBAR,m_bShowMainToolbar);
-	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFAVORITESToolbar);
+	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFavoritesToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_DRIVES,m_bShowDrivesToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_APPLICATIONTOOLBAR,m_bShowApplicationToolbar);
 	lCheckMenuItem(m_hToolbarRightClickMenu,IDM_TOOLBARS_LOCKTOOLBARS,m_bLockToolbars);
@@ -1503,7 +1501,7 @@ void SaltedExplorer::OnTbnDropDown(LPARAM lParam)
 		     nmTB->iItem < MENUBAR_END)
 	{
 		//HMENU menu = LoadMenu(GetModuleHandle(NULL), /*MAKEINTRESOURCE((IDR_SUBMENU_START - MENUBAR_START) + nmTB->iItem)*/MAKEINTRESOURCE(IDR_MAINMENU));
-		HMENU menu = GetMenu(m_hContainer);
+		HMENU menu = m_hMenu;
 		HMENU subMenu = GetSubMenu(menu, nmTB->iItem - MENUBAR_START - 1);
 		POINT menuLocation = {nmTB->rcButton.left, nmTB->rcButton.bottom};
 		ClientToScreen(m_hMenuBar, &menuLocation);
@@ -1516,13 +1514,8 @@ void SaltedExplorer::OnTbnDropDown(LPARAM lParam)
 	}
 }
 
-void SaltedExplorer::OnTabMClick(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnTabMClick(POINT *pt)
 {
-	TCHITTESTINFO	htInfo;
-	int				iTabHit;
-	int				x;
-	int				y;
-
 	/* Only close a tab if the tab control
 	actually has focused (i.e. if the middle mouse
 	button was clicked on the control, then the
@@ -1530,14 +1523,11 @@ void SaltedExplorer::OnTabMClick(WPARAM wParam,LPARAM lParam)
 	somewhere else, it won't). */
 	if(GetFocus() == m_hTabCtrl)
 	{
-		x = LOWORD(lParam);
-		y = HIWORD(lParam);
-
-		htInfo.pt.x = x;
-		htInfo.pt.y = y;
+		TCHITTESTINFO htInfo;
+		htInfo.pt = *pt;
 
 		/* Find the tab that the click occurred over. */
-		iTabHit = TabCtrl_HitTest(m_hTabCtrl,&htInfo);
+		int iTabHit = TabCtrl_HitTest(m_hTabCtrl,&htInfo);
 
 		if(iTabHit != -1)
 		{
@@ -1599,29 +1589,21 @@ void SaltedExplorer::OnAutoSizeColumns(void)
 	}
 }
 
-BOOL SaltedExplorer::OnMeasureItem(WPARAM wParam,LPARAM lParam)
+BOOL SaltedExplorer::OnMeasureItem(MEASUREITEMSTRUCT *pMeasureItem)
 {
-	MEASUREITEMSTRUCT	*pMeasureItem = NULL;
-
-	pMeasureItem = (MEASUREITEMSTRUCT *)lParam;
-
 	if(pMeasureItem->CtlType == ODT_MENU)
 	{
-		return m_pCustomMenu->OnMeasureItem(wParam,lParam);
+		return m_pCustomMenu->OnMeasureItem(pMeasureItem);
 	}
 
 	return TRUE;
 }
 
-BOOL SaltedExplorer::OnDrawItem(WPARAM wParam,LPARAM lParam)
+BOOL SaltedExplorer::OnDrawItem(DRAWITEMSTRUCT *pDrawItem)
 {
-	DRAWITEMSTRUCT	*pDrawItem = NULL;
-
-	pDrawItem = (DRAWITEMSTRUCT *)lParam;
-
 	if(pDrawItem->CtlType == ODT_MENU)
 	{
-		return m_pCustomMenu->OnDrawItem(wParam,lParam);
+		return m_pCustomMenu->OnDrawItem(pDrawItem);
 	}
 
 	return TRUE;
@@ -2189,12 +2171,8 @@ void SaltedExplorer::OnCreateNewFolder(void)
 	}
 }
 
-void SaltedExplorer::OnAppCommand(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnAppCommand(UINT cmd)
 {
-	UINT	cmd;
-
-	cmd = GET_APPCOMMAND_LPARAM(lParam);
-
 	switch(cmd)
 	{
 	case APPCOMMAND_BROWSER_BACKWARD:
@@ -2430,7 +2408,7 @@ void SaltedExplorer::OnIdaRClick(void)
 			}
 		}
 
-		OnListViewRClick(m_hActiveListView,&ptMenuOrigin);
+		OnListViewRClick(&ptMenuOrigin);
 	}
 	else if(hFocus == m_hTreeView)
 	{
@@ -2603,32 +2581,34 @@ void SaltedExplorer::ShowMainRebarBand(HWND hwnd,BOOL bShow)
 	}
 }
 
-void SaltedExplorer::OnNdwIconRClick(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnNdwIconRClick(POINT *pt)
 {
-	LPITEMIDLIST pidlDirectory	= NULL;
-	POINT pt;
-
-	pidlDirectory = m_pActiveShellBrowser->QueryCurrentDirectoryIdl();
-
-	pt.x = GET_X_LPARAM(lParam);
-	pt.y = GET_Y_LPARAM(lParam);
-	ClientToScreen(m_hDisplayWindow,&pt);
-
-	OnListViewRClick(m_hDisplayWindow,&pt);
+	POINT ptCopy = *pt;
+	ClientToScreen(m_hDisplayWindow,&ptCopy);
+	OnListViewRClick(&ptCopy);
 }
 
-void SaltedExplorer::OnNdwRClick(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnNdwRClick(POINT *pt)
 {
-	POINT pt;
+	HMENU hMenu = LoadMenu(g_hLanguageModule, MAKEINTRESOURCE(IDR_DISPLAYWINDOW_RCLICK));
 
-	pt.x = GET_X_LPARAM(lParam);
-	pt.y = GET_Y_LPARAM(lParam);
+	if(hMenu != NULL)
+	{
+		HMENU hPopupMenu = GetSubMenu(hMenu, 0);
 
-	ClientToScreen(m_hDisplayWindow,&pt);
+		if(hPopupMenu != NULL)
+		{
+			POINT ptCopy = *pt;
+			BOOL bRes = ClientToScreen(m_hDisplayWindow, &ptCopy);
+			if(bRes)
+			{
+				TrackPopupMenu(hPopupMenu, TPM_LEFTALIGN | TPM_RIGHTBUTTON | TPM_VERTICAL,
+					ptCopy.x, ptCopy.y, 0, m_hContainer, NULL);
+			}
+		}
 
-	TrackPopupMenu(m_hDisplayWindowRightClickMenu,
-		TPM_LEFTALIGN|TPM_RIGHTBUTTON|TPM_VERTICAL,
-		pt.x,pt.y,0,m_hContainer,NULL);
+		DestroyMenu(hMenu);
+	}
 }
 
 LRESULT SaltedExplorer::OnCustomDraw(LPARAM lParam)
@@ -2951,34 +2931,6 @@ void SaltedExplorer::SetDirectorySpecificSettings(int iTab,LPITEMIDLIST pidlDire
 			}
 		}
 	}
-}
-
-void SaltedExplorer::SetupJumplistTasks()
-{
-	std::list<JumpListTaskInformation> TaskList;
-
-	JumpListTaskInformation jlti;
-
-	TCHAR szCurrentProcess[MAX_PATH];
-
-	GetProcessImageName(GetCurrentProcessId(),szCurrentProcess,
-		SIZEOF_ARRAY(szCurrentProcess));
-
-	TCHAR szName[256];
-
-	LoadString(g_hLanguageModule,
-		IDS_TASKS_NEWTAB,szName,SIZEOF_ARRAY(szName));
-
-	/* New tab task. */
-	jlti.pszName		= szName;
-	jlti.pszPath		= szCurrentProcess;
-	jlti.pszArguments	= NSaltedExplorer::JUMPLIST_TASK_NEWTAB_ARGUMENT;
-	jlti.pszIconPath	= szCurrentProcess;
-	jlti.iIcon			= 1;
-
-	TaskList.push_back(jlti);
-
-	AddJumpListTasks(TaskList);
 }
 
 void SaltedExplorer::PlayNavigationSound(void)

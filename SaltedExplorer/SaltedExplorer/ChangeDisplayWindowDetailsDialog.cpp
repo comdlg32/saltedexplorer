@@ -33,7 +33,6 @@
 #include "../Helper/Helper.h"
 #include "MainResource.h"
 
-
 extern DWRule_t	*g_pDWRule;
 
 INT_PTR CALLBACK DWChangeDetailsProcStub(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam)

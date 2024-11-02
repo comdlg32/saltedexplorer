@@ -66,10 +66,15 @@ HWND SaltedExplorer::CreateAndSubclassListView(HWND hParent,DWORD Style)
 	ListView_SetExtendedListViewStyle(hListView,
 		dwExtendedStyle);
 
-	/* Set the listview to the Windows Explorer theme
-	used in Windows Vista. */
-	/* SetWindowTheme(hListView,L"Explorer",NULL); */
-	SetWindowLongPtr(hListView,GWL_EXSTYLE,WS_EX_CLIENTEDGE);
+	if(m_bVistaControls)
+	{
+		SetWindowTheme(hListView,L"Explorer",NULL);
+	}
+	else
+	{
+		SetWindowLongPtr(hListView,GWL_EXSTYLE,WS_EX_CLIENTEDGE);
+	}
+
 	return hListView;
 }
 
@@ -188,11 +193,19 @@ UINT msg,WPARAM wParam,LPARAM lParam)
 			break;
 
 		case WM_MBUTTONDOWN:
-			OnListViewMButtonDown(wParam,lParam);
+			{
+				POINT pt;
+				POINTSTOPOINT(pt, MAKEPOINTS(lParam));
+				OnListViewMButtonDown(&pt);
+			}
 			break;
 
 		case WM_MBUTTONUP:
-			OnListViewMButtonUp(wParam,lParam);
+			{
+				POINT pt;
+				POINTSTOPOINT(pt, MAKEPOINTS(lParam));
+				OnListViewMButtonUp(&pt);
+			}
 			break;
 
 		/* If no item is currently been dragged, and the last drag
@@ -351,12 +364,11 @@ LRESULT SaltedExplorer::OnListViewLButtonDown(WPARAM wParam,LPARAM lParam)
 	return CallWindowProc(DefaultListViewProc,m_hActiveListView,WM_LBUTTONDOWN,wParam,lParam);
 }
 
-void SaltedExplorer::OnListViewMButtonDown(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnListViewMButtonDown(POINT *pt)
 {
 	LV_HITTESTINFO ht;
 
-	ht.pt.x = LOWORD(lParam);
-	ht.pt.y = HIWORD(lParam);
+	ht.pt = *pt;
 
 	ListView_HitTest(m_hActiveListView,&ht);
 
@@ -372,12 +384,11 @@ void SaltedExplorer::OnListViewMButtonDown(WPARAM wParam,LPARAM lParam)
 	}
 }
 
-void SaltedExplorer::OnListViewMButtonUp(WPARAM wParam,LPARAM lParam)
+void SaltedExplorer::OnListViewMButtonUp(POINT *pt)
 {
 	LV_HITTESTINFO	ht;
 
-	ht.pt.x = LOWORD(lParam);
-	ht.pt.y = HIWORD(lParam);
+	ht.pt = *pt;
 
 	ListView_HitTest(m_hActiveListView,&ht);
 
@@ -1097,7 +1108,7 @@ void SaltedExplorer::CreateFileInfoTip(int iItem,TCHAR *szInfoTip,UINT cchMax)
 	}
 }
 
-void SaltedExplorer::OnListViewRClick(HWND hParent,POINT *pCursorPos)
+void SaltedExplorer::OnListViewRClick(POINT *pCursorPos)
 {
 	/* It may be possible for the active tab/folder
 	to change while the menu is been shown (e.g. if

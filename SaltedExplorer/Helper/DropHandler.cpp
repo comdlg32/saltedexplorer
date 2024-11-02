@@ -182,8 +182,12 @@ void CDropHandler::HandleLeftClickDrop(IDataObject *pDataObject,POINTL *pptl)
 
 	if(CheckDropFormatSupported(pDataObject,&m_ftcHDrop))
 	{
-		hrCopy = CopyHDropData(pDataObject,bPrefferedEffect,dwEffect,
-			PastedFileList);
+		/* CopyHDropData may copy the data
+		in a background thread, so it
+		notifies the caller itself (rather
+		than returning a list of files
+		in PastedFileList). */
+		hrCopy = CopyHDropData(pDataObject,bPrefferedEffect,dwEffect);
 	}
 	else if(CheckDropFormatSupported(pDataObject,&m_ftcShellIDList))
 	{
@@ -260,7 +264,7 @@ BOOL CDropHandler::CheckDropFormatSupported(IDataObject *pDataObject,FORMATETC *
 }
 
 HRESULT CDropHandler::CopyHDropData(IDataObject *pDataObject,
-	BOOL bPrefferedEffect,DWORD dwEffect,std::list<std::wstring> &PastedFileList)
+	BOOL bPrefferedEffect,DWORD dwEffect)
 {
 	STGMEDIUM stg;
 	HRESULT hr = pDataObject->GetData(&m_ftcHDrop,&stg);

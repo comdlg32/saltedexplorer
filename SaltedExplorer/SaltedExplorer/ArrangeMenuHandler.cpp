@@ -30,7 +30,7 @@ void SaltedExplorer::InitializeArrangeMenuItems(void)
 	HMENU				hArrangeMenu;
 	MENUITEMINFO		mi;
 	ArrangeMenuItem_t	ArrangeMenuItem;
-	hMainMenu = GetMenu(m_hContainer);
+	hMainMenu = m_hMenu;
 	hArrangeMenu = GetSubMenu(hMainMenu,3);
 
 	mi.cbSize	= sizeof(mi);

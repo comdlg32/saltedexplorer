@@ -4,17 +4,31 @@
 #include <list>
 #include <boost/variant.hpp>
 
-class Favorite;
-class FavoriteFolder;
+class CFavorite;
+class CFavoriteFolder;
 
-class FavoriteFolder
+namespace NFavorite
+{
+	__interface IFavoriteItemNotification
+	{
+		virtual void	OnFavoriteItemModified(const GUID &guid);
+
+		virtual void	OnFavoriteAdded(const CFavoriteFolder &ParentFavoriteFolder,const CFavorite &Favorite);
+		virtual void	OnFavoriteFolderAdded(const CFavoriteFolder &ParentFavoriteFolder,const CFavoriteFolder &FavoriteFolder);
+
+		virtual void	OnFavoriteRemoved(const GUID &guid);
+		virtual void	OnFavoriteFolderRemoved(const GUID &guid);
+	};
+}
+
+class CFavoriteFolder
 {
 public:
 
-	static FavoriteFolder	Create(const std::wstring &strName);
-	static FavoriteFolder	*CreateNew(const std::wstring &strName);
-	static FavoriteFolder	UnserializeFromRegistry(const std::wstring &strKey);
-	~FavoriteFolder();
+	static CFavoriteFolder	Create(const std::wstring &strName);
+	static CFavoriteFolder	*CreateNew(const std::wstring &strName);
+	static CFavoriteFolder	UnserializeFromRegistry(const std::wstring &strKey);
+	~CFavoriteFolder();
 
 	void			SerializeToRegistry(const std::wstring &strKey);
 
@@ -31,13 +45,16 @@ public:
 	one child folder. */
 	bool			HasChildFolder() const;
 
-	std::list<boost::variant<FavoriteFolder,Favorite>>::iterator	begin();
-	std::list<boost::variant<FavoriteFolder,Favorite>>::iterator	end();
+	std::list<boost::variant<CFavoriteFolder,CFavorite>>::iterator	begin();
+	std::list<boost::variant<CFavoriteFolder,CFavorite>>::iterator	end();
 
-	void			InsertFavorite(const Favorite &bm);
-	void			InsertFavoriteFolder(const FavoriteFolder &bf);
-	void			InsertFavorite(const Favorite &bm,std::size_t Position);
-	void			InsertFavoriteFolder(const FavoriteFolder &bf,std::size_t Position);
+	std::list<boost::variant<CFavoriteFolder,CFavorite>>::const_iterator	begin() const;
+	std::list<boost::variant<CFavoriteFolder,CFavorite>>::const_iterator	end() const;
+
+	void			InsertFavorite(const CFavorite &Favorite);
+	void			InsertFavorite(const CFavorite &Favorite,std::size_t Position);
+	void			InsertFavoriteFolder(const CFavoriteFolder &FavoriteFolder);
+	void			InsertFavoriteFolder(const CFavoriteFolder &FavoriteFolder,std::size_t Position);
 
 	void			RemoveFavorite();
 	void			RemoveFavoriteFolder();
@@ -50,7 +67,7 @@ private:
 		INITIALIZATION_TYPE_REGISTRY
 	};
 
-	FavoriteFolder(const std::wstring &str,InitializationType_t InitializationType);
+	CFavoriteFolder(const std::wstring &str,InitializationType_t InitializationType);
 
 	void			Initialize(const std::wstring &strName);
 	void			InitializeFromRegistry(const std::wstring &strKey);
@@ -72,15 +89,15 @@ private:
 	the ordering within this list defines the ordering
 	between child items (i.e. there is no explicit
 	ordering). */
-	std::list<boost::variant<FavoriteFolder,Favorite>>	m_ChildList;
+	std::list<boost::variant<CFavoriteFolder,CFavorite>>	m_ChildList;
 };
 
-class Favorite
+class CFavorite
 {
 public:
 
-	Favorite(const std::wstring &strName,const std::wstring &strLocation,const std::wstring &strDescription);
-	~Favorite();
+	CFavorite(const std::wstring &strName,const std::wstring &strLocation,const std::wstring &strDescription);
+	~CFavorite();
 
 	GUID			GetGUID() const;
 
@@ -94,6 +111,8 @@ public:
 
 	int				GetVisitCount() const;
 	FILETIME		GetDateLastVisited() const;
+
+	void			UpdateVisitCount();
 
 	FILETIME		GetDateCreated() const;
 	FILETIME		GetDateModified() const;
@@ -113,5 +132,42 @@ private:
 	FILETIME		m_ftModified;
 };
 
+class CFavoriteItemNotifier
+{
+public:
+
+	~CFavoriteItemNotifier();
+
+	static CFavoriteItemNotifier &GetInstance();
+
+	void	AddObserver(NFavorite::IFavoriteItemNotification *pbin);
+	void	RemoveObserver(NFavorite::IFavoriteItemNotification *pbin);
+
+	void	NotifyObserversFavoriteItemModified(const GUID &guid);
+	void	NotifyObserversFavoriteAdded(const CFavoriteFolder &ParentFavoriteFolder,const CFavorite &Favorite);
+	void	NotifyObserversFavoriteFolderAdded(const CFavoriteFolder &ParentFavoriteFolder,const CFavoriteFolder &FavoriteFolder);
+	void	NotifyObserversFavoriteRemoved(const GUID &guid);
+	void	NotifyObserversFavoriteFolderRemoved(const GUID &guid);
+
+private:
+
+	enum NotificationType_t
+	{
+		NOTIFY_FAVORITE_ITEM_MODIFIED,
+		NOTIFY_FAVORITE_ADDED,
+		NOTIFY_FAVORITE_FOLDER_ADDED,
+		NOTIFY_FAVORITE_REMOVED,
+		NOTIFY_FAVORITE_FOLDER_REMOVED
+	};
+
+	CFavoriteItemNotifier();
+
+	CFavoriteItemNotifier(const CFavoriteItemNotifier &);
+	CFavoriteItemNotifier & operator=(const CFavoriteItemNotifier &);
+
+	void	NotifyObservers(NotificationType_t NotificationType,const CFavoriteFolder *pParentFavoriteFolder,const CFavoriteFolder *pFavoriteFolder,const CFavorite *pFavorite,const GUID *pguid);
+
+	std::list<NFavorite::IFavoriteItemNotification *>	m_listObservers;
+};
 
 #endif

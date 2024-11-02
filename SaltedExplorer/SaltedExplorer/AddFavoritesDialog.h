@@ -38,7 +38,7 @@ class CAddFavoritesDialog : public CBaseDialog
 {
 public:
 
-	CAddFavoritesDialog(HINSTANCE hInstance,int iResource,HWND hParent,FavoriteFolder *pAllFavorites,Favorite *pFavorite);
+	CAddFavoritesDialog(HINSTANCE hInstance,int iResource,HWND hParent,CFavoriteFolder &AllFavorites,CFavorite &Favorite);
 	~CAddFavoritesDialog();
 
 	LRESULT CALLBACK	TreeViewEditProc(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
@@ -57,6 +57,8 @@ protected:
 	void	GetResizableControlInformation(CBaseDialog::DialogSizeConstraint &dsc,std::list<CResizableDialog::Control_t> &ControlList);
 
 private:
+
+	CAddFavoritesDialog & operator = (const CAddFavoritesDialog &mbd);
 
 	void		SetDialogIcon();
 
@@ -78,10 +80,10 @@ private:
 
 	HICON			m_hDialogIcon;
 
-	FavoriteFolder	*m_pAllFavorites;
-	Favorite		*m_pFavorite;
+	CFavoriteFolder	&m_AllFavorites;
+	CFavorite		&m_Favorite;
 
-	FavoritesTreeView	*m_pFavoritesTreeView;
+	CFavoritesTreeView	*m_pFavoritesTreeView;
 
 	CAddFavoritesDialogPersistentSettings	*m_pabdps;
 };

@@ -16,6 +16,7 @@
 #include "AddFavoritesDialog.h"
 #include "FavoritesHelper.h"
 #include "MainResource.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 
 namespace NAddFavoritesDialog
@@ -27,9 +28,9 @@ namespace NAddFavoritesDialog
 const TCHAR CAddFavoritesDialogPersistentSettings::SETTINGS_KEY[] = _T("AddFavorite");
 
 CAddFavoritesDialog::CAddFavoritesDialog(HINSTANCE hInstance,int iResource,HWND hParent,
-	FavoriteFolder *pAllFavorites,Favorite *pFavorite) :
-m_pAllFavorites(pAllFavorites),
-m_pFavorite(pFavorite),
+	CFavoriteFolder &AllFavorites,CFavorite &Favorite) :
+m_AllFavorites(AllFavorites),
+m_Favorite(Favorite),
 CBaseDialog(hInstance,iResource,hParent,true)
 {
 	m_pabdps = &CAddFavoritesDialogPersistentSettings::GetInstance();
@@ -41,8 +42,8 @@ CBaseDialog(hInstance,iResource,hParent,true)
 	that. */
 	if(!m_pabdps->m_bInitialized)
 	{
-		m_pabdps->m_guidSelected = pAllFavorites->GetGUID();
-		m_pabdps->m_setExpansion.insert(pAllFavorites->GetGUID());
+		m_pabdps->m_guidSelected = AllFavorites.GetGUID();
+		m_pabdps->m_setExpansion.insert(AllFavorites.GetGUID());
 
 		m_pabdps->m_bInitialized = true;
 	}
@@ -56,19 +57,18 @@ BOOL CAddFavoritesDialog::OnInitDialog()
 {
 	SetDialogIcon();
 
-	SetDlgItemText(m_hDlg,IDC_FAVORITES_NAME,m_pFavorite->GetName().c_str());
-	SetDlgItemText(m_hDlg,IDC_FAVORITES_LOCATION,m_pFavorite->GetLocation().c_str());
+	SetDlgItemText(m_hDlg,IDC_FAVORITES_NAME,m_Favorite.GetName().c_str());
+	SetDlgItemText(m_hDlg,IDC_FAVORITES_LOCATION,m_Favorite.GetLocation().c_str());
 
-	if(m_pFavorite->GetName().size() == 0 ||
-		m_pFavorite->GetLocation().size() == 0)
+	if(m_Favorite.GetName().size() == 0 ||
+		m_Favorite.GetLocation().size() == 0)
 	{
 		EnableWindow(GetDlgItem(m_hDlg,IDOK),FALSE);
 	}
 
 	HWND hTreeView = GetDlgItem(m_hDlg,IDC_FAVORITES_TREEVIEW);
 
-	m_pFavoritesTreeView = new FavoritesTreeView(hTreeView);
-	m_pFavoritesTreeView->InsertFoldersIntoTreeView(m_pAllFavorites,
+	m_pFavoritesTreeView = new CFavoritesTreeView(hTreeView,&m_AllFavorites,
 		m_pabdps->m_guidSelected,m_pabdps->m_setExpansion);
 
 	HWND hEditName = GetDlgItem(m_hDlg,IDC_FAVORITES_NAME);
@@ -83,7 +83,7 @@ BOOL CAddFavoritesDialog::OnInitDialog()
 void CAddFavoritesDialog::SetDialogIcon()
 {
 	HIMAGELIST himl = ImageList_Create(16,16,ILC_COLOR32|ILC_MASK,0,48);
-	HBITMAP hBitmap = LoadBitmap(GetInstance(),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
+	HBITMAP hBitmap = LoadBitmap(GetModuleHandle(NULL),MAKEINTRESOURCE(IDB_SHELLIMAGES_2000));
 	ImageList_Add(himl,hBitmap,NULL);
 
 	m_hDialogIcon = ImageList_GetIcon(himl,SHELLIMAGES_ADDFAV,ILD_NORMAL);
@@ -203,20 +203,20 @@ BOOL CAddFavoritesDialog::OnNotify(NMHDR *pnmhdr)
 
 void CAddFavoritesDialog::OnNewFolder()
 {
+	TCHAR szTemp[64];
+	LoadString(GetInstance(),IDS_FAVORITES_NEWFAVORITEFOLDER,szTemp,SIZEOF_ARRAY(szTemp));
+	CFavoriteFolder NewFavoriteFolder = CFavoriteFolder::Create(szTemp);
+
 	HWND hTreeView = GetDlgItem(m_hDlg,IDC_FAVORITES_TREEVIEW);
 	HTREEITEM hSelectedItem = TreeView_GetSelection(hTreeView);
 
 	assert(hSelectedItem != NULL);
 
-	TCHAR szTemp[64];
-	LoadString(GetInstance(),IDS_FAVORITES_NEWFAVORITEFOLDER,szTemp,SIZEOF_ARRAY(szTemp));
-	FavoriteFolder NewFavoriteFolder = FavoriteFolder::Create(szTemp);
-
-	FavoriteFolder *pParentFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(
-		hSelectedItem,m_pAllFavorites);
-	pParentFavoriteFolder->InsertFavoriteFolder(NewFavoriteFolder);
-	HTREEITEM hNewItem = m_pFavoritesTreeView->InsertFolderIntoTreeView(hSelectedItem,
-		&NewFavoriteFolder,m_pabdps->m_guidSelected,m_pabdps->m_setExpansion);
+	CFavoriteFolder &ParentFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hSelectedItem);
+	ParentFavoriteFolder.InsertFavoriteFolder(NewFavoriteFolder);
+	/* TODO: Rely on notification. */
+	/*HTREEITEM hNewItem = m_pFavoritesTreeView->InsertFolderIntoTreeView(hSelectedItem,
+		NewFavoriteFolder,m_pabdps->m_guidSelected,m_pabdps->m_setExpansion);*/
 
 	TVITEM tvi;
 	tvi.mask		= TVIF_CHILDREN;
@@ -229,8 +229,8 @@ void CAddFavoritesDialog::OnNewFolder()
 	the user creates a new folder, they intend to place any
 	new Favorite within that folder. */
 	SetFocus(hTreeView);
-	TreeView_SelectItem(hTreeView,hNewItem);
-	TreeView_EditLabel(hTreeView,hNewItem);
+	//TreeView_SelectItem(hTreeView,hNewItem);
+	//TreeView_EditLabel(hTreeView,hNewItem);
 }
 
 void CAddFavoritesDialog::OnRClick(NMHDR *pnmhdr)
@@ -278,9 +278,8 @@ BOOL CAddFavoritesDialog::OnTvnEndLabelEdit(NMTVDISPINFO *pnmtvdi)
 	if(pnmtvdi->item.pszText != NULL &&
 		lstrlen(pnmtvdi->item.pszText) > 0)
 	{
-		FavoriteFolder *pFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(
-			pnmtvdi->item.hItem,m_pAllFavorites);
-		pFavoriteFolder->SetName(pnmtvdi->item.pszText);
+		CFavoriteFolder &FavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(pnmtvdi->item.hItem);
+		FavoriteFolder.SetName(pnmtvdi->item.pszText);
 
 		SetWindowLongPtr(m_hDlg,DWLP_MSGRESULT,TRUE);
 		return TRUE;
@@ -348,11 +347,10 @@ void CAddFavoritesDialog::OnOk()
 	{
 		HWND hTreeView = GetDlgItem(m_hDlg,IDC_FAVORITES_TREEVIEW);
 		HTREEITEM hSelected = TreeView_GetSelection(hTreeView);
-		FavoriteFolder *pFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(
-			hSelected,m_pAllFavorites);
+		CFavoriteFolder &FavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hSelected);
 
-		Favorite Favorite(strName,strLocation,_T(""));
-		pFavoriteFolder->InsertFavorite(Favorite);
+		CFavorite Favorite(strName,strLocation,_T(""));
+		FavoriteFolder.InsertFavorite(Favorite);
 	}
 
 	EndDialog(m_hDlg,1);
@@ -376,8 +374,8 @@ void CAddFavoritesDialog::SaveTreeViewState()
 	HWND hTreeView = GetDlgItem(m_hDlg,IDC_FAVORITES_TREEVIEW);
 
 	HTREEITEM hSelected = TreeView_GetSelection(hTreeView);
-	FavoriteFolder *pFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hSelected,m_pAllFavorites);
-	m_pabdps->m_guidSelected  = pFavoriteFolder->GetGUID();
+	CFavoriteFolder &FavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hSelected);
+	m_pabdps->m_guidSelected  = FavoriteFolder.GetGUID();
 
 	m_pabdps->m_setExpansion.clear();
 	SaveTreeViewExpansionState(hTreeView,TreeView_GetRoot(hTreeView));
@@ -389,8 +387,8 @@ void CAddFavoritesDialog::SaveTreeViewExpansionState(HWND hTreeView,HTREEITEM hI
 
 	if(uState & TVIS_EXPANDED)
 	{
-		FavoriteFolder *pFavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hItem,m_pAllFavorites);
-		m_pabdps->m_setExpansion.insert(pFavoriteFolder->GetGUID());
+		CFavoriteFolder &FavoriteFolder = m_pFavoritesTreeView->GetFavoriteFolderFromTreeView(hItem,m_AllFavorites);
+		m_pabdps->m_setExpansion.insert(FavoriteFolder.GetGUID());
 
 		HTREEITEM hChild = TreeView_GetChild(hTreeView,hItem);
 		SaveTreeViewExpansionState(hTreeView,hChild);

@@ -598,25 +598,19 @@ void SaltedExplorer::OnApplicationToolbarRClick(void)
 {
 	MENUITEMINFO mii;
 
+	TCHAR szTemp[64];
+	LoadString(g_hLanguageModule,IDS_APPLICATIONBUTTON_NEW,
+		szTemp,SIZEOF_ARRAY(szTemp));
+
 	mii.cbSize		= sizeof(mii);
 	mii.fMask		= MIIM_ID|MIIM_STRING;
-	mii.dwTypeData	= _T("New Application Button...");
+	mii.dwTypeData	= szTemp;
 	mii.wID			= IDM_APP_NEW;
 
 	/* Add the item to the menu. */
 	InsertMenuItem(m_hToolbarRightClickMenu,7,TRUE,&mii);
 
-	/* Set it to be owner drawn. */
-	SetMenuItemOwnerDrawn(m_hToolbarRightClickMenu,7);
-
 	OnMainToolbarRClick();
-
-	mii.cbSize	= sizeof(mii);
-	mii.fMask	= MIIM_DATA;
-	GetMenuItemInfo(m_hToolbarRightClickMenu,7,TRUE,&mii);
-
-	/* Free the owner drawn data. */
-	free((void *)mii.dwItemData);
 
 	/* Now, remove the item from the menu. */
 	DeleteMenu(m_hToolbarRightClickMenu,7,MF_BYPOSITION);

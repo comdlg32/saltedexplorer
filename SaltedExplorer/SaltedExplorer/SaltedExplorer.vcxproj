@@ -282,6 +282,7 @@
     <ClCompile Include="DrivesToolbarHandler.cpp" />
     <ClCompile Include="EventSwitcher.cpp" />
     <ClCompile Include="ManageFavoritesDialog.cpp" />
+    <ClCompile Include="MenuToolbar.cpp" />
     <ClCompile Include="SaltedExplorer.cpp" />
     <ClCompile Include="FilterDialog.cpp" />
     <ClCompile Include="HandleWindowState.cpp" />
@@ -329,12 +330,14 @@
     <ClInclude Include="AboutDialog.h" />
     <ClInclude Include="AddFavoritesDialog.h" />
     <ClInclude Include="ColorRuleDialog.h" />
+    <ClInclude Include="Config.h" />
     <ClInclude Include="CustomizeColorsDialog.h" />
     <ClInclude Include="DestroyFilesDialog.h" />
     <ClInclude Include="DialogHelper.h" />
     <ClInclude Include="FavoritesHelper.h" />
     <ClInclude Include="MainToolbar.h" />
     <ClInclude Include="ManageFavoritesDialog.h" />
+    <ClInclude Include="MenuToolbar.h" />
     <ClInclude Include="NewFavoriteFolderDialog.h" />
     <ClInclude Include="SaltedExplorer.h" />
     <ClInclude Include="SaltedExplorer_internal.h" />

@@ -3,14 +3,16 @@
 
 #include <windows.h>
 #include <commctrl.h>
+#include "SaltedExplorer_internal.h"
+#include "FavoritesHelper.h"
 #include "../ShellBrowser/iShellView.h"
 #include "../Helper/FileContextMenuManager.h"
 #include "../Helper/BaseDialog.h"
 #include "../Helper/SetDefaultFileManager.h"
 #include "../Helper/FileActionHandler.h"
 #include "../Helper/Favorites.h"
-#include "SaltedExplorer_internal.h"
 #include "MainToolbar.h"
+#include "FavoriteIPHelper.h"
 #import <msxml3.dll> raw_interfaces_only
 
 #define MAX_TABS					100
@@ -133,7 +135,7 @@ typedef enum
 
 typedef enum
 {
-	OPTION_WEBVIEW	= 1,
+	OPTION_WEBVIEW		= 1,
 	OPTION_NOWEBVIEW	= 2
 } WEBVIEW_OPTIONS;
 
@@ -153,6 +155,7 @@ TOOLBAR_SEARCH,TOOLBAR_PROPERTIES,TOOLBAR_REFRESH};
 class SaltedExplorer : public IDropTarget, public IServiceProvider,
 	public IShellView2, public INewMenuClient, public IDropFilesCallback,
 	public IFileContextMenuExternal, public IModelessDialogNotification,
+	public NFavoriteIPHelper::IPFavoriteNotificationGet, public NFavoriteIPHelper::IPFavoriteNotificationSet,
 	public ISaltedExplorer
 {
 public:
@@ -186,6 +189,7 @@ public:
 	INT_PTR CALLBACK	ChangeDisplayColours(HWND hDlg,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ApplicationButtonPropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	ApplicationToolbarNewButtonProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
+	LRESULT CALLBACK	MainWndTaskbarThumbnailProc(HWND hwnd,UINT uMsg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	DWChangeDetailsProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
 	INT_PTR CALLBACK	DWLinePropertiesProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lParam);
 
@@ -363,7 +367,7 @@ private:
 		ULONG __stdcall		Release(void);
 
 		/* Drag and drop. */
-		HRESULT _stdcall	DragEnter(IDataObject *pDataObject,DWORD grfKeyStat,POINTL pt,DWORD *pdwEffect);
+		HRESULT _stdcall	DragEnter(IDataObject *pDataObject,DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
 		HRESULT _stdcall	DragOver(DWORD grfKeyState,POINTL pt,DWORD *pdwEffect);
 		HRESULT _stdcall	DragLeave(void);
 		HRESULT _stdcall	Drop(IDataObject *pDataObject,DWORD grfKeyState,POINTL ptl,DWORD *pdwEffect);
@@ -391,8 +395,8 @@ private:
 	/* <----Private message handlers.----> */
 
 	/* Main window private message handlers. */
-	LRESULT CALLBACK		CommandHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
-	LRESULT CALLBACK		NotifyHandler(HWND hwnd,UINT Msg,WPARAM wParam,LPARAM lParam);
+	LRESULT CALLBACK		CommandHandler(HWND hwnd, WPARAM wParam);
+	LRESULT CALLBACK		NotifyHandler(LPARAM lParam);
 	BOOL					OnSize(int MainWindowWidth,int MainWindowHeight);
 	int						OnClose(void);
 	int						OnDestroy(void);
@@ -425,7 +429,7 @@ private:
 	LRESULT					StatusBarMenuSelect(WPARAM wParam,LPARAM lParam);
 	void					HandleDirectoryMonitoring(int iTabId);
 	void					OnTbnDropDown(LPARAM lParam);
-	void					OnTabMClick(WPARAM wParam,LPARAM lParam);
+	void					OnTabMClick(POINT *pt);
 	void					OnDisplayWindowResized(WPARAM wParam);
 	void					OnStartedBrowsing(int iTabId,TCHAR *szPath);
 	void					OnDuplicateTab(int iTab);
@@ -434,8 +438,8 @@ private:
 	void					OnLockTabAndAddress(int iTab);
 	void					HandleTabToolbarItemStates(void);
 	void					OnAutoSizeColumns(void);
-	BOOL					OnMeasureItem(WPARAM wParam,LPARAM lParam);
-	BOOL					OnDrawItem(WPARAM wParam,LPARAM lParam);
+	BOOL					OnMeasureItem(MEASUREITEMSTRUCT *pMeasureItem);
+	BOOL					OnDrawItem(DRAWITEMSTRUCT *pDrawItem);
 	void					OnToolbarViews(void);
 	void					ShowToolbarViewsDropdown(void);
 	void					OnMainToolbarRClick(void);
@@ -455,15 +459,15 @@ private:
 	void					OnShellNewItemCreated(LPARAM lParam);
 	void					OnCreateNewFolder(void);
 	void					OnPaste(void);
-	void					OnAppCommand(WPARAM wParam,LPARAM lParam);
+	void					OnAppCommand(UINT cmd);
 	void					OnBrowseBack(void);
 	void					OnBrowseForward(void);
 	void					OnRefresh(void);
 	void					OnDirectoryModified(int iTabId);
 	void					OnIdaRClick(void);
 	void					OnAssocChanged(void);
-	void					OnNdwRClick(WPARAM wParam,LPARAM lParam);
-	void					OnNdwIconRClick(WPARAM wParam,LPARAM lParam);
+	void					OnNdwRClick(POINT *pt);
+	void					OnNdwIconRClick(POINT *pt);
 	LRESULT					OnCustomDraw(LPARAM lParam);
 	void					OnSortBy(UINT uSortMode);
 	void					OnGroupBy(UINT uSortMode);
@@ -473,8 +477,8 @@ private:
 	void					OnSelectTab(int iTab,BOOL bSetFocus);
 
 	/* ListView private message handlers. */
-	void					OnListViewMButtonDown(WPARAM wParam,LPARAM lParam);
-	void					OnListViewMButtonUp(WPARAM wParam,LPARAM lParam);
+	void					OnListViewMButtonDown(POINT *pt);
+	void					OnListViewMButtonUp(POINT *pt);
 	LRESULT					OnListViewLButtonDown(WPARAM wParam,LPARAM lParam);
 	void					OnListViewDoubleClick(NMHDR *nmhdr);
 	void					OnListViewFileRename(void);
@@ -487,7 +491,7 @@ private:
 	BOOL					OnListViewEndLabelEdit(LPARAM lParam);
 	void					OnListViewGetDisplayInfo(LPARAM lParam);
 	void					OnListViewFileDelete(BOOL bPermanent);
-	void					OnListViewRClick(HWND hParent,POINT *pCursorPos);
+	void					OnListViewRClick(POINT *pCursorPos);
 	void					OnListViewBackgroundRClick(POINT *pCursorPos);
 	void					OnListViewItemRClick(POINT *pCursorPos);
 	void					OnListViewHeaderRClick(POINT *pCursorPos);
@@ -515,20 +519,20 @@ private:
 	void					OnTreeViewPaste(void);
 
 	/* Main toolbar private message handlers. */
-	BOOL					OnTBQueryInsert(LPARAM lParam);
-	BOOL					OnTBQueryDelete(LPARAM lParam);
+	BOOL					OnTBQueryInsert();
+	BOOL					OnTBQueryDelete();
 	BOOL					OnTBGetButtonInfo(LPARAM lParam);
-	BOOL					OnTBRestore(LPARAM lParam);
+	BOOL					OnTBRestore();
 	void					OnTBSave(LPARAM lParam);
 	void					OnTBReset(void);
 	void					OnTBGetInfoTip(LPARAM lParam);
 
 	/* Tab control private message handlers. */
 	void					OnInitTabMenu(WPARAM wParam);
-	void					OnTabCtrlLButtonDown(WPARAM wParam,LPARAM lParam);
+	void					OnTabCtrlLButtonDown(POINT *pt);
 	void					OnTabCtrlLButtonUp(void);
-	void					OnTabCtrlMouseMove(WPARAM wParam,LPARAM lParam);
-	void					OnTabCtrlRButtonUp(WPARAM wParam,LPARAM lParam);
+	void					OnTabCtrlMouseMove(POINT *pt);
+	void					OnTabCtrlRButtonUp(POINT *pt);
 	void					ProcessTabCommand(UINT uMenuID,int iTabHit);
 
 	/* Address bar private message handlers. */
@@ -561,7 +565,7 @@ private:
 	/* Menus. */
 	HMENU					InitializeRightClickMenu(void);
 	void					SetProgramMenuItemStates(HMENU hProgramMenu);
-	void					SetArrangeMenuItemStates(HMENU);
+	void					SetArrangeMenuItemStates();
 
 	/* Columns. */
 	void					SetAllDefaultColumns(void);
@@ -633,7 +637,7 @@ private:
 	/* Settings. */
 	void					SaveAllSettings(void);
 	LONG					SaveSettings();
-	LONG					LoadSettings(LPCTSTR);
+	LONG					LoadSettings();
 	void					ValidateLoadedSettings(void);
 	void					ValidateToolbarSettings(void);
 	void					ValidateColumns(void);
@@ -652,7 +656,7 @@ private:
 	void					SaveColumnWidthsToRegistry(HKEY hColumnsKey,TCHAR *szKeyName,std::list<Column_t> *pColumns);
 	void					LoadDefaultColumnsFromRegistry(void);
 	void					SaveDefaultColumnsToRegistry(void);
-	void					InitializeFAVORITES(void);
+	void					InitializeFavorites(void);
 	void					SaveFavoritesToRegistry(void);
 	void					LoadFavoritesFromRegistry(void);
 	void					LoadApplicationToolbarFromRegistry(void);
@@ -692,6 +696,7 @@ private:
 	void					ToggleFolders(void);
 
 	/* Windows 7 taskbar thumbnail previews. */
+	void					InitializeTaskbarThumbnails();
 	ATOM					RegisterTabProxyClass(TCHAR *szClassName,LPITEMIDLIST pidlDirectory);
 	void					CreateTabProxy(LPITEMIDLIST pidlDirectory,int iTabId,BOOL bSwitchToNewTab);
 	void					RegisterTab(HWND hTabProxy,TCHAR *szDisplayName,BOOL bTabActive);
@@ -706,6 +711,13 @@ private:
 	void					ReleaseTabId(int iTabId);
 	int						GenerateUniqueTabId(void);
 	BOOL					CheckTabIdStatus(int iTabId);
+
+	/* IPFavoriteNotificationGet methods. */
+	bool					GetIPBroadcast() const;
+
+	/* IPFavoriteNotificationSet methods. */
+	void					SetIPBroadcast(bool bBroadcast);
+
 
 	/* Languages. */
 	void					SetLanguageModule(void);
@@ -921,12 +933,16 @@ private:
 	IShellBrowser2 *		m_pActiveShellBrowser;
 	IDirectoryMonitor *		m_pDirMon;
 	CMyTreeView *			m_pMyTreeView;
-	FavoriteFolder *		m_bfAllFavorites;
+	CFavoriteFolder *		m_bfAllFavorites;
 	CCustomMenu *			m_pCustomMenu;
 	CStatusBar *			m_pStatusBar;
 	HANDLE					m_hIconThread;
 	HANDLE					m_hTreeViewIconThread;
 	HANDLE					m_hFolderSizeThread;
+
+	IPFavoriteObserver		*m_pipbo;
+	bool					m_bBroadcastIPFavoriteNotifications;
+	FavoritesToolbar		*m_pFavoritesToolbar;
 
 	/** Internal state. **/
 	HWND					m_hActiveListView;
@@ -940,7 +956,6 @@ private:
 	HMENU					m_hFavoritesMenu;
 	HMENU					m_hTabRightClickMenu;
 	HMENU					m_hToolbarRightClickMenu;
-	HMENU					m_hDisplayWindowRightClickMenu;
 	HMENU					m_hApplicationRightClickMenu;
 	HMENU					m_hViewsMenu;
 	TCHAR					m_CurrentDirectory[MAX_PATH];
@@ -992,7 +1007,7 @@ private:
 	BOOL					m_bShowDisplayWindow;
 	BOOL					m_bShowMenuBar;
 	BOOL					m_bShowMainToolbar;
-	BOOL					m_bShowFAVORITESToolbar;
+	BOOL					m_bShowFavoritesToolbar;
 	BOOL					m_bShowDrivesToolbar;
 	BOOL					m_bShowApplicationToolbar;
 	BOOL					m_bAlwaysShowTabBar;
@@ -1032,7 +1047,6 @@ private:
 	BOOL					m_bTVAutoExpandSelected;
 	BOOL					m_bLargeToolbarIcons;
 	BOOL					m_bToolbarTitleButtons;
-	BOOL					m_bWebView;
 	BOOL					m_bPlayNavigationSound;
 	SizeDisplayFormat_t		m_SizeDisplayFormat;
 	UINT					m_StartupMode;
@@ -1119,6 +1133,9 @@ private:
 	int						m_nSelected;
 	int						m_nSelectedOnInvert;
 	int						m_ListViewMButtonItem;
+
+	/* Favorites. */
+	CIPFavoriteItemNotifier	*m_pipbin;
 
 	/* Copy/cut. */
 	IDataObject				*m_pClipboardDataObject;

@@ -3,10 +3,9 @@
  * Project: DisplayWindow
  * File: MsgHandler.cpp
  *
- *
  * Handles GUI messages for the display window.
  *
- 
+ * Toiletflusher and XP Pro
  * www.saltedexplorer.ml
  *
  *****************************************************************/

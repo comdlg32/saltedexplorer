@@ -16,6 +16,7 @@
 #include <list>
 #include "SaltedExplorer.h"
 #include "CustomizeColorsDialog.h"
+#include "FavoritesHelper.h"
 #include "../Helper/FileOperations.h"
 #include "../Helper/Helper.h"
 #include "../Helper/Controls.h"
@@ -25,21 +26,25 @@
 
 extern HIMAGELIST himlMenu;
 
-void SaltedExplorer::InitializeFAVORITES(void)
+void SaltedExplorer::InitializeFavorites(void)
 {
 	TCHAR szTemp[64];
 
 	LoadString(g_hLanguageModule,IDS_FAVORITES_ALLFAVORITES,szTemp,SIZEOF_ARRAY(szTemp));
-	m_bfAllFavorites = FavoriteFolder::CreateNew(szTemp);
+	m_bfAllFavorites = CFavoriteFolder::CreateNew(szTemp);
 
-	/* Set up the 'FAVORITES Toolbar' and 'FAVORITES Menu' folders. */
+	/* Set up the 'Favorites Toolbar' and 'Favorites Menu' folders. */
 	LoadString(g_hLanguageModule,IDS_FAVORITES_FAVORITESTOOLBAR,szTemp,SIZEOF_ARRAY(szTemp));
-	FavoriteFolder bfFAVORITESToolbar = FavoriteFolder::Create(szTemp);
-	m_bfAllFavorites->InsertFavoriteFolder(bfFAVORITESToolbar);
+	CFavoriteFolder bfFavoritesToolbar = CFavoriteFolder::Create(szTemp);
+	m_bfAllFavorites->InsertFavoriteFolder(bfFavoritesToolbar);
 
 	LoadString(g_hLanguageModule,IDS_FAVORITES_FAVORITESMENU,szTemp,SIZEOF_ARRAY(szTemp));
-	FavoriteFolder bfFAVORITESMenu = FavoriteFolder::Create(szTemp);
-	m_bfAllFavorites->InsertFavoriteFolder(bfFAVORITESMenu);
+	CFavoriteFolder bfFavoritesMenu = CFavoriteFolder::Create(szTemp);
+	m_bfAllFavorites->InsertFavoriteFolder(bfFavoritesMenu);
+
+	m_pipbin = new CIPFavoriteItemNotifier(m_hContainer);
+	CFavoriteItemNotifier::GetInstance().AddObserver(m_pipbin);
+
 }
 
 void SaltedExplorer::InitializeDisplayWindow(void)
@@ -65,7 +70,7 @@ void SaltedExplorer::InitializeMenus(void)
 	int		nTopLevelMenus;
 	int		i = 0;
 
-	hMenu = GetMenu(m_hContainer);
+	hMenu = m_hMenu;
 
 	/* Insert the view mode (icons, small icons, details, etc) menus in. */
 	MENUITEMINFO mii;
@@ -107,24 +112,8 @@ void SaltedExplorer::InitializeMenus(void)
 
 	ImageList_Add(himlMenu,hBitmap,NULL);
 
-	/* <---- Associate menu items with a particular image ----> */
-
-	/* <---- Main menu ----> */
-
 	/* <---- Tab right click menu ----> */
 	SetMenuOwnerDraw(m_hTabRightClickMenu);
-
-	/* <---- Toolbar right click menu ----> */
-	SetMenuOwnerDraw(m_hToolbarRightClickMenu);
-
-	/* <---- Application toolbar right click menu ----> */
-	SetMenuOwnerDraw(m_hApplicationRightClickMenu);
-
-	/* <---- Display window right click menu ----> */
-	SetMenuOwnerDraw(m_hDisplayWindowRightClickMenu);
-
-	/* <---- Toolbar views menu ----> */
-	SetMenuOwnerDraw(m_hViewsMenu);
 
 	/* CCustomMenu will handle the drawing of all owner drawn menus. */
 	m_pCustomMenu = new CCustomMenu(m_hContainer,hMenu,himlMenu);

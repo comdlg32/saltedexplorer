@@ -22,6 +22,7 @@
 #include "../Helper/BaseDialog.h"
 #include "../Helper/FileContextMenuManager.h"
 #include "../Helper/XMLSettings.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 
 

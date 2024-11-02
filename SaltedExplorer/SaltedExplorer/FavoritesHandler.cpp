@@ -81,9 +81,9 @@ void SaltedExplorer::FavoriteToolbarNewFavorite(int iItem)
 		/*TBBUTTON tbButton;
 		SendMessage(m_hFavoritesToolbar,TB_GETBUTTON,iItem,(LPARAM)&tbButton);*/
 
-		Favorite bm(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
+		CFavorite Favorite(EMPTY_STRING,EMPTY_STRING,EMPTY_STRING);
 
-		CAddFavoritesDialog AddFavoritesDialog(g_hLanguageModule,IDD_ADD_FAVORITES,m_hContainer,m_bfAllFavorites,&bm);
+		CAddFavoritesDialog AddFavoritesDialog(g_hLanguageModule,IDD_ADD_FAVORITES,m_hContainer,*m_bfAllFavorites,Favorite);
 		AddFavoritesDialog.ShowModalDialog();
 	}
 }

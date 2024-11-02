@@ -228,6 +228,7 @@
     <ClInclude Include="ShellHelper.h" />
     <ClInclude Include="StatusBar.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="WindowHelper.h" />
     <ClInclude Include="XMLSettings.h" />
   </ItemGroup>
   <ItemGroup>

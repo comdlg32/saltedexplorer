@@ -125,7 +125,6 @@ will need to be changed correspondingly. */
 #define HASH_PLAYNAVIGATIONSOUND	1987363412
 #define HASH_SHELL_THEME			3998265761
 #define HASH_TOOLBARTITLEBUTTONS	4055947555
-#define HASH_WEBVIEW				4066781454
 
 typedef struct
 {
@@ -334,8 +333,6 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("LargeToolbarIcons"),NXMLSettings::EncodeBoolValue(m_bLargeToolbarIcons));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ToolbarTitleButtons"),NXMLSettings::EncodeBoolValue(m_bToolbarTitleButtons));
-	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
-	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("WebView"),NXMLSettings::EncodeBoolValue(m_bWebView));
 
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	_itow_s(m_iLastSelectedTab,szValue,SIZEOF_ARRAY(szValue),10);
@@ -367,7 +364,7 @@ MSXML2::IXMLDOMElement *pRoot)
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowApplicationToolbar"),NXMLSettings::EncodeBoolValue(m_bShowApplicationToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
-	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFAVORITESToolbar"),NXMLSettings::EncodeBoolValue(m_bShowFAVORITESToolbar));
+	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowFavoritesToolbar"),NXMLSettings::EncodeBoolValue(m_bShowFavoritesToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
 	NXMLSettings::WriteStandardSetting(pXMLDom,pe,_T("Setting"),_T("ShowDrivesToolbar"),NXMLSettings::EncodeBoolValue(m_bShowDrivesToolbar));
 	NXMLSettings::AddWhiteSpaceToNode(pXMLDom,bstr_wsntt,pe);
@@ -1952,7 +1949,7 @@ WCHAR *wszName,WCHAR *wszValue)
 		break;
 
 	case HASH_SHOWFAVORITESTOOLBAR:
-		m_bShowFAVORITESToolbar = NXMLSettings::DecodeBoolValue(wszValue);
+		m_bShowFavoritesToolbar = NXMLSettings::DecodeBoolValue(wszValue);
 		break;
 
 	case HASH_SHOWDRIVESTOOLBAR:

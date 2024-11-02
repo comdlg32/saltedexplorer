@@ -763,12 +763,12 @@ void SaltedExplorer::DeleteToolbarButton(int iButton)
 	SendMessage(m_hMainToolbar,TB_DELETEBUTTON,iButton,0);
 }
 
-BOOL SaltedExplorer::OnTBQueryInsert(LPARAM lParam)
+BOOL SaltedExplorer::OnTBQueryInsert()
 {
 	return TRUE;
 }
 
-BOOL SaltedExplorer::OnTBQueryDelete(LPARAM lParam)
+BOOL SaltedExplorer::OnTBQueryDelete()
 {
 	/* All buttons can be deleted. */
 	return TRUE;
@@ -809,7 +809,7 @@ void SaltedExplorer::OnTBSave(LPARAM lParam)
 	/* Can add custom information here. */
 }
 
-BOOL SaltedExplorer::OnTBRestore(LPARAM lParam)
+BOOL SaltedExplorer::OnTBRestore()
 {
 	return 0;
 }

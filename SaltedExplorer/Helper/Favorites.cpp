@@ -18,7 +18,7 @@
 #include "RegistrySettings.h"
 #include "Helper.h"
 
-Favorite::Favorite(const std::wstring &strName,const std::wstring &strLocation,const std::wstring &strDescription) :
+CFavorite::CFavorite(const std::wstring &strName,const std::wstring &strLocation,const std::wstring &strDescription) :
 	m_strName(strName),
 	m_strLocation(strLocation),
 	m_strDescription(strDescription),
@@ -28,82 +28,96 @@ Favorite::Favorite(const std::wstring &strName,const std::wstring &strLocation,c
 	GetSystemTimeAsFileTime(&m_ftCreated);
 }
 
-Favorite::~Favorite()
+CFavorite::~CFavorite()
 {
 
 }
 
-std::wstring Favorite::GetName() const
+std::wstring CFavorite::GetName() const
 {
 	return m_strName;
 }
 
-std::wstring Favorite::GetLocation() const
+std::wstring CFavorite::GetLocation() const
 {
 	return m_strLocation;
 }
 
-std::wstring Favorite::GetDescription() const
+std::wstring CFavorite::GetDescription() const
 {
 	return m_strDescription;
 }
 
-void Favorite::SetName(const std::wstring &strName)
+void CFavorite::SetName(const std::wstring &strName)
 {
 	m_strName = strName;
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteItemModified(m_guid);
 }
 
-void Favorite::SetLocation(const std::wstring &strLocation)
+void CFavorite::SetLocation(const std::wstring &strLocation)
 {
 	m_strLocation = strLocation;
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteItemModified(m_guid);
 }
 
-void Favorite::SetDescription(const std::wstring &strDescription)
+void CFavorite::SetDescription(const std::wstring &strDescription)
 {
 	m_strDescription = strDescription;
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteItemModified(m_guid);
 }
 
-GUID Favorite::GetGUID() const
+GUID CFavorite::GetGUID() const
 {
 	return m_guid;
 }
 
-int Favorite::GetVisitCount() const
+int CFavorite::GetVisitCount() const
 {
 	return m_iVisitCount;
 }
 
-FILETIME Favorite::GetDateLastVisited() const
+FILETIME CFavorite::GetDateLastVisited() const
 {
 	return m_ftLastVisited;
 }
 
-FILETIME Favorite::GetDateCreated() const
+void CFavorite::UpdateVisitCount()
+{
+	++m_iVisitCount;
+	GetSystemTimeAsFileTime(&m_ftLastVisited);
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteItemModified(m_guid);
+}
+
+FILETIME CFavorite::GetDateCreated() const
 {
 	return m_ftCreated;
 }
 
-FILETIME Favorite::GetDateModified() const
+FILETIME CFavorite::GetDateModified() const
 {
 	return m_ftModified;
 }
 
-FavoriteFolder FavoriteFolder::Create(const std::wstring &strName)
+CFavoriteFolder CFavoriteFolder::Create(const std::wstring &strName)
 {
-	return FavoriteFolder(strName,INITIALIZATION_TYPE_NORMAL);
+	return CFavoriteFolder(strName,INITIALIZATION_TYPE_NORMAL);
 }
 
-FavoriteFolder *FavoriteFolder::CreateNew(const std::wstring &strName)
+CFavoriteFolder *CFavoriteFolder::CreateNew(const std::wstring &strName)
 {
-	return new FavoriteFolder(strName,INITIALIZATION_TYPE_NORMAL);
+	return new CFavoriteFolder(strName,INITIALIZATION_TYPE_NORMAL);
 }
 
-FavoriteFolder FavoriteFolder::UnserializeFromRegistry(const std::wstring &strKey)
+CFavoriteFolder CFavoriteFolder::UnserializeFromRegistry(const std::wstring &strKey)
 {
-	return FavoriteFolder(strKey,INITIALIZATION_TYPE_REGISTRY);
+	return CFavoriteFolder(strKey,INITIALIZATION_TYPE_REGISTRY);
 }
 
-FavoriteFolder::FavoriteFolder(const std::wstring &str,InitializationType_t InitializationType)
+CFavoriteFolder::CFavoriteFolder(const std::wstring &str,InitializationType_t InitializationType)
 {
 	switch(InitializationType)
 	{
@@ -117,12 +131,12 @@ FavoriteFolder::FavoriteFolder(const std::wstring &str,InitializationType_t Init
 	}
 }
 
-FavoriteFolder::~FavoriteFolder()
+CFavoriteFolder::~CFavoriteFolder()
 {
 
 }
 
-void FavoriteFolder::Initialize(const std::wstring &strName)
+void CFavoriteFolder::Initialize(const std::wstring &strName)
 {
 	CoCreateGuid(&m_guid);
 
@@ -133,7 +147,7 @@ void FavoriteFolder::Initialize(const std::wstring &strName)
 	m_ftModified = m_ftCreated;
 }
 
-void FavoriteFolder::InitializeFromRegistry(const std::wstring &strKey)
+void CFavoriteFolder::InitializeFromRegistry(const std::wstring &strKey)
 {
 	HKEY hKey;
 	LONG lRes = RegOpenKeyEx(HKEY_CURRENT_USER,strKey.c_str(),0,KEY_READ,&hKey);
@@ -159,7 +173,7 @@ void FavoriteFolder::InitializeFromRegistry(const std::wstring &strKey)
 
 			if(CheckWildcardMatch(_T("FavoriteFolder_*"),szSubKeyName,FALSE))
 			{
-				FavoriteFolder FavoriteFolder = FavoriteFolder::UnserializeFromRegistry(szSubKey);
+				CFavoriteFolder FavoriteFolder = CFavoriteFolder::UnserializeFromRegistry(szSubKey);
 				m_ChildList.push_back(FavoriteFolder);
 			}
 			else if(CheckWildcardMatch(_T("Favorite_*"),szSubKeyName,FALSE))
@@ -175,7 +189,7 @@ void FavoriteFolder::InitializeFromRegistry(const std::wstring &strKey)
 	}
 }
 
-void FavoriteFolder::SerializeToRegistry(const std::wstring &strKey)
+void CFavoriteFolder::SerializeToRegistry(const std::wstring &strKey)
 {
 	HKEY hKey;
 	LONG lRes = RegCreateKeyEx(HKEY_CURRENT_USER,strKey.c_str(),
@@ -198,12 +212,12 @@ void FavoriteFolder::SerializeToRegistry(const std::wstring &strKey)
 		{
 			TCHAR szSubKey[256];
 
-			if(FavoriteFolder *pFavoriteFolder = boost::get<FavoriteFolder>(&Variant))
+			if(CFavoriteFolder *pFavoriteFolder = boost::get<CFavoriteFolder>(&Variant))
 			{
 				StringCchPrintf(szSubKey,SIZEOF_ARRAY(szSubKey),_T("%s\\FavoriteFolder_%d"),strKey.c_str(),iItem);
 				pFavoriteFolder->SerializeToRegistry(szSubKey);
 			}
-			else if(Favorite *pFavorite = boost::get<Favorite>(&Variant))
+			else if(CFavorite *pFavorite = boost::get<CFavorite>(&Variant))
 			{
 				StringCchPrintf(szSubKey,SIZEOF_ARRAY(szSubKey),_T("%s\\Favorite_%d"),strKey.c_str(),iItem);
 
@@ -217,84 +231,100 @@ void FavoriteFolder::SerializeToRegistry(const std::wstring &strKey)
 	}
 }
 
-std::wstring FavoriteFolder::GetName() const
+std::wstring CFavoriteFolder::GetName() const
 {
 	return m_strName;
 }
 
-void FavoriteFolder::SetName(const std::wstring &strName)
+void CFavoriteFolder::SetName(const std::wstring &strName)
 {
 	m_strName = strName;
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteItemModified(m_guid);
 }
 
-GUID FavoriteFolder::GetGUID() const
+GUID CFavoriteFolder::GetGUID() const
 {
 	return m_guid;
 }
 
-FILETIME FavoriteFolder::GetDateCreated() const
+FILETIME CFavoriteFolder::GetDateCreated() const
 {
 	return m_ftCreated;
 }
 
-FILETIME FavoriteFolder::GetDateModified() const
+FILETIME CFavoriteFolder::GetDateModified() const
 {
 	return m_ftModified;
 }
 
-void FavoriteFolder::InsertFavorite(const Favorite &bm)
+void CFavoriteFolder::InsertFavorite(const CFavorite &Favorite)
 {
-	InsertFavorite(bm,m_ChildList.size());
+	InsertFavorite(Favorite,m_ChildList.size());
 }
 
-void FavoriteFolder::InsertFavorite(const Favorite &bm,std::size_t Position)
+void CFavoriteFolder::InsertFavorite(const CFavorite &Favorite,std::size_t Position)
 {
 	if(Position > (m_ChildList.size() - 1))
 	{
-		m_ChildList.push_back(bm);
+		m_ChildList.push_back(Favorite);
 	}
 	else
 	{
 		auto itr = m_ChildList.begin();
 		std::advance(itr,Position);
-		m_ChildList.insert(itr,bm);
+		m_ChildList.insert(itr,Favorite);
 	}
 	GetSystemTimeAsFileTime(&m_ftModified);
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteAdded(*this,Favorite);
 }
 
-void FavoriteFolder::InsertFavoriteFolder(const FavoriteFolder &bf)
+void CFavoriteFolder::InsertFavoriteFolder(const CFavoriteFolder &FavoriteFolder)
 {
-	InsertFavoriteFolder(bf,m_ChildList.size());
+	InsertFavoriteFolder(FavoriteFolder,m_ChildList.size());
 }
 
-void FavoriteFolder::InsertFavoriteFolder(const FavoriteFolder &bf,std::size_t Position)
+void CFavoriteFolder::InsertFavoriteFolder(const CFavoriteFolder &FavoriteFolder,std::size_t Position)
 {
 	if(Position > (m_ChildList.size() - 1))
 	{
-		m_ChildList.push_back(bf);
+		m_ChildList.push_back(FavoriteFolder);
 	}
 	else
 	{
 		auto itr = m_ChildList.begin();
 		std::advance(itr,Position);
-		m_ChildList.insert(itr,bf);
+		m_ChildList.insert(itr,FavoriteFolder);
 	}
 
 	m_nChildFolders++;
 	GetSystemTimeAsFileTime(&m_ftModified);
+
+	CFavoriteItemNotifier::GetInstance().NotifyObserversFavoriteFolderAdded(*this,FavoriteFolder);
 }
 
-std::list<boost::variant<FavoriteFolder,Favorite>>::iterator FavoriteFolder::begin()
+std::list<boost::variant<CFavoriteFolder,CFavorite>>::iterator CFavoriteFolder::begin()
 {
 	return m_ChildList.begin();
 }
 
-std::list<boost::variant<FavoriteFolder,Favorite>>::iterator FavoriteFolder::end()
+std::list<boost::variant<CFavoriteFolder,CFavorite>>::iterator CFavoriteFolder::end()
 {
 	return m_ChildList.end();
 }
 
-bool FavoriteFolder::HasChildFolder() const
+std::list<boost::variant<CFavoriteFolder,CFavorite>>::const_iterator CFavoriteFolder::begin() const
+{
+	return m_ChildList.begin();
+}
+
+std::list<boost::variant<CFavoriteFolder,CFavorite>>::const_iterator CFavoriteFolder::end() const
+{
+	return m_ChildList.end();
+}
+
+bool CFavoriteFolder::HasChildFolder() const
 {
 	if(m_nChildFolders > 0)
 	{
@@ -302,4 +332,94 @@ bool FavoriteFolder::HasChildFolder() const
 	}
 
 	return false;
+}
+
+CFavoriteItemNotifier::CFavoriteItemNotifier()
+{
+
+}
+
+CFavoriteItemNotifier::~CFavoriteItemNotifier()
+{
+
+}
+
+CFavoriteItemNotifier& CFavoriteItemNotifier::GetInstance()
+{
+	static CFavoriteItemNotifier bin;
+	return bin;
+}
+
+void CFavoriteItemNotifier::AddObserver(NFavorite::IFavoriteItemNotification *pbin)
+{
+	m_listObservers.push_back(pbin);
+}
+
+void CFavoriteItemNotifier::RemoveObserver(NFavorite::IFavoriteItemNotification *pbin)
+{
+	auto itr = std::find_if(m_listObservers.begin(),m_listObservers.end(),
+		[pbin](const NFavorite::IFavoriteItemNotification *pbinCurrent){return pbinCurrent == pbin;});
+
+	if(itr != m_listObservers.end())
+	{
+		m_listObservers.erase(itr);
+	}
+}
+
+void CFavoriteItemNotifier::NotifyObserversFavoriteItemModified(const GUID &guid)
+{
+	NotifyObservers(NOTIFY_FAVORITE_ITEM_MODIFIED,NULL,NULL,NULL,&guid);
+}
+
+void CFavoriteItemNotifier::NotifyObserversFavoriteAdded(const CFavoriteFolder &ParentFavoriteFolder,
+	const CFavorite &Favorite)
+{
+	NotifyObservers(NOTIFY_FAVORITE_ADDED,&ParentFavoriteFolder,NULL,&Favorite,NULL);
+}
+
+void CFavoriteItemNotifier::NotifyObserversFavoriteFolderAdded(const CFavoriteFolder &ParentFavoriteFolder,
+	const CFavoriteFolder &FavoriteFolder)
+{
+	NotifyObservers(NOTIFY_FAVORITE_FOLDER_ADDED,&ParentFavoriteFolder,&FavoriteFolder,NULL,NULL);
+}
+
+void CFavoriteItemNotifier::NotifyObserversFavoriteRemoved(const GUID &guid)
+{
+	NotifyObservers(NOTIFY_FAVORITE_REMOVED,NULL,NULL,NULL,&guid);
+}
+
+void CFavoriteItemNotifier::NotifyObserversFavoriteFolderRemoved(const GUID &guid)
+{
+	NotifyObservers(NOTIFY_FAVORITE_FOLDER_REMOVED,NULL,NULL,NULL,&guid);
+}
+
+void CFavoriteItemNotifier::NotifyObservers(NotificationType_t NotificationType,
+	const CFavoriteFolder *pParentFavoriteFolder,const CFavoriteFolder *pFavoriteFolder,
+	const CFavorite *pFavorite,const GUID *pguid)
+{
+	for each(auto pbin in m_listObservers)
+	{
+		switch(NotificationType)
+		{
+		case NOTIFY_FAVORITE_ITEM_MODIFIED:
+			pbin->OnFavoriteItemModified(*pguid);
+			break;
+
+		case NOTIFY_FAVORITE_ADDED:
+			pbin->OnFavoriteAdded(*pParentFavoriteFolder,*pFavorite);
+			break;
+
+		case NOTIFY_FAVORITE_FOLDER_ADDED:
+			pbin->OnFavoriteFolderAdded(*pParentFavoriteFolder,*pFavoriteFolder);
+			break;
+
+		case NOTIFY_FAVORITE_REMOVED:
+			pbin->OnFavoriteRemoved(*pguid);
+			break;
+
+		case NOTIFY_FAVORITE_FOLDER_REMOVED:
+			pbin->OnFavoriteFolderRemoved(*pguid);
+			break;
+		}
+	}
 }

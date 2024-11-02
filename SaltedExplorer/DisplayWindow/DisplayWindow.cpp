@@ -3,7 +3,6 @@
  * Project: DisplayWindow
  * File: DisplayWindow.cpp
  *
- *
  * Creates and manages a 'display window'. This window
  * can be used to show various information (e.g. file
  * information) and is drawn with a gradient background.
@@ -18,7 +17,6 @@
  * is calculated, and once a particular column is full,
  * text will be placed in the next column.
  *
- 
  * www.saltedexplorer.ml
  *
  *****************************************************************/
@@ -28,6 +26,7 @@
 #include "DisplayWindowInternal.h"
 #include "../Helper/Helper.h"
 #include "../Helper/RegistrySettings.h"
+#include "../Helper/WindowHelper.h"
 #include "../Helper/Macros.h"
 
 

@@ -97,7 +97,7 @@ void SaltedExplorer::SetProgramMenuItemStates(HMENU hProgramMenu)
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_ADDRESSBAR,m_bShowAddressBar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MAINTOOLBAR,m_bShowMainToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_MENUBAR,m_bShowMenuBar);
-	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFAVORITESToolbar);
+	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_FAVORITESTOOLBAR,m_bShowFavoritesToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_DRIVES,m_bShowDrivesToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_APPLICATIONTOOLBAR,m_bShowApplicationToolbar);
 	lCheckMenuItem(hProgramMenu,IDM_TOOLBARS_LOCKTOOLBARS,m_bLockToolbars);
@@ -147,7 +147,7 @@ void SaltedExplorer::SetProgramMenuItemStates(HMENU hProgramMenu)
 		lCheckMenuItem(hProgramMenu,IDM_ARRANGEICONSBY_AUTOARRANGE,m_pActiveShellBrowser->QueryAutoArrange());
 	}
 
-	SetArrangeMenuItemStates(hProgramMenu);
+	SetArrangeMenuItemStates();
 }
 
 /*
@@ -155,7 +155,7 @@ void SaltedExplorer::SetProgramMenuItemStates(HMENU hProgramMenu)
 * 'arrange menu', which appears as a
 * submenu in other higher level menus.
 */
-void SaltedExplorer::SetArrangeMenuItemStates(HMENU hProgramMenu)
+void SaltedExplorer::SetArrangeMenuItemStates()
 {
 	UINT ItemToCheck;
 	UINT SortMode;
